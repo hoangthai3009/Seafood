@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In</title>
+  <!-- Thêm thư viện Bootstrap để có giao diện đẹp hơn -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 100px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #007bff;
+    }
+
+    label {
+      margin-top: 10px;
+    }
+
+    #error {
+      color: red;
+      margin-top: 10px;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 3px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    p {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Sign In</h2>
+  <form id="signInForm">
+    <div class="form-group">
+      <label for="usernameOrEmail">Username or Email:</label>
+      <input type="text" id="usernameOrEmail" name="usernameOrEmail" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" class="form-control" required>
+    </div>
+    <button type="button" onclick="signIn()" class="btn btn-primary">Sign In</button>
+    <div id="error"></div>
+    <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+  </form>
+</div>
+
+<script>
+  function signIn() {
+    const signInForm = document.getElementById('signInForm');
+    const usernameOrEmail = signInForm.elements['usernameOrEmail'].value;
+    const password = signInForm.elements['password'].value;
+
+    axios.post('/api/auth/signin', {
+      usernameOrEmail: usernameOrEmail,
+      password: password
+    })
+            .then(function (response) {
+              // Xác thực thành công, chuyển hướng đến trang home hoặc làm bất kỳ điều gì bạn cần ở đây
+              console.log(response.data);
+              window.location.href = '/';
+            })
+            .catch(function (error) {
+              // Xác thực không thành công, hiển thị thông báo lỗi
+              console.error(error.response.data);
+              document.getElementById('error').innerText = error.response.data;
+            });
+  }
+</script>
+</body>
+</html>

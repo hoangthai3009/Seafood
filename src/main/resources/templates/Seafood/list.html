@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+        lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách sản phẩm</title>
+    <th:block th:replace="layout :: link-css"></th:block>
+</head>
+<body>
+<th:block th:replace="layout :: header"></th:block>
+<div class="container">
+    <div class="alert alert-danger" th:if="${message}" th:text="${message}"></div>
+    <table class="table">
+        <tr>
+            <th><a th:href="@{/seafoods(pageNo=${currentPage}, sortBy='id')}">Id</a></th>
+            <th><a th:href="@{/seafoods(pageNo=${currentPage}, sortBy='name')}">Tên</a></th>
+            <th><a th:href="@{/seafoods(pageNo=${currentPage}, sortBy='origin')}">Xuất xứ</a></th>
+            <th><a th:href="@{/seafoods(pageNo=${currentPage}, sortBy='description')}">Mô tả</a></th>
+            <th><a th:href="@{/seafoods(pageNo=${currentPage}, sortBy='price')}">Giá tiền</a></th>
+            <th><a th:href="@{/seafoods(pageNo=${currentPage}, sortBy='image')}">Ảnh</a></th>
+            <th><a th:href="@{/seafoods(pageNo=${currentPage}, sortBy='quantity')}">Số lượng</a></th>
+            <th><a th:href="@{/seafoods(pageNo=${currentPage}, sortBy='manufacturing_date')}">Ngày sản xuất</a></th>
+            <th><a th:href="@{/seafoods(pageNo=${currentPage}, sortBy='expiry_date')}">Hạn sử dụng</a></th>
+            <th><a th:href="@{/seafoods(pageNo=${currentPage}, sortBy='category')}">Loại</a></th>
+            <th></th>
+        </tr>
+        <tbody>
+        <tr th:each="seafood : ${seafood}">
+            <td th:text="${seafood.id}"></td>
+            <td th:text="${seafood.name}"></td>
+            <td th:text="${seafood.origin}"></td>
+            <td th:text="${seafood.description}"></td>
+            <td th:text="${seafood.price}"></td>
+            <td th:text="${seafood.image}"></td>
+            <td th:text="${seafood.quantity}"></td>
+            <td th:text="${#dates.format(seafood.manufacturing_date, 'yyyy-MM-dd')}"></td>
+            <td th:text="${#dates.format(seafood.expiry_date, 'yyyy-MM-dd')}"></td>
+            <td th:text="${seafood.category.name}"></td>
+            <td>
+                <a class="btn btn-primary"
+                   th:href="@{/seafoods/edit/{id}(id=${seafood.getId()})}">Edit</a>
+                <a class="btn btn-danger"
+                   th:href="@{/seafoods/delete/{id}(id=${seafood.getId()})}"
+                   onclick="return confirm('Bạn chắc chắn muốn xóa chứ ?')">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center pagination-sm">
+            <li class="page-item" th:class="${currentPage == i} ? 'active'" th:each="i : ${#numbers.sequence(0, totalPages)}">
+                <a class="page-link" th:href="@{/seafoods(pageNo=${i}, sortBy=${currentSort})}" th:text="${i}"></a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<script th:src="@{/js/jquery-3.6.4.min.js}"></script>
+<script th:src="@{/js/list.js}"></script>
+<th:block th:replace="layout :: footer"></th:block>
+</body>
+</html>

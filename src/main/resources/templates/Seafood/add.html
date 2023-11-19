@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thyme leaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="layout :: link-css"></th:block>
+    <title>Thêm sản phẩm</title>
+</head>
+<body>
+<th:block th:replace="layout :: header"></th:block>
+<div class="container">
+    <h1>Thêm sản phẩm</h1>
+    <form th:action="@{/seafoods/add}" th:object="${seafood}" method="post">
+        <div class="col-6 mb-3">
+            <label class="form-label" for="name">Tên sản phẩm: </label>
+            <input class="form-control" type="text" th:field="*{name}" id="name">
+            <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="image">Hình: </label>
+            <input class="form-control" type="text" th:field="*{image}" id="image">
+            <span class="text-danger" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="origin">Xuất xứ: </label>
+            <input class="form-control" type="text" th:field="*{origin}" id="origin">
+            <span class="text-danger" th:if="${#fields.hasErrors('origin')}" th:errors="*{origin}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="price">Giá tiền: </label>
+            <input class="form-control" type="text" th:field="*{price}" id="price">
+            <span class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="manufacturing_date">Ngày sản xuất: </label>
+            <input class="form-control" type="date" th:field="*{manufacturing_date}" id="manufacturing_date">
+            <span class="text-danger" th:if="${#fields.hasErrors('manufacturing_date')}" th:errors="*{manufacturing_date}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="expiry_date">Hạn sử dụng: </label>
+            <input class="form-control" type="date" th:field="*{expiry_date}" id="expiry_date">
+            <span class="text-danger" th:if="${#fields.hasErrors('expiry_date')}" th:errors="*{expiry_date}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="quantity">Số lượng: </label>
+            <input class="form-control" type="text" th:field="*{quantity}" id="quantity">
+            <span class="text-danger" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="description">Mô tả: </label>
+            <input class="form-control" type="text" th:field="*{description}" id="description">
+            <span class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="category">Loại: </label>
+            <select class="form-control" id="category" name="category.id">
+                <option value="">-- Chọn loại --</option>
+                <option th:each="category: ${categories}" th:value="${category.id}"
+                        th:text="${category.name}"></option>
+            </select>
+            <span class="text-danger" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Save">
+    </form>
+    <br>
+    <a th:href="@{/seafoods}">Back to List</a>
+</div>
+<th:block th:replace="layout :: footer"></th:block>
+</body>
+</html>

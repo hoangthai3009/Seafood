@@ -1,0 +1,41 @@
+/* CSS seafood Admin */
+.tab {
+    display: none;
+}
+
+.active-tab {
+    display: block;
+}
+
+.altPreview {
+    width: 300px;
+    height: 250px;
+    border: 1px solid lightgray;
+
+}
+.card-header {
+    background-color: white;
+    color: royalblue;
+    padding: 10px;
+    text-align: center;
+}
+
+.button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.tab-button {
+    background-color: white;
+    color: royalblue;
+    border: lightgrey 1px solid;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.tab-button:hover {
+    background-color: lightgrey;
+}
+

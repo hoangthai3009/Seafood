@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="layout-admin :: link-css"></th:block>
+    <title>Thêm sản phẩm</title>
+    <link th:fragment="link-css" th:href="@{/css/seafood-admin.css}" rel="stylesheet" type="text/css">
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <th:block th:replace="layout-admin :: header"></th:block>
+    <div id="content-wrapper">
+        <div id="content">
+            <th:block th:replace="layout-admin :: nav"></th:block>
+            <div class="container-fluid">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold" style="font-size: 25px">THÊM SẢN PHẨM</h6>
+                    </div>
+                    <div class="mt-3 d-flex justify-content-center">
+                        <button class="tab-button" onclick="openTab('tabChiTiet')">Chi tiết</button>
+                        <button class="tab-button" onclick="openTab('tabMoTa')">Mô tả</button>
+                        <button class="tab-button" onclick="openTab('tabHinhAnh')">Hình ảnh</button>
+                    </div>
+                    <hr>
+                    <form class="p-4" th:action="@{/Admin/add-seafood}" th:object="${seafood}" method="post"
+                          enctype="multipart/form-data">
+                        <!-- Tổng quan Tab -->
+                        <div class="tab active-tab" id="tabChiTiet">
+                            <div class="form-group">
+                                <label class="d-flex justify-content-center" for="name">Tên Sản Phẩm:</label>
+                                <input class="form-control" type="text" id="name" th:field="*{name}">
+                                <span class="text-danger" th:if="${#fields.hasErrors('name')}"
+                                      th:errors="*{name}"></span>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col mt-3">
+                                    <label class="d-flex justify-content-center" for="category">Loại sản phẩm:</label>
+                                    <select class="form-control" id="category" name="category.id">
+                                        <option value="">-- Chọn loại --</option>
+                                        <option th:each="category: ${categories}" th:value="${category.id}"
+                                                th:text="${category.name}"></option>
+                                    </select>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('category')}"
+                                          th:errors="*{category}"></span>
+                                </div>
+                                <div class="col mt-3">
+                                    <label class="d-flex justify-content-center" for="origin">Xuất xứ: </label>
+                                    <input class="form-control" type="text" th:field="*{origin}" id="origin">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('origin')}"
+                                          th:errors="*{origin}"></span>
+                                </div>
+                                <div class="col mt-3">
+                                    <label class="d-flex justify-content-center" for="price">Giá(VNĐ): </label>
+                                    <input class="form-control" type="text" id="price" th:field="*{price}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('price')}"
+                                          th:errors="*{price}"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col mt-3">
+                                    <label class="d-flex justify-content-center" for="quantity">Số lượng: </label>
+                                    <input class="form-control" type="text" th:field="*{quantity}" id="quantity">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('quantity')}"
+                                              th:errors="*{quantity}"></span>
+                                </div>
+
+                                <div class="col mt-3">
+                                    <label class="d-flex justify-content-center" for="manufacturing_date">Ngày sản
+                                        xuất: </label>
+                                        <input class="form-control" type="date" th:field="*{manufacturing_date}"
+                                               id="manufacturing_date">
+                                        <span class="text-danger" th:if="${#fields.hasErrors('manufacturing_date')}"
+                                              th:errors="*{manufacturing_date}"></span>
+                                    </div>
+                                <div class="col mt-3">
+                                    <label class="d-flex justify-content-center" for="expiry_date">Hạn sử dụng: </label>
+                                        <input class="form-control" type="date" th:field="*{expiry_date}"
+                                               id="expiry_date">
+                                        <span class="text-danger" th:if="${#fields.hasErrors('expiry_date')}"
+                                              th:errors="*{expiry_date}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Mô tả Tab -->
+                        <div class="tab" id="tabMoTa">
+                            <div class="mt-2">
+                                <label class="form-label" for="description">Mô Tả: </label>
+                                <textarea required class="form-control" id="description" th:field="*{description}"
+                                          style="height:356px"></textarea>
+                                <span class="text-danger" th:if="${#fields.hasErrors('description')}"
+                                      th:errors="*{description}"></span>
+                            </div>
+                        </div>
+
+                        <!-- Hình ảnh Tab -->
+                        <div class="tab" id="tabHinhAnh">
+                            <div class="mt-2" id="">
+                                <div class="row">
+                                    <!-- Hình ảnh chính -->
+                                    <div class="col">
+                                        <label>Chọn hình ảnh chính</label>
+                                        <p>
+                                            <img alt="" class="altPreview mb-3" id="thumbnail"/>
+                                            <input type="file" name="mainImage" id="mainImage"
+                                                   title="Chọn hình ảnh chính cho sản phẩm" accept="image/*" required>
+                                        </p>
+                                    </div>
+                                    <div class="col">
+                                        <label>Chọn hình ảnh phụ 1</label>
+                                        <p>
+                                            <img alt="" class="altPreview mb-3" id="thumbnail0"/>
+                                            <input type="file" name="extraImage"
+                                                   title="Chọn hình ảnh phụ 1 cho sản phẩm" accept="image/*">
+                                        </p>
+                                    </div>
+                                    <div class="col">
+                                        <label>Chọn hình ảnh phụ 2</label>
+                                        <p>
+                                            <img alt="" class="altPreview mb-3" id="thumbnail1"/>
+                                            <input type="file" name="extraImage"
+                                                   title="Chọn hình ảnh phụ 2 cho sản phẩm" accept="image/*">
+                                        </p>
+                                    </div>
+                                    <div class="col">
+                                        <label>Chọn hình ảnh phụ 3</label>
+                                        <p>
+                                            <img alt="" class="altPreview mb-3" id="thumbnail2"/>
+                                            <input type="file" name="extraImage"
+                                                   title="Chọn hình ảnh phụ 3 cho sản phẩm" accept="image/*">
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="submit" class="mt-2 btn btn-primary form-control" value="Thêm sản phẩm">
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        <th:block th:replace="layout-admin :: footer"></th:block>
+    </div>
+</div>
+</body>
+</html>

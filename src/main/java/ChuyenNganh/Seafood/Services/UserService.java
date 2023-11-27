@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -34,7 +35,7 @@ public class UserService {
         userRepository.removeRoleFromUser(userId, roleId);
     }
 
-    public String[] getRolesOfUser(Long id) {
+    public String[] getRolesOfUser(UUID id) {
         return userRepository.getRolesOfUser(id);
     }
 

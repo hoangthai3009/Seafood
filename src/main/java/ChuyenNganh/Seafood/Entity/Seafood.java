@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.format.annotation.DateTimeFormat;
-
+import ChuyenNganh.Seafood.Entity.Seafood;
 import java.util.Date;
 import java.util.Objects;
 
@@ -45,8 +45,14 @@ public class Seafood {
     @NotNull(message = "Giá tiền không được để trống")
     private Double price;
 
-    @Column(name = "image")
-    private String image;
+    @Column(name ="main_image")
+    private String mainImage;
+    @Column(name="extra_image1")
+    private String extraImage1;
+    @Column(name="extra_image2")
+    private String extraImage2;
+    @Column(name="extra_image3")
+    private String extraImage3;
 
     @Column(name = "quantity")
     @NotNull(message = "Số lượng không được để trống")
@@ -80,5 +86,57 @@ public class Seafood {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Transient
+    public String getMainImagePath(){
+        if(mainImage == null || id == null) return null;
+        return "/img/seafoods/" + id + "/" + mainImage;
+    }
+    @Transient
+    public String getExtraImagePath1(){
+        if(extraImage1 == null || id == null) return null;
+        return "/img/seafoods/" + id + "/" + extraImage1;
+    }
+    @Transient
+    public String getExtraImagePath2(){
+        if(extraImage2 == null || id == null) return null;
+        return "/img/seafoods/" + id + "/" + extraImage2;
+    }
+    @Transient
+    public String getExtraImagePath3(){
+        if(extraImage3 == null || id == null) return null;
+        return "/img/seafoods/" + id + "/" + extraImage3;
+    }
+
+    public String getMainImage() {
+        return mainImage;
+    }
+
+    public void setMainImage(String mainImage) {
+        this.mainImage = mainImage;
+    }
+    public String getExtraImage1() {
+        return extraImage1;
+    }
+
+    public void setExtraImage1(String extraImage1) {
+        this.extraImage1 = extraImage1;
+    }
+
+    public String getExtraImage2() {
+        return extraImage2;
+    }
+
+    public void setExtraImage2(String extraImage2) {
+        this.extraImage2 = extraImage2;
+    }
+
+    public String getExtraImage3() {
+        return extraImage3;
+    }
+
+    public void setExtraImage3(String extraImage3) {
+        this.extraImage3 = extraImage3;
     }
 }

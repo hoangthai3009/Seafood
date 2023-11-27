@@ -1,17 +1,16 @@
 package ChuyenNganh.Seafood.Controller;
 
 import ChuyenNganh.Seafood.Entity.Seafood;
-import ChuyenNganh.Seafood.Services.SeafoodService;
 import ChuyenNganh.Seafood.Services.CategoryService;
+import ChuyenNganh.Seafood.Services.SeafoodService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation. *;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +21,7 @@ public class SeafoodController {
 
     private final SeafoodService seafoodService;
     private final CategoryService categoryService;
+
 
     @GetMapping
     public String listSeafoods(@NotNull Model model,
@@ -35,6 +35,36 @@ public class SeafoodController {
         model.addAttribute("totalPages", seafoodService.countSeafood() / pageSize);
         return "seafood/list";
     }
+
+    /*@GetMapping("/{seafoodId}")
+    public String detailSeafood(@PathVariable Long seafoodId, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        model.addAttribute("currentUsername", currentUsername);
+
+        Seafood seafood = seafoodService.getSeafoodById(seafoodId);
+
+        // Sử dụng thư viện markdown để hiển thị mô tả sản phẩm.
+        String markdownDescription = markdownHtmlRenderer.render(markdownParser.parse(seafood.getDescription()));
+        seafood.setDescription(markdownDescription);
+        model.addAttribute("seafood", seafood);
+
+        String description = seafood.getDescription();
+        String htmlDescription = description
+                .replace("{{image1}}", "<img style=\"width:100%;\" src=\"https://phuc-public-image.s3.ap-southeast-2.amazonaws.com/" + seafood.getImage_2() + "\"/>")
+                .replace("{{image2}}", "<img style=\"width:100%;\" src=\"https://phuc-public-image.s3.ap-southeast-2.amazonaws.com/" + seafood.getImage_3() + "\"/>")
+                .replace("{{image3}}", "<img style=\"width:100%;\" src=\"https://phuc-public-image.s3.ap-southeast-2.amazonaws.com/" + seafood.getImage_4() + "\"/>");
+        model.addAttribute("description", htmlDescription);
+
+        *//*List<Comment> comments = commentService.getCommentByProductId(productId);
+        model.addAttribute("comments", comments);
+
+        Comment newComment = new Comment();
+        model.addAttribute("newComment", newComment);*//*
+
+        return "seafood/detail";
+    }*/
+
     @GetMapping("/add")
     public String addSeafood(Model model) {
         model.addAttribute("seafood", new Seafood());
@@ -56,7 +86,7 @@ public class SeafoodController {
         seafoodService.saveSeafood(seafood);
         return "redirect:/seafoods";
     }
-
+/*
     @GetMapping("/edit/{id}")
     public String editSeafood (@PathVariable("id") Long id, Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());
@@ -82,7 +112,7 @@ public class SeafoodController {
         }
         seafoodService.saveSeafood(seafood);
         return "redirect:/seafoods";
-    }
+    }*/
 
     @GetMapping("/delete/{id}")
     public String deleteSeafood (@PathVariable("id") Long id) {

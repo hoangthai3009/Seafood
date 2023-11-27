@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý quyền</title>
+    <th:block th:replace="layout-admin :: link-css"></th:block>
+    <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <th:block th:replace="layout-admin :: header"></th:block>
+    <div id="content-wrapper">
+        <div id="content">
+            <th:block th:replace="layout-admin :: nav"></th:block>
+            <div class="container-fluid">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="font-weight-bold text-primary">Quản Lý Quyền Tài Khoản</h6>
+                    </div>
+                    <div class="card-body">
+                        <a class="btn btn-primary" th:href="@{/Admin/add-role}">Thêm Quyền Mới</a>
+
+                        <div class="mt-3 table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">Tên Quyền</th>
+                                    <th class="text-center">Mô Tả</th>
+                                    <th class="text-center">Chức Năng</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="role: ${roles}">
+                                    <td th:text="${role.roleName}"></td>
+                                    <td th:text="${role.description}"></td>
+                                    <td class="text-center">
+                                        <a th:href="@{/Admin/edit-role/{roleId}(roleId=${role.roleId})}">
+                                            <i class="fas fa-pen-to-square mr-3"></i></a>
+                                        <a th:href="@{/Admin/delete-role/{roleId}(roleId=${role.roleId})}"
+                                           onclick="return confirm('Xác nhận xóa quyền này?')"><i class="fas fa-times" style="color:red"></i></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <th:block th:replace="layout-admin :: footer"></th:block>
+        </div>
+    </div>
+</div>
+
+<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="/js/datatables-demo.js"></script>
+</body>
+</html>

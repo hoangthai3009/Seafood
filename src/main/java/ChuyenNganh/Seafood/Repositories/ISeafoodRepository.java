@@ -12,7 +12,7 @@ import java.util.*;
 
 @Repository
 public interface ISeafoodRepository extends PagingAndSortingRepository<Seafood, Long>, JpaRepository<Seafood, Long> {
-    default List<Seafood> findAllBooks(Integer pageNo, Integer pageSize, String sortBy) {
+    default List<Seafood> findAllSeafoods(Integer pageNo, Integer pageSize, String sortBy) {
         return findAll(PageRequest.of(pageNo, pageSize, Sort.by(sortBy))).getContent();
     }
     @Query("""

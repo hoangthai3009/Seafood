@@ -1,8 +1,8 @@
 package ChuyenNganh.Seafood.Controller;
 
 import ChuyenNganh.Seafood.Entity.Seafood;
-import ChuyenNganh.Seafood.Services.CategoryService;
-import ChuyenNganh.Seafood.Services.SeafoodService;
+import ChuyenNganh.Seafood.Security.Services.CategoryService;
+import ChuyenNganh.Seafood.Security.Services.SeafoodService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -119,41 +119,6 @@ public class SeafoodController {
         Seafood seafood = seafoodService.getSeafoodById(id);
         seafoodService.deleteSeafood(id);
         return "redirect:/seafoods";
-    }
-
-    /*@PostMapping("/add-to-cart")
-    public String addToCart(HttpSession session,
-                            @RequestParam long id,
-                            @RequestParam String name,
-                            @RequestParam double price,
-                            @RequestParam int quantity,
-                            RedirectAttributes attributes)
-    {
-        Book book = bookService.getBookById(id);
-        if (book.getQuantity() < quantity)
-        {
-            attributes.addFlashAttribute("message", "vượt quá số lượng tồn");
-            return "redirect:/books";
-        }
-        var cart = cartService.getCart(session);
-        cart.addItems(new Item(id, name, price, quantity));
-        cartService.updateCart(session, cart);
-        return "redirect:/books";
-    }*/
-
-    @GetMapping("/search")
-    public String searchBook(
-            @NotNull Model model,
-            @RequestParam String keyword,
-            @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "2") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy) {
-        model.addAttribute("seafood", seafoodService.searchSeafood(keyword));
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("currentSort", sortBy);
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("totalPages", seafoodService.countSeafood() / pageSize);
-        return "seafood/list";
     }
 
 }

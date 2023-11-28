@@ -2,33 +2,24 @@ package ChuyenNganh.Seafood.Controller;
 
 import ChuyenNganh.Seafood.DTO.BillDto;
 import ChuyenNganh.Seafood.Entity.Bill;
-import ChuyenNganh.Seafood.Entity.Role;
 import ChuyenNganh.Seafood.Entity.Seafood;
-import ChuyenNganh.Seafood.Entity.User;
 import ChuyenNganh.Seafood.Mapper.BillMapper;
-import ChuyenNganh.Seafood.Services.*;
+import ChuyenNganh.Seafood.Security.Services.CategoryService;
+import ChuyenNganh.Seafood.Security.Services.SeafoodService;
 import ChuyenNganh.Seafood.Utils.FileUploadUlti;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -40,14 +31,14 @@ import java.util.stream.Collectors;
 public class AdminController {
 
     @Autowired
-    private BillService BillService;
+    private ChuyenNganh.Seafood.Security.Services.BillService BillService;
     @Autowired
     private BillMapper BillMapper;
-    @Autowired
+    /*@Autowired
     private RoleService roleService;
     @Autowired
     private UserService userService;
-
+*/
     private final SeafoodService seafoodService;
     private final CategoryService categoryService;
     Logger logger = LoggerFactory.getLogger(AdminController.class);
@@ -251,7 +242,7 @@ public class AdminController {
     }
 
 //    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/list-user")
+    /*@GetMapping("/list-user")
     public String getAllUser(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
@@ -289,12 +280,12 @@ public class AdminController {
         return "redirect:/Admin/roles";
     }
 
-/*    @GetMapping("/edit-role/{roleId}")
+*//*    @GetMapping("/edit-role/{roleId}")
     public String editRoleForm(@PathVariable("roleId") UUID roleId, Model model) {
         Role role = roleService.getRoleById(roleId);
         model.addAttribute("role", role);
         return "Admin/role/edit-role";
-    }*/
+    }*//*
     @PostMapping("/edit-role/{roleId}")
     public String editRole(@Valid @ModelAttribute("role") Role role,
                            BindingResult bindingResult, Model model) {
@@ -309,5 +300,5 @@ public class AdminController {
         roleService.saveRole(role);
         logger.info("Sửa thành công role có Id {}", role.getRoleId());
         return "redirect:/Admin/roles";
-    }
+    }*/
 }

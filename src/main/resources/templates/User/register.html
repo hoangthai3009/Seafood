@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <!-- Add Bootstrap library for a better UI -->
+    <title>Register</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
@@ -67,10 +66,11 @@
         }
     </style>
 </head>
+
 <body>
 <div class="container">
     <h2>Sign Up</h2>
-    <form id="signUpForm">
+    <form id="registerForm">
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" class="form-control" required>
@@ -91,39 +91,54 @@
             <label for="phone">Phone:</label>
             <input type="text" id="phone" name="phone" class="form-control" required>
         </div>
-        <button type="button" onclick="signUp()" class="btn btn-primary">Sign Up</button>
+        <button type="button" onclick="register()" class="btn btn-primary">Sign Up</button>
         <div id="error"></div>
-        <p>Already have an account? <a href="/signin">Sign In</a></p>
+        <p>Already have an account? <a href="/login">Sign In</a></p>
     </form>
 </div>
 
 <script>
-    function signUp() {
-        const signUpForm = document.getElementById('signUpForm');
-        const username = signUpForm.elements['username'].value;
-        const email = signUpForm.elements['email'].value;
-        const password = signUpForm.elements['password'].value;
-        const fullname = signUpForm.elements['fullname'].value;
-        const phone = signUpForm.elements['phone'].value;
+    function register() {
+        var username = document.getElementById("username").value;
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+        var fullname = document.getElementById("fullname").value;
+        var phone = document.getElementById("phone").value;
 
-        axios.post('/signup', {
+        var signUpData = {
             username: username,
             email: email,
             password: password,
             fullname: fullname,
             phone: phone
+        };
+
+        fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(signUpData),
         })
-            .then(function (response) {
-                // Registration successful, you can redirect to the login page or any other page
-                console.log(response.data);
-                window.location.href = '/signin';
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/login';
+                } else {
+                    return response.json();
+                }
             })
-            .catch(function (error) {
-                // Registration unsuccessful, display error message
-                console.error(error.response.data);
-                document.getElementById('error').innerText = error.response.data;
+            .then(data => {
+                if (data && data.message) {
+                    document.getElementById("error").innerText = data.message;
+                } else {
+                    document.getElementById("error").innerText = "Sai thông tin đăng nhập";
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
             });
     }
 </script>
 </body>
+
 </html>

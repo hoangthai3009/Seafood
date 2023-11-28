@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In</title>
-  <!-- Thêm thư viện Bootstrap để có giao diện đẹp hơn -->
+  <title>Login</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
@@ -69,8 +68,8 @@
 </head>
 <body>
 <div class="container">
-  <h2>Sign In</h2>
-  <form id="signInForm">
+  <h2>Login</h2>
+  <form id="loginForm">
     <div class="form-group">
       <label for="usernameOrEmail">Username or Email:</label>
       <input type="text" id="usernameOrEmail" name="usernameOrEmail" class="form-control" required>
@@ -79,31 +78,38 @@
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" class="form-control" required>
     </div>
-    <button type="button" onclick="signIn()" class="btn btn-primary">Sign In</button>
+    <button type="button" onclick="login()" class="btn btn-primary">Login</button>
     <div id="error"></div>
-    <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+    <p>Don't have an account? <a href="/register">Sign Up</a></p>
   </form>
 </div>
 
 <script>
-  function signIn() {
-    const signInForm = document.getElementById('signInForm');
-    const usernameOrEmail = signInForm.elements['usernameOrEmail'].value;
-    const password = signInForm.elements['password'].value;
+  function login() {
+    var usernameOrEmail = document.getElementById("usernameOrEmail").value;
+    var password = document.getElementById("password").value;
 
-    axios.post('/api/auth/signin', {
+    var loginData = {
       usernameOrEmail: usernameOrEmail,
       password: password
+    };
+
+    fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(loginData),
     })
-            .then(function (response) {
-              // Xác thực thành công, chuyển hướng đến trang home hoặc làm bất kỳ điều gì bạn cần ở đây
-              console.log(response.data);
-              window.location.href = '/';
+            .then(response => {
+              if (response.ok) {
+                window.location.href = '/';
+              } else {
+                document.getElementById("error").innerText = "Sai thông tin đăng nhập";
+              }
             })
-            .catch(function (error) {
-              // Xác thực không thành công, hiển thị thông báo lỗi
-              console.error(error.response.data);
-              document.getElementById('error').innerText = error.response.data;
+            .catch((error) => {
+              console.error('Error:', error);
             });
   }
 </script>

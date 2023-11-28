@@ -1,7 +1,5 @@
 package ChuyenNganh.Seafood.Entity;
 
-import ChuyenNganh.Seafood.Validators.Annotation.ValidEmail;
-import ChuyenNganh.Seafood.Validators.Annotation.ValidUsername;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -11,46 +9,40 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "user",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        })
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
-    @Column(name = "fullname", length = 40)
-    @Size(max = 60, message = "Tên của bạn không được vượt quá 60 ký tự.")
-    private String fullname;
-
-    @Column(name = "phone", length = 10)
-    @Pattern(regexp = "^[0-9]{10}$", message = "Số điện thoại phải gồm 10 chữ số.")
-    private String phone;
-
-    @Email(message = "Email invalid")
-    @Column(name = "email", length = 40)
-    @ValidEmail
-    private String email;
-
-    @Column(name = "username", length = 40)
-    @Size(min = 5, message = "Tên tài khoản phải ít nhất 5 ký tự.")
-    @Size(max = 40, message = "Tài khoản không được vượt quá 40 ký tự.")
-    @ValidUsername
+    @NotBlank
+    @Size(max = 20)
     private String username;
 
-    @Column(name = "password", length = 64)
-    @Size(min = 6, message = "Mật khẩu phải ít nhất 6 ký tự.")
-    @Size(max = 144, message = "Mật khẩu không được vượt quá 144 ký tự.")
+    @NotBlank
+    @Size(max = 50)
+    @Email
+    private String email;
+
+    @NotBlank
+    @Size(max = 120)
     private String password;
 
-    /*@Enumerated(EnumType.STRING)
-    @Column(name = "provider", length = 50)
-    private String provider;
+    @NotBlank
+    @Size(max = 50)
+    private String fullname;
 
-    private boolean enabled;*/
+    @NotBlank
+    @Pattern(regexp = "^[0-9]{10}$")
+    private String phone;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role",
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-
 }

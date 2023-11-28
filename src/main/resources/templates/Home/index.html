@@ -1,21 +1,82 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ỨNG DỤNG QUẢN LÝ SÁCH</title>
-    <th:block th:replace="layout :: link-css"></th:block>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seafood API Viewer</title>
+    <!-- Thêm Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-<th:block th:replace="layout :: header"></th:block>
 <div class="container">
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                TRANG CHỦ ỨNG DỤNG QUẢN LÝ SÁCH
-            </a>
-        </div>
+    <h1 class="my-4">Seafood List</h1>
+    <ul id="seafoodList" class="list-group mb-4"></ul>
+
+    <!-- Phân trang sử dụng Bootstrap -->
+    <nav>
+        <ul class="pagination" id="pagination"></ul>
     </nav>
 </div>
-<th:block th:replace="layout :: footer"></th:block>
+
+<script>
+    const seafoodList = document.getElementById('seafoodList');
+    const pagination = document.getElementById('pagination');
+
+    // Hàm hiển thị Seafood
+    function displaySeafood(seafood) {
+        const listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.innerHTML = `
+                <strong>ID:</strong> ${seafood.id}<br>
+                <strong>Name:</strong> ${seafood.name}<br>
+                <strong>Origin:</strong> ${seafood.origin}<br>
+                <strong>Description:</strong> ${seafood.description}<br>
+                <strong>Price:</strong> ${seafood.price}<br>
+                <strong>Quantity:</strong> ${seafood.quantity}<br>
+                <strong>Manufacturing Date:</strong> ${seafood.manufacturing_date}<br>
+                <strong>Expiry Date:</strong> ${seafood.expiry_date}
+            `;
+        seafoodList.appendChild(listItem);
+    }
+
+    // Sử dụng Fetch API để gọi API
+    function fetchData(page = 0) {
+        fetch(`http://localhost:8080/api/seafoods?page=${page}`)
+            .then(response => response.json())
+            .then(data => {
+                seafoodList.innerHTML = '';
+                pagination.innerHTML = '';
+
+                // Lặp qua danh sách seafoods và hiển thị
+                data.content.forEach(seafood => {
+                    displaySeafood(seafood);
+                });
+
+                // Tạo các nút phân trang sử dụng Bootstrap
+                for (let i = 0; i < data.totalPages; i++) {
+                    const pageItem = document.createElement('li');
+                    pageItem.className = `page-item ${i === data.number ? 'active' : ''}`;
+                    pageItem.innerHTML = `
+                            <a class="page-link" href="#" onclick="fetchData(${i})">${i + 1}</a>
+                        `;
+                    pagination.appendChild(pageItem);
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    // Gọi fetchData() mặc định khi trang được tải
+    fetchData();
+</script>
+
+<!-- Thêm Bootstrap JavaScript và Popper.js -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

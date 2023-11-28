@@ -1,4 +1,4 @@
-package ChuyenNganh.Seafood.Services;
+package ChuyenNganh.Seafood.Security.Services;
 
 import ChuyenNganh.Seafood.Entity.BillDetail;
 import ChuyenNganh.Seafood.Repositories.IBillDetailRepository;
@@ -13,7 +13,7 @@ public class BillDetailService {
     @Autowired
     private IBillDetailRepository billDetailRepository;
 
-    public List<BillDetail> getAllBillDetail(UUID userId) {
+    public List<BillDetail> getAllBillDetail(Long userId) {
         return billDetailRepository.findAllBillDetailByUser(userId);
     }
 

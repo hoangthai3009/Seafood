@@ -16,9 +16,9 @@ import java.util.UUID;
 public interface IBillDetailRepository extends JpaRepository<BillDetail, BillDetailKey> {
     @Query("SELECT bd FROM BillDetail bd " +
             "JOIN Bill b ON b.id = bd.id.billId " +
-            "JOIN User u ON u.userId = b.user.userId " +
-            "WHERE u.userId = :userId")
-    List<BillDetail> findAllBillDetailByUser(@Param("userId") UUID userId);
+            "JOIN User u ON u.id = b.user.id " +
+            "WHERE u.id = :userId")
+    List<BillDetail> findAllBillDetailByUser(@Param("userId") Long userId);
 
     @Query("SELECT bd FROM BillDetail bd " +
             "WHERE bd.seafood.id = :productId AND bd.bill.id = :billId")

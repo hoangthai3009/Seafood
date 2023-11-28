@@ -1,4 +1,4 @@
-package ChuyenNganh.Seafood.Services;
+package ChuyenNganh.Seafood.Security.Services;
 
 import ChuyenNganh.Seafood.Entity.Category;
 import ChuyenNganh.Seafood.Repositories.ICategoryRepository;

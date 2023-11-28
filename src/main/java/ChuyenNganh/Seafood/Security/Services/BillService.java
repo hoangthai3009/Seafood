@@ -1,4 +1,4 @@
-package ChuyenNganh.Seafood.Services;
+package ChuyenNganh.Seafood.Security.Services;
 
 import ChuyenNganh.Seafood.Entity.Bill;
 import ChuyenNganh.Seafood.Entity.User;
@@ -24,7 +24,7 @@ public class BillService {
         return billRepository.findById(id).orElse(null);
     }
 
-    public Bill getBillByUserId(UUID userId) {
+    public Bill getBillByUserId(Long userId) {
         return billRepository.findBillByUser(userId);
     }
 

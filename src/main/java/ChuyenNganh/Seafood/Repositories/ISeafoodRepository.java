@@ -1,7 +1,9 @@
 package ChuyenNganh.Seafood.Repositories;
 
 import ChuyenNganh.Seafood.Entity.Seafood;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,5 +23,7 @@ public interface ISeafoodRepository extends PagingAndSortingRepository<Seafood, 
             OR s.origin LIKE %?1%
             OR s.category.name LIKE %?1%
             """)
-    List<Seafood> searchSeafood(String keyword);
+    Page<Seafood> searchSeafood(String keyword, Pageable pageable);
+
+    Page<Seafood> findByCategoryId(Long categoryId, Pageable pageable);
 }

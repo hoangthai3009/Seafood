@@ -14,8 +14,8 @@ import java.util.UUID;
 @Repository
 public interface IBillRepository extends JpaRepository<Bill, Long> {
     @Query("SELECT b FROM Bill b, User u " +
-            "WHERE b.user.userId = :userId")
-    Bill findBillByUser(@Param("userId") UUID userId);
+            "WHERE b.user.id = :userId")
+    Bill findBillByUser(@Param("userId") Long userId);
 
     @Query("SELECT MONTH(b.createdAt) AS month, SUM(b.totalPrice) AS total " +
             "FROM Bill b " +

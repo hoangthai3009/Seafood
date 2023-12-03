@@ -5,8 +5,9 @@ import ChuyenNganh.Seafood.Entity.Bill;
 import ChuyenNganh.Seafood.Entity.Seafood;
 import ChuyenNganh.Seafood.Mapper.BillMapper;
 import ChuyenNganh.Seafood.Security.Services.CategoryService;
+import ChuyenNganh.Seafood.Security.Services.IImageService;
+import ChuyenNganh.Seafood.Security.Services.RoleService;
 import ChuyenNganh.Seafood.Security.Services.SeafoodService;
-import ChuyenNganh.Seafood.Utils.FileUploadUlti;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -27,18 +27,19 @@ import java.util.stream.Collectors;
 
 
 @Controller
-@RequestMapping("/Admin")
+@RequestMapping("/admin")
 public class AdminController {
 
     @Autowired
     private ChuyenNganh.Seafood.Security.Services.BillService BillService;
     @Autowired
     private BillMapper BillMapper;
-    /*@Autowired
-    private RoleService roleService;
     @Autowired
-    private UserService userService;
-*/
+    IImageService imageService;
+    @Autowired
+    private RoleService roleService;
+/*    @Autowired
+    private UserService userService;*/
     private final SeafoodService seafoodService;
     private final CategoryService categoryService;
     Logger logger = LoggerFactory.getLogger(AdminController.class);
@@ -76,27 +77,22 @@ public class AdminController {
     public String saveSeafood(@ModelAttribute(name = "seafood") Seafood seafood,
                               RedirectAttributes ra,
                               @RequestParam("mainImage") MultipartFile mainMultipartFile,
-                              @RequestParam(value = "extraImage", required = false) MultipartFile[] extraMultipartFiles) throws IOException {
-        String mainImageName = StringUtils.cleanPath(mainMultipartFile.getOriginalFilename());
-        seafood.setMainImage(mainImageName);
+                              @RequestParam(value = "extraImage", required = false) MultipartFile[] extraMultipartFiles
+                              ) throws IOException {
+        String mainImage = imageService.save(mainMultipartFile);
+        seafood.setMainImage(mainImage);
 
         int count = 0;
         for(MultipartFile extraMultipart : extraMultipartFiles){
-            String extraImageName = StringUtils.cleanPath(extraMultipart.getOriginalFilename());
-            if(count == 0) seafood.setExtraImage1(extraImageName);
-            if(count == 1) seafood.setExtraImage2(extraImageName);
-            if(count == 2) seafood.setExtraImage3(extraImageName);
+            String extraImage = imageService.save(extraMultipart);
+            if(count == 0) seafood.setExtraImage1(extraImage);
+            if(count == 1) seafood.setExtraImage2(extraImage);
+            if(count == 2) seafood.setExtraImage3(extraImage);
             count ++;
+
         }
 
         Seafood saveSeafood = seafoodService.saveSeafood(seafood);
-        String uploadDir = "src/main/resources/static/img/seafoods/" + saveSeafood.getId();
-        FileUploadUlti.saveFile(uploadDir,mainMultipartFile,mainImageName);
-
-        for(MultipartFile extraMultipart : extraMultipartFiles){
-            String fileName = StringUtils.cleanPath(extraMultipart.getOriginalFilename());
-            FileUploadUlti.saveFile(uploadDir,extraMultipart,fileName);
-        }
 
         ra.addFlashAttribute("message","Seafood save successfully.");
         return "redirect:/Admin/seafoods";
@@ -112,76 +108,50 @@ public class AdminController {
             return "not-found";
         }
     }
-    @PostMapping("/edit-seafood/{id}")
-    public String updateSeafood(@PathVariable Long id,
-                                @ModelAttribute(name = "seafood") Seafood seafood,
+    @PostMapping("/edit-seafood")
+    public String updateSeafood(@ModelAttribute(name = "seafood") Seafood seafood,
                                 RedirectAttributes ra,
                                 @RequestParam(value = "mainImage", required = false) MultipartFile mainMultipartFile,
-                                @RequestParam(value = "extraImage",required = false) MultipartFile[] extraMultipartFiles) throws IOException {
-        Seafood existingSeafood = seafoodService.getSeafoodById(id);
-
-        // Check if seafood exists
-        if (existingSeafood == null) {
-            // Handle the case where the seafood with the given id is not found
-            // You can redirect to an error page or handle it as appropriate
-            return "redirect:/error";
+                                @RequestParam(value = "extraImage", required = false) MultipartFile[] extraMultipartFiles,
+                                boolean exist) throws IOException {
+        // Kiểm tra xem có hình chính mới không
+        if (!mainMultipartFile.isEmpty()) {
+            String mainImage = imageService.save(mainMultipartFile);
+            seafood.setMainImage(mainImage);
+        }else {
+            // Giữ nguyên giá trị ảnh chính hiện tại nếu không có cập nhật
+            Seafood currentSeafood = seafoodService.getSeafoodById(seafood.getId());
+            seafood.setMainImage(currentSeafood.getMainImage());
         }
 
-        existingSeafood.setName(seafood.getName());
-        // Set other attributes you want to update
-
-        String mainImageName = StringUtils.cleanPath(mainMultipartFile.getOriginalFilename());
-        existingSeafood.setMainImage(mainImageName);
-
+        // Kiểm tra và cập nhật hình phụ
         int count = 0;
         for (MultipartFile extraMultipart : extraMultipartFiles) {
-            String extraImageName = StringUtils.cleanPath(extraMultipart.getOriginalFilename());
-            if (count == 0) existingSeafood.setExtraImage1(extraImageName);
-            if (count == 1) existingSeafood.setExtraImage2(extraImageName);
-            if (count == 2) existingSeafood.setExtraImage3(extraImageName);
-            count++;
+            if (!extraMultipart.isEmpty()) {
+                String extraImage = imageService.save(extraMultipart);
+                // Cập nhật giá trị ảnh phụ tương ứng
+                if (count == 0) seafood.setExtraImage1(extraImage);
+                else if (count == 1) seafood.setExtraImage2(extraImage);
+                else if (count == 2) seafood.setExtraImage3(extraImage);
+                count++;
+            }
+            else{
+                // Giữ nguyên giá trị ảnh phụ hiện tại nếu không có cập nhật
+                Seafood currentSeafood = seafoodService.getSeafoodById(seafood.getId());
+                if (count == 0) seafood.setExtraImage1(currentSeafood.getExtraImage1());
+                else if (count == 1) seafood.setExtraImage2(currentSeafood.getExtraImage2());
+                else if (count == 2) seafood.setExtraImage3(currentSeafood.getExtraImage3());
+                count++;
+            }
         }
-
-        Seafood updatedSeafood = seafoodService.saveSeafood(existingSeafood);
-        String uploadDir = "src/main/resources/static/img/seafoods/" + updatedSeafood.getId();
-        FileUploadUlti.saveFile(uploadDir, mainMultipartFile, mainImageName);
-
-        for (MultipartFile extraMultipart : extraMultipartFiles) {
-            String fileName = StringUtils.cleanPath(extraMultipart.getOriginalFilename());
-            FileUploadUlti.saveFile(uploadDir, extraMultipart, fileName);
-        }
-
-        ra.addFlashAttribute("message", "Seafood updated successfully.");
+        // Lưu thông tin seafood cập nhật
+        seafoodService.saveSeafood(seafood);
+        ra.addFlashAttribute("message", "Seafood edited successfully.");
         return "redirect:/Admin/seafoods";
     }
-    /*@PostMapping("/edit-seafood")
-    public String editSeafood(@ModelAttribute(name = "seafood") Seafood seafood,
-                             RedirectAttributes ra,
-                             @RequestParam("fileImage")MultipartFile multipartFile
-    ) throws IOException {
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        seafood.setImage(fileName);
-        Seafood saveSeafood = seafoodService.saveSeafood(seafood);
 
-        String uploadDir = "src/main/resources/static/img/seafoods/";
-        Path uploadPath = Paths.get(uploadDir);
 
-        if(!Files.exists(uploadPath)){
-            Files.createDirectories(uploadPath);
-        }
 
-        try(InputStream inputStream = multipartFile.getInputStream()) {
-            Path filePath = uploadPath.resolve(fileName);
-            System.out.println(filePath.toFile().getAbsolutePath());
-            Files.copy(inputStream,filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e){
-            throw new IOException("Không thể lưu file tải lên: " + fileName);
-        }
-        ra.addFlashAttribute("message","Ảnh được lưu thành công.");
-
-        return "redirect:/Admin/seafoods";
-    }
-*/
     @GetMapping("/delete/{id}")
     public String deleteSeafood (@PathVariable("id") Long id) {
         Seafood seafood = seafoodService.getSeafoodById(id);

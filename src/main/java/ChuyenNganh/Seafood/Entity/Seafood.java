@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.format.annotation.DateTimeFormat;
-import ChuyenNganh.Seafood.Entity.Seafood;
+
 import java.util.Date;
 import java.util.Objects;
 

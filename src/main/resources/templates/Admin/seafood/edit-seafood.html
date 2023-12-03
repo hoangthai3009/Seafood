@@ -23,7 +23,7 @@
                         <button class="tab-button" onclick="openTab('tabHinhAnh')">Hình ảnh</button>
                     </div>
                     <hr>
-                    <form class="p-4" th:action="@{/Admin/edit-seafood}" th:object="${seafood}" method="post"
+                    <form class="p-4" th:action="@{/admin/edit-seafood}" th:object="${seafood}" method="post"
                           enctype="multipart/form-data">
                         <!-- Tổng quan Tab -->
                         <input type="hidden" th:field="*{id}">

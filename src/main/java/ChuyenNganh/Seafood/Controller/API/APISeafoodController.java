@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/seafoods")
 public class APISeafoodController {
@@ -29,6 +30,16 @@ public class APISeafoodController {
         return ResponseEntity.ok(seafoods);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Seafood> getSeafood(@PathVariable Long id) {
+        Seafood seafood = seafoodService.getSeafoodById(id);
+        if (seafood != null) {
+            return ResponseEntity.ok(seafood);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/search")
     public ResponseEntity<Page<Seafood>> searchSeafoods(@RequestParam String keyword, Pageable pageable) {
         Page<Seafood> matchingSeafoods = seafoodService.searchSeafood(keyword, pageable);
@@ -40,5 +51,7 @@ public class APISeafoodController {
         Page<Seafood> seafoodsByCategory = seafoodService.getSeafoodsByCategory(categoryId, pageable);
         return ResponseEntity.ok(seafoodsByCategory);
     }
+
+
 }
 

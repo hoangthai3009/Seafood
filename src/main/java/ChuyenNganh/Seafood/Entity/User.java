@@ -19,8 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 20)
+    @Size(max = 50)
     private String username;
 
     @NotBlank
@@ -32,13 +31,18 @@ public class User {
     @Size(max = 120)
     private String password;
 
-    @NotBlank
     @Size(max = 50)
     private String fullname;
 
-    @NotBlank
     @Pattern(regexp = "^[0-9]{10}$")
     private String phone;
+
+    private String token;
+
+    private boolean enabled;
+
+    @Column(name = "provider", length = 50)
+    private String provider;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",

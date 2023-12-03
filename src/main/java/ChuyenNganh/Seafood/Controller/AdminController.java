@@ -8,6 +8,7 @@ import ChuyenNganh.Seafood.Security.Services.CategoryService;
 import ChuyenNganh.Seafood.Security.Services.IImageService;
 import ChuyenNganh.Seafood.Security.Services.RoleService;
 import ChuyenNganh.Seafood.Security.Services.SeafoodService;
+import ChuyenNganh.Seafood.Utils.FileUploadUlti;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -38,35 +40,25 @@ public class AdminController {
     IImageService imageService;
     @Autowired
     private RoleService roleService;
-/*    @Autowired
-    private UserService userService;*/
-    private final SeafoodService seafoodService;
-    private final CategoryService categoryService;
-    Logger logger = LoggerFactory.getLogger(AdminController.class);
+    @Autowired
+    private SeafoodService seafoodService;
+    @Autowired
+    private CategoryService categoryService;
 
 
-    public AdminController(CategoryService categoryService, SeafoodService seafoodService) {
-        this.categoryService = categoryService;
-        this.seafoodService = seafoodService;
-    }
-
-    @GetMapping("/seafoods")
-    public String listSeafoods(@NotNull Model model,
-                               @RequestParam(defaultValue = "0") int pageNo,
-                               @RequestParam(defaultValue = "2") int pageSize,
-                               @RequestParam(defaultValue = "id") String sortBy) {
-        model.addAttribute("seafood", seafoodService.getAllSeafoods(pageNo, pageSize, sortBy));
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("currentSort", sortBy);
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("totalPages", seafoodService.countSeafood() / pageSize);
-        return "Admin/seafood/list-seafood";
-    }
 
     @GetMapping
     public String index() {
         return "Admin/index";
     }
+
+    @GetMapping("/seafoods")
+    public String getAllSeafoodsPage(Model model) {
+        List<Seafood> seafoods = seafoodService.getAllSeafoods();
+        model.addAttribute("seafoods", seafoods);
+        return "Admin/seafood/list-seafood";
+    }
+
     @GetMapping("/add-seafood")
     public String addSeafood(Model model) {
         model.addAttribute("seafood", new Seafood());
@@ -89,13 +81,12 @@ public class AdminController {
             if(count == 1) seafood.setExtraImage2(extraImage);
             if(count == 2) seafood.setExtraImage3(extraImage);
             count ++;
-
         }
 
         Seafood saveSeafood = seafoodService.saveSeafood(seafood);
 
         ra.addFlashAttribute("message","Seafood save successfully.");
-        return "redirect:/Admin/seafoods";
+        return "redirect:/admin/seafoods";
     }
     @GetMapping("/edit-seafood/{id}")
     public String editSeafood (@PathVariable("id") Long id, Model model) {
@@ -147,7 +138,7 @@ public class AdminController {
         // Lưu thông tin seafood cập nhật
         seafoodService.saveSeafood(seafood);
         ra.addFlashAttribute("message", "Seafood edited successfully.");
-        return "redirect:/Admin/seafoods";
+        return "redirect:/admin/seafoods";
     }
 
 
@@ -156,7 +147,7 @@ public class AdminController {
     public String deleteSeafood (@PathVariable("id") Long id) {
         Seafood seafood = seafoodService.getSeafoodById(id);
         seafoodService.deleteSeafood(id);
-        return "redirect:/Admin/seafoods";
+        return "redirect:/admin/seafoods";
     }
 
     @GetMapping("/bills")
@@ -247,7 +238,7 @@ public class AdminController {
         }
         logger.info("Tạo thành công Quyền có Id{}", role.getRoleId());
         roleService.saveRole(role);
-        return "redirect:/Admin/roles";
+        return "redirect:/admin/roles";
     }
 
 *//*    @GetMapping("/edit-role/{roleId}")
@@ -269,6 +260,6 @@ public class AdminController {
         }
         roleService.saveRole(role);
         logger.info("Sửa thành công role có Id {}", role.getRoleId());
-        return "redirect:/Admin/roles";
+        return "redirect:/admin/roles";
     }*/
 }

@@ -21,9 +21,6 @@ public class SeafoodService {
     public List<Seafood> getAllSeafoods() {
         return seafoodRepository.findAll();
     }
-    public List<Seafood> getAllSeafoods(Integer pageNo, Integer pageSize, String sortBy) {
-        return seafoodRepository.findAllSeafoods(pageNo, pageSize, sortBy);
-    }
     public Page<Seafood> getAllSeafoods(Pageable pageable) {
         return seafoodRepository.findAll(pageable);
     }
@@ -34,10 +31,6 @@ public class SeafoodService {
 
     public Page<Seafood> getSeafoodsByCategory(Long categoryId, Pageable pageable) {
         return seafoodRepository.findByCategoryId(categoryId, pageable);
-    }
-
-    public long countSeafood() {
-        return seafoodRepository.count();
     }
 
     public Seafood saveSeafood(Seafood seafood) {

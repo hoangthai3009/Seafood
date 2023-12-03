@@ -18,7 +18,7 @@
                         <h6 class="font-weight-bold text-primary">QUẢN LÝ SẢN PHẨM</h6>
                     </div>
                     <div class="card-body">
-                        <a class="btn btn-primary" th:href="@{/Admin/add-seafood}">Thêm sản phẩm</a>
+                        <a class="btn btn-primary" th:href="@{/admin/add-seafood}">Thêm sản phẩm</a>
 
                         <div class="mt-3 table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -38,7 +38,7 @@
                                 </thead>
 
                                 <tbody>
-                                <tr th:each="seafood: ${seafood}">
+                                <tr th:each="seafood: ${seafoods}">
                                     <td style="text-align: center;">
                                         <img th:src="@{${seafood.mainImage}}" th:width="100px" style="display: block; margin: 0 auto;"  alt=""/>
                                     </td>
@@ -51,9 +51,9 @@
                                     <td th:text="${#dates.format(seafood.manufacturing_date, 'dd-MM-yyyy')}"></td>
                                     <td th:text="${#dates.format(seafood.expiry_date, 'dd-MM-yyyy')}"></td>
                                     <td>
-                                        <a th:href="@{/Admin/edit-seafood/{id}(id=${seafood.id})}" class="mr-2">
+                                        <a th:href="@{/admin/edit-seafood/{id}(id=${seafood.id})}" class="mr-2">
                                             <i class="fa-regular fa-pen-to-square"></i></a>
-                                        <a th:href="@{/Admin/delete/{id}(id=${seafood.id})}"
+                                        <a th:href="@{/admin/delete/{id}(id=${seafood.id})}"
                                            onclick="return confirm('Xóa sản phẩm này?')"><i class="fas fa-times" style="color:red"></i></a>
                                     </td>
                                 </tr>

@@ -1,5 +1,6 @@
 package ChuyenNganh.Seafood.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -26,6 +27,7 @@ public class Category {
     @Size(max = 50, min = 1, message = "Tên không được vượt quá 50 kí tự")
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Seafood> seafoods = new ArrayList<>();
 

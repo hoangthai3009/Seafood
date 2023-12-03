@@ -7,15 +7,11 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.Hibernate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-import java.util.Objects;
 
-@Getter
-@Setter
-@ToString
+@Data
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -75,70 +71,4 @@ public class Seafood {
     @ValidCategoryId
     @ToString.Exclude
     private Category category;
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
-            return false;
-        Seafood seafood = (Seafood) o;
-        return getId() != null && Objects.equals(getId(), seafood.getId());
-    }
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-
-    @Transient
-    public String getMainImagePath(){
-        if(mainImage == null || id == null) return null;
-        return "/img/seafoods/" + id + "/" + mainImage;
-    }
-    @Transient
-    public String getExtraImagePath1(){
-        if(extraImage1 == null || id == null) return null;
-        return "/img/seafoods/" + id + "/" + extraImage1;
-    }
-    @Transient
-    public String getExtraImagePath2(){
-        if(extraImage2 == null || id == null) return null;
-        return "/img/seafoods/" + id + "/" + extraImage2;
-    }
-    @Transient
-    public String getExtraImagePath3(){
-        if(extraImage3 == null || id == null) return null;
-        return "/img/seafoods/" + id + "/" + extraImage3;
-    }
-
-    public String getMainImage() {
-        return mainImage;
-    }
-
-    public void setMainImage(String mainImage) {
-        this.mainImage = mainImage;
-    }
-    public String getExtraImage1() {
-        return extraImage1;
-    }
-
-    public void setExtraImage1(String extraImage1) {
-        this.extraImage1 = extraImage1;
-    }
-
-    public String getExtraImage2() {
-        return extraImage2;
-    }
-
-    public void setExtraImage2(String extraImage2) {
-        this.extraImage2 = extraImage2;
-    }
-
-    public String getExtraImage3() {
-        return extraImage3;
-    }
-
-    public void setExtraImage3(String extraImage3) {
-        this.extraImage3 = extraImage3;
-    }
 }

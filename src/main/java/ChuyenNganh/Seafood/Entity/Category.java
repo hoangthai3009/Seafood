@@ -8,9 +8,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import java.util.*;
 
-@Getter
-@Setter
-@ToString
+@Data
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -30,5 +28,4 @@ public class Category {
     @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Seafood> seafoods = new ArrayList<>();
-
 }

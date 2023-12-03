@@ -33,7 +33,7 @@ public class SeafoodController {
         model.addAttribute("currentSort", sortBy);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("totalPages", seafoodService.countSeafood() / pageSize);
-        return "seafood/list";
+        return "Seafood/list";
     }
 
     /*@GetMapping("/{seafoodId}")

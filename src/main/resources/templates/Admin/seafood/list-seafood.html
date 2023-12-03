@@ -40,7 +40,7 @@
                                 <tbody>
                                 <tr th:each="seafood: ${seafood}">
                                     <td style="text-align: center;">
-                                        <img th:src="@{${seafood.mainImagePath}}" th:width="100px" style="display: block; margin: 0 auto;"  alt=""/>
+                                        <img th:src="@{${seafood.mainImage}}" th:width="100px" style="display: block; margin: 0 auto;"  alt=""/>
                                     </td>
                                     <td th:text="${seafood.name}"></td>
                                     <td th:text="${seafood.category.name}"></td>

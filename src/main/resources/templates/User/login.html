@@ -7,111 +7,85 @@
   <title>Login</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <style>
-    body {
-      background-color: #f8f9fa;
-      font-family: 'Arial', sans-serif;
-    }
-
-    .container {
-      max-width: 400px;
-      margin: 100px auto;
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-      text-align: center;
-      color: #007bff;
-    }
-
-    label {
-      margin-top: 10px;
-    }
-
-    #error {
-      color: red;
-      margin-top: 10px;
-    }
-
-    button {
-      margin-top: 20px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 3px;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    p {
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    a {
-      color: #007bff;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/signin-up.css}">
 </head>
 <body>
-<div class="container">
-  <h2>Login</h2>
-  <form id="loginForm">
-    <div class="form-group">
-      <label for="usernameOrEmail">Username or Email:</label>
-      <input type="text" id="usernameOrEmail" name="usernameOrEmail" class="form-control" required>
+<div class="wrapper">
+  <div class="title-text">
+    <div class="title login">Xin chào</div>
+    <div class="title signup">Chào mừng</div>
+  </div>
+  <div class="form-container">
+    <div class="slide-controls">
+      <input type="radio" name="slide" id="login" checked>
+      <input type="radio" name="slide" id="signup">
+      <label for="login" class="slide login">Đăng nhập</label>
+      <label for="signup" class="slide signup">Đăng ký</label>
+      <div class="slider-tab"></div>
     </div>
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" class="form-control" required>
+    <div class="form-inner">
+      <form action="#" class="login">
+        <div class="field">
+          <input type="text" id="usernameOrEmail" placeholder="Tên tài khoản hoặc Email" required="">
+        </div>
+        <div class="field">
+          <input type="password" id="login-password" placeholder="Mật khẩu" required="">
+        </div>
+        <div class="pass-link"><a href="#">Quên mật khẩu?</a></div>
+        <div class="field btn">
+          <div class="btn-layer"></div>
+          <input type="button" onclick="login()" value="Đăng nhập">
+        </div>
+        <div class="signup-link">Chưa là thành viên? <a href="">Đăng ký ngay</a></div>
+      </form>
+
+      <form action="#" class="signup">
+        <div class="field">
+          <input type="text" id="fullname" placeholder="Họ và tên" required>
+        </div>
+        <div class="field">
+          <input type="text" id="username" placeholder="Tên tài khoản" required>
+        </div>
+        <div class="field">
+          <input type="text" id="email" placeholder="Địa chỉ email" required>
+        </div>
+        <div class="field">
+          <input type="text" id="phone" placeholder="Số điện thoại" required>
+        </div>
+        <div class="field">
+          <input type="password" id="password" placeholder="Mật khẩu" required>
+        </div>
+        <div class="field">
+          <input type="password" id="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+        </div>
+        <div id="passwordMatchError" style="color: red; display: none;">Mật khẩu không khớp!</div>
+        <div class="field btn">
+          <div class="btn-layer"></div>
+          <input type="button" onclick="validatePassword()" value="Đăng ký">
+        </div>
+      </form>
     </div>
-    <button type="button" onclick="login()" class="btn btn-primary">Login</button>
-    <div id="error"></div>
-    <p>Don't have an account? <a href="/register">Sign Up</a></p>
-  </form>
+  </div>
 </div>
-
+<script th:src="@{/js/login-register.js}" ></script>
 <script>
-  function login() {
-    var usernameOrEmail = document.getElementById("usernameOrEmail").value;
-    var password = document.getElementById("password").value;
-
-    var loginData = {
-      usernameOrEmail: usernameOrEmail,
-      password: password
-    };
-
-    fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(loginData),
-    })
-            .then(response => {
-              if (response.ok) {
-                window.location.href = '/';
-              } else {
-                document.getElementById("error").innerText = "Sai thông tin đăng nhập";
-              }
-            })
-            .catch((error) => {
-              console.error('Error:', error);
-            });
-  }
+  const loginText = document.querySelector(".title-text .login");
+  const loginForm = document.querySelector("form.login");
+  const loginBtn = document.querySelector("label.login");
+  const signupBtn = document.querySelector("label.signup");
+  const signupLink = document.querySelector("form .signup-link a");
+  signupBtn.onclick = (()=>{
+    loginForm.style.marginLeft = "-50%";
+    loginText.style.marginLeft = "-50%";
+  });
+  loginBtn.onclick = (()=>{
+    loginForm.style.marginLeft = "0%";
+    loginText.style.marginLeft = "0%";
+  });
+  signupLink.onclick = (()=>{
+    signupBtn.click();
+    return false;
+  });
 </script>
 </body>
 </html>

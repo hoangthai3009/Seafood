@@ -1,10 +1,11 @@
+<!--
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seafood API Viewer</title>
-    <!-- Thêm Bootstrap CSS -->
+    &lt;!&ndash; Thêm Bootstrap CSS &ndash;&gt;
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -17,7 +18,7 @@
     <h1 class="my-4">Seafood List</h1>
     <ul id="seafoodList" class="list-group mb-4"></ul>
 
-    <!-- Phân trang sử dụng Bootstrap -->
+    &lt;!&ndash; Phân trang sử dụng Bootstrap &ndash;&gt;
     <nav>
         <ul class="pagination" id="pagination"></ul>
     </nav>
@@ -74,9 +75,181 @@
     fetchData();
 </script>
 
-<!-- Thêm Bootstrap JavaScript và Popper.js -->
+&lt;!&ndash; Thêm Bootstrap JavaScript và Popper.js &ndash;&gt;
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+-->
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Ogani Template">
+    <meta name="keywords" content="Ogani, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ogani | Template</title>
+    <th:block th:replace="layout :: link-css"></th:block>
+</head>
+<th:block th:replace="layout :: header"></th:block>
+<body>
+<!-- Hero Section Begin -->
+<section class="hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="hero__categories">
+                    <div class="hero__categories__all">
+                        <i class="fas fa-bars"></i>
+                        <span>Danh mục</span>
+                    </div>
+                    <ul>
+                        <li><a href="#">Fresh Meat</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="hero__search">
+                    <div class="hero__search__form">
+                        <form action="/search" th:method="GET">
+                            <div class="hero__search__categories">
+                                Danh mục
+                                <span class="arrow_carrot-down"></span>
+                            </div>
+                            <input type="text" placeholder="Bạn cần tìm kiếm gì ?">
+                            <button type="submit" class="site-btn">Tìm kiếm</button>
+                        </form>
+                    </div>
+                    <div class="hero__search__phone">
+                        <div class="hero__search__phone__icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="hero__search__phone__text">
+                            <h5>+65 11.188.888</h5>
+                            <span>support 24/7 time</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero__item set-bg" data-setbg="img/banner/banner-hero.jpg">
+                    <div class="hero__text">
+                        <span>Hải sản tươi sống</span>
+                        <h2>Chất lượng <br />100% độ uy tín</h2>
+                        <p>Còn ngại gì mà không mua sắm ngay nào</p>
+                        <a href="#" class="primary-btn">Mua ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hero Section End -->
+
+<!-- Categories Section Begin -->
+<section class="categories">
+    <div class="container">
+        <div class="row">
+            <div class="categories__slider owl-carousel" th:each="category : ${category}">
+                <div class="col-lg-3">
+                    <div class="categories__item set-bg" data-setbg="image-category">
+                        <h5><a href="#" th:text="${category.name}"></a></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Categories Section End -->
+
+<!-- Featured Section Begin -->
+<div class="featured spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <h2>Mặt hàng mới</h2>
+                </div>
+                <div class="featured__controls">
+                    <ul>
+                        <li class="active" data-filter="*">Tất cả</li>
+                        <li data-filter="1">Cá</li>
+                        <li data-filter="2">Mực</li>
+                        <li data-filter="3">Tôm</li>
+                        <li data-filter="4">Cua/Ghẹ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row featured__filter" id="seafoodList">
+<!--            gọi api hiển thị seafoods-->
+        </div>
+    </div>
+
+</div>
+<!-- Featured Section End -->
+<!-- Banner Begin -->
+<div class="banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="banner__pic">
+                    <img src="img/banner/banner-1.jpg" alt="">
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="banner__pic">
+                    <img src="img/banner/banner-2.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Banner End -->
+<!-- Js Plugins -->
+<th:block th:replace="layout :: footer"></th:block>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const seafoodList = document.getElementById('seafoodList');
+
+        function displaySeafood(seafood) {
+            const column = document.createElement('div');
+            column.className = 'col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat';
+            column.innerHTML = `
+            <div class="featured__item" data-filter="${seafood.category}">
+                <div class="featured__item__pic ">
+                <img src="${seafood.mainImage}" alt="Seafood Image">
+                    <ul class="featured__item__pic__hover">
+                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
+                        <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                    </ul>
+                </div>
+                <div class="featured__item__text">
+                    <h6><a href="#" title="${seafood.name}">${seafood.name}</a></h6>
+                    <h5>${seafood.price + ' VNĐ'}</h5>
+                </div>
+            </div>`;
+
+            seafoodList.appendChild(column);
+        }
+
+        // Sử dụng Fetch API để gọi API
+        function fetchData() {
+            fetch('http://localhost:8080/api/seafoods')
+                .then(response => response.json())
+                .then(data => {
+                    data.content.forEach(seafood => {
+                        displaySeafood(seafood);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        fetchData();
+    });
+</script>
+</body>
+</html>
+

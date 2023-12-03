@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "seafood-406512",
+  "private_key_id": "01bc36c090eafd0159d216aa06eee442d6d1cd1f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDPaHTON2TU15QE\nY6C5Of5UynARqTPEpZx7WiR9GxO2CCjZZGXN3yEnHFJjcNom0SgiArnTR6NdsLfX\nTTIXMu57i/hvMQSY8CotzN124blceOsAsHXUxuEkcVmna++iSUWevphRryaIT9IQ\n9/J1EzHbxNdraXv3z2kAs2459y0sWX/vhpg5qo+d5SVaVB6fO1EGq+NRaVB1HLPH\nx1wRkgi4WlG29Gjv2nPISOAzm+6ECfbiwa2cGu0uMi3wL4lYcKcssVDL/jiGzeYZ\nI21kconSMZ9Za5wU4+lQvJSoA2URBIJ4VxQ9y1cNr9jrehrc8BzbuylsqfXOwezB\nL4V2r9JFAgMBAAECggEAGVM5mfl5EiUdkXihxiQu6icKzplAtTT8mbI8zNraygoO\nhNbluGDToT0r0TEVLhKxag+3pXT0nWrH09387Qi+xm6ln9wWId+HYu7GJu8ybThl\nh4DEbn33PTYq+o6rJL96JQNEQYsXsyK99Wz1GbcFij5riFXJuY1FlrySC7li9mxh\n87w84vzbdtqknFqC8svsEuYSScfRpCtP0fXkmCbF2A+ZppZsFcpA0u4KtU0l3e8z\nnPnWWxn8qly73+WqfM334Y90+G1lSCHLMr0/KAagYdYbcwlONu6pdcE4/L+EaoyQ\nQtx9OnnSpMLBZ8V6K2zsyiYqDfQclIJ9qPVmRP8oQQKBgQDpzn6dyJxolbnfOflv\n3nsLCR6Br0oLe3UjjZJ4B8Ae683buctrbX++4m/oEslkK807TchqtEvZg13ioUtx\nHUXMMJ6YayctfwWpSgE9fLU8PrHPzdPE1pf3XfL+F5+u6Gjwi+gCDy09VZdQ+GFB\nNiVhnuRc8Ok6KXLLJvec/FWGQQKBgQDjGHm59N/Y1tHJyRQwVKRA4KrxbfkvyBP3\nGgpz9Nqnq8J6mwiLvg4BKqHqk7kDosxOjQiTDYwcchak2MdnBJWMJmDfjhJS35Er\nowswXk4Y5WupypNEG+8steUNe8d2VZ6jpBgd2hiAkUk1Qo74ir2j480z9FyTeiam\nMuCnQnVzBQKBgQDgnPAmxML99llKineHcUTjpS8ZhzyrKz+tmCROC6QWEJMDs8oo\nulkvGHpJiULQaQQRJPiVCgCURg+72RiQ4n5bW5oA82//1TerGt12JIg4CELqT+JS\nB5aWnjsCv884SS4HaWDKGapscf2cXAGSlGH1FqBsaUSmC4usfxMCTagcAQKBgQDI\nYfxm3W/3gfYzOz6ZNtaIeLXdutA6HS2gyFWY4+FcOe6tCMeNpvHsjZW5ywdh8fCd\nD00VlMqg/vqEEtRAToc211Z7bH02qxcJjiB9WXlH9of9lkZDvvJYXVfzgdkKzZnh\ngxXUoXElYQ1b9ZL6NFIJnySeR2y4pPwdgp9Adx/zkQKBgQDfubfa40ZTygFD6csB\nVYD7tfebpydaOu9KZlqpG6s3vvn4twy3fIkGhN6u8yn4bjTcHywU2waOyVPyuLHh\nfBCWV4x7sYcLCNEL6Kqj2FWjLxd/E5CI2H8XctQls55/B/HeZFn4FXDoyavmmPD8\nSitLylC2dPpKYwIZZ/8rQeMIww==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-qticy@seafood-406512.iam.gserviceaccount.com",
+  "client_id": "107469565986595629166",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-qticy%40seafood-406512.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <th:block th:replace="layout-admin :: link-css"></th:block>
-    <title>Thêm sản phẩm</title>
+    <title>Chỉnh Sửa sản phẩm</title>
     <link th:fragment="link-css" th:href="@{/css/seafood-admin.css}" rel="stylesheet" type="text/css">
 </head>
 <body id="page-top">
@@ -26,6 +26,7 @@
                     <form class="p-4" th:action="@{/Admin/edit-seafood}" th:object="${seafood}" method="post"
                           enctype="multipart/form-data">
                         <!-- Tổng quan Tab -->
+                        <input type="hidden" th:field="*{id}">
                         <div class="tab active-tab" id="tabChiTiet">
                             <div class="form-group">
                                 <label class="d-flex justify-content-center" for="name">Tên Sản Phẩm:</label>
@@ -101,15 +102,15 @@
                                     <div class="col">
                                         <label>Chọn hình ảnh chính</label>
                                         <p>
-                                            <img alt="" class="altPreview mb-3" id="thumbnail"  th:src="@{${seafood.mainImagePath}}"/>
+                                            <img alt="" class="altPreview mb-3" id="thumbnail"  th:src="@{${seafood.mainImage}}"/>
                                             <input type="file" name="mainImage" id="mainImage"
-                                                   title="Chọn hình ảnh chính cho sản phẩm" accept="image/*" required>
+                                                   title="Chọn hình ảnh chính cho sản phẩm" accept="image/*">
                                         </p>
                                     </div>
                                     <div class="col">
                                         <label>Chọn hình ảnh phụ 1</label>
                                         <p>
-                                            <img alt="" class="altPreview mb-3" id="thumbnail0" th:src="@{${seafood.extraImagePath1}}"/>
+                                            <img alt="" class="altPreview mb-3" id="thumbnail0" th:src="@{${seafood.extraImage1}}"/>
                                             <input type="file" name="extraImage"
                                                    title="Chọn hình ảnh phụ 1 cho sản phẩm" accept="image/*">
                                         </p>
@@ -117,7 +118,7 @@
                                     <div class="col">
                                         <label>Chọn hình ảnh phụ 2</label>
                                         <p>
-                                            <img alt="" class="altPreview mb-3" id="thumbnail1" th:src="@{${seafood.extraImagePath2}}"/>
+                                            <img alt="" class="altPreview mb-3" id="thumbnail1" th:src="@{${seafood.extraImage2}}"/>
                                             <input type="file" name="extraImage"
                                                    title="Chọn hình ảnh phụ 2 cho sản phẩm" accept="image/*">
                                         </p>
@@ -125,7 +126,7 @@
                                     <div class="col">
                                         <label>Chọn hình ảnh phụ 3</label>
                                         <p>
-                                            <img alt="" class="altPreview mb-3" id="thumbnail2" th:src="@{${seafood.extraImagePath3}}"/>
+                                            <img alt="" class="altPreview mb-3" id="thumbnail2" th:src="@{${seafood.extraImage3}}"/>
                                             <input type="file" name="extraImage"
                                                    title="Chọn hình ảnh phụ 3 cho sản phẩm" accept="image/*">
                                         </p>

@@ -1,62 +1,244 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="zxx">
+
 <head>
     <meta charset="UTF-8">
-    <title>Ứng Dụng Của Tôi</title>
-    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script th:src="@{/js/bootstrap.min.js}"></script>
-    <style>
-        .navbar {
-            margin-bottom: 20px;
-        }
-
-        #loginButton, #logoutButton {
-            margin-right: 10px;
-        }
-
-        #loginButton[style="display: none;"],
-        #logoutButton[style="display: none;"] {
-            display: block;
-        }
-    </style>
+    <meta name="description" content="Ogani Template">
+    <meta name="keywords" content="Ogani, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hải Sản - Website</title>
 </head>
+<header>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-...." crossorigin="anonymous" />
+
+    <!-- Css Styles -->
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/bootstrap.min.css}" type="text/css">
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/font-awesome.min.css}" type="text/css">
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/elegant-icons.css}" type="text/css">
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/nice-select.css}" type="text/css">
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/jquery-ui.min.css}" type="text/css">
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/owl.carousel.min.css}" type="text/css">
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/slicknav.min.css}" type="text/css">
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/style.css}" type="text/css">
+</header>
 <body>
-<header th:fragment="header">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand order-1" href="#">Thị Trường Hải Sản</a>
-        <button class="navbar-toggler order-2" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse order-3" id="navbarNav">
-            <form class="form-inline mx-auto search-bar">
-                <input class="form-control mr-sm-2" type="search" placeholder="Tìm kiếm" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm kiếm</button>
-            </form>
-            <div id="loginButton" style="display: none;">
-                <a class="btn btn-outline-primary" href="/login">Đăng Nhập</a>
-            </div>
-            <div id="logoutButton" style="display: none;">
-                <button class="btn btn-outline-primary" onclick="signoutUser()">Đăng Xuất</button>
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+<!-- Header Section Begin -->
+<header class="header">
+    <div class="header__top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="header__top__left">
+                        <ul>
+                            <li><i class="fas fa-envelope"></i> hello@colorlib.com</li>
+                            <li>Free Shipping for all Order of $99</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="header__top__right">
+
+                        <div class="header__top__right__auth" id="loginButton">
+                            <a href="/login"><i class="fas fa-user"></i>Đăng Nhập</a>
+                        </div>
+                        <div class="header__top__right__auth ml-4">
+                            <li class="nav-item dropdown no-arrow" id="userDropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small text-uppercase" id="userName"></span>
+                                    <i class="fa-solid fa-circle-user"></i>
+                                </a>
+                                <div id="logoutButton" class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="userDropdown">
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Profile
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Settings
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Activity Log
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <form method="POST" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">
+                                        <button class="btn btn-sm btn-outline-danger" onclick="signoutUser()">
+                                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Đăng Xuất
+                                        </button>
+                                    </form>
+                                </div>
+                            </li>
+
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-    </nav>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="header__logo">
+                    <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <nav class="header__menu">
+                    <ul>
+                        <li class="active"><a href="./index.html">Trang chủ</a></li>
+                        <li><a href="./shop-grid.html">Sản phẩm</a></li>
+                        <li><a href="#">Pages</a>
+                            <ul class="header__menu__dropdown">
+                                <li><a href="./shop-details.html">Khuyến mãi</a></li>
+                                <li><a href="./shoping-cart.html">Shoping Cart</a></li>
+                                <li><a href="./checkout.html">Check Out</a></li>
+                                <li><a href="./blog-details.html">Blog Details</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="./blog.html">Khuyến mãi</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-lg-3">
+                <div class="header__cart">
+                    <ul>
+                        <li><a href="#"><i class="fas fa-heart"></i> <span>1</span></a></li>
+                        <li><a href="#"><i class="fas fa-shopping-bag"></i> <span>3</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header Section End -->
+<div th:insert="~{::${content}}">
+    <!-- NỘI DUNG TRANG CON -->
+</div>
+<!-- Footer Section Begin -->
+<footer class="footer spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="footer__about">
+                    <div class="footer__about__logo">
+                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                    </div>
+                    <ul>
+                        <li>Address: 60-49 Road 11378 New York</li>
+                        <li>Phone: +65 11.188.888</li>
+                        <li>Email: hello@colorlib.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
+                <div class="footer__widget">
+                    <h6>Useful Links</h6>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">About Our Shop</a></li>
+                        <li><a href="#">Secure Shopping</a></li>
+                        <li><a href="#">Delivery infomation</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Our Sitemap</a></li>
+                    </ul>
+                    <ul>
+                        <li><a href="#">Who We Are</a></li>
+                        <li><a href="#">Our Services</a></li>
+                        <li><a href="#">Projects</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Innovation</a></li>
+                        <li><a href="#">Testimonials</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="footer__widget">
+                    <h6>Join Our Newsletter Now</h6>
+                    <p>Get E-mail updates about our latest shop and special offers.</p>
+                    <form action="#">
+                        <input type="text" placeholder="Enter your mail">
+                        <button type="submit" class="site-btn">Subscribe</button>
+                    </form>
+                    <div class="footer__widget__social">
+                        <a href="#"><i class="fas fa-facebook"></i></a>
+                        <a href="#"><i class="fas fa-instagram"></i></a>
+                        <a href="#"><i class="fas fa-twitter"></i></a>
+                        <a href="#"><i class="fas fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="footer__copyright">
+                    <div class="footer__copyright__text"><p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fas fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p></div>
+                    <div class="footer__copyright__payment"><img src="img/payment-item.png" alt=""></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+<!-- Footer Section End -->
+
+<!-- Js Plugins -->
+<script th:src="@{/js/jquery-3.7.0.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.nice-select.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/jquery.slicknav.js}"></script>
+<script th:src="@{/js/mixitup.min.js}"></script>
+<script th:src="@{/js/owl.carousel.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <!-- Core plugin JavaScript-->
+    <script th:src="@{/vendor/jquery/jquery.easing.min.js}"></script>
+    <!-- Custom scripts for all pages-->
+    <script th:src="@{/js/sb-admin-2.min.js}"></script>
+    <script th:src="@{/js/admin-js.js/}"></script>
     <script>
+        // Kiểm tra trạng thái đăng nhập khi trang được tải
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
 
-        fetch('/api/auth/check-login')
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('logoutButton').style.display = 'block';
-                } else {
-                    document.getElementById('loginButton').style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Error checking signin status:', error);
-            });
+        // Hàm kiểm tra trạng thái đăng nhập
+        function checkLoginStatus() {
+            fetch('/api/auth/check-login')
+                .then(response => {
+                    if (response.ok) {
+                        // Đã đăng nhập, ẩn nút đăng nhập và hiện dropdown
+                        document.getElementById('loginButton').style.display = 'none';
+                        document.getElementById('userDropdown').style.display = 'block';
 
+                        // Lấy thông tin người dùng và hiển thị tên người dùng
+                        /*fetch('/user-info')
+                            .then(response => response.json())
+                            .then(data => {
+                                document.getElementById('userName').innerText = data.username;
+                            });*/
+                    } else {
+                        // Chưa đăng nhập, ẩn dropdown và hiện nút đăng nhập
+                        document.getElementById('loginButton').style.display = 'block';
+                        document.getElementById('userDropdown').style.display = 'none';
+                    }
+                });
+        }
+
+        // Hàm đăng xuất
         function signoutUser() {
             fetch('/api/auth/logout', {
                 method: 'POST',
@@ -69,13 +251,9 @@
                     alert('Đăng xuất thất bại. Vui lòng thử lại.');
                 });
         }
+
     </script>
-</header>
-<div class="container mt-4">
-    <div th:insert="~{::${content}}"></div>
-</div>
-<footer th:fragment="footer">
-    <script th:src="@{/js/bootstrap.min.js}"></script>
+
 </footer>
 </body>
 </html>

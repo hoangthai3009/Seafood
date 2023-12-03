@@ -150,14 +150,13 @@
 
         <div class="topbar-divider d-none d-sm-block"></div>
 
-        <li class="nav-item dropdown no-arrow" sec:authorize="isAuthenticated()">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+        <li class="nav-item dropdown no-arrow" id="userDropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small text-uppercase" th:text="${#authentication.name}"></span>
-                <img class="img-profile rounded-circle"
-                     src="/img/undraw_profile.svg">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small text-uppercase" id="userName"></span>
+                <i class="fa-solid fa-circle-user"></i>
             </a>
-            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+            <div id="logoutButton" class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                  aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="#">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -172,18 +171,19 @@
                     Activity Log
                 </a>
                 <div class="dropdown-divider"></div>
-                <form th:action="@{/logout}" method="POST" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">
-                    <button class="btn btn-sm btn-outline-danger" type="submit">
+                <form method="POST" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">
+                    <button class="btn btn-sm btn-outline-danger" onclick="signoutUser()">
                         <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Logout
+                        Đăng Xuất
                     </button>
                 </form>
             </div>
         </li>
-        <li class="nav-item dropdown no-arrow" sec:authorize="!isAuthenticated()">
-            <a th:href="@{/login}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+
+        <li class="nav-item dropdown no-arrow" id="loginButton">
+            <a href="/login" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                 <i class="fas fa-right-to-bracket"></i>
-                Login
+                Đăng Nhập
             </a>
         </li>
     </ul>
@@ -209,6 +209,50 @@
     <!-- Custom scripts for all pages-->
     <script th:src="@{/js/sb-admin-2.min.js}"></script>
     <script th:src="@{/js/admin-js.js/}"></script>
+    <script>
+        // Kiểm tra trạng thái đăng nhập khi trang được tải
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
+
+        // Hàm kiểm tra trạng thái đăng nhập
+        function checkLoginStatus() {
+            fetch('/api/auth/check-login')
+                .then(response => {
+                    if (response.ok) {
+                        // Đã đăng nhập, ẩn nút đăng nhập và hiện dropdown
+                        document.getElementById('loginButton').style.display = 'none';
+                        document.getElementById('userDropdown').style.display = 'block';
+
+                        // Lấy thông tin người dùng và hiển thị tên người dùng
+                        /*fetch('/user-info')
+                            .then(response => response.json())
+                            .then(data => {
+                                document.getElementById('userName').innerText = data.username;
+                            });*/
+                    } else {
+                        // Chưa đăng nhập, ẩn dropdown và hiện nút đăng nhập
+                        document.getElementById('loginButton').style.display = 'block';
+                        document.getElementById('userDropdown').style.display = 'none';
+                    }
+                });
+        }
+
+        // Hàm đăng xuất
+        function signoutUser() {
+            fetch('/api/auth/logout', {
+                method: 'POST',
+            })
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Đăng xuất lỗi:', error);
+                    alert('Đăng xuất thất bại. Vui lòng thử lại.');
+                });
+        }
+
+    </script>
 </footer>
 <!-- End footer -->
 </body>

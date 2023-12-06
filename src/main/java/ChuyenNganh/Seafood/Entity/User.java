@@ -41,8 +41,8 @@ public class User {
 
     private boolean enabled;
 
-    @Column(name = "provider", length = 50)
-    private String provider;
+    @Enumerated(EnumType.STRING)
+    private EProvider provider;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",

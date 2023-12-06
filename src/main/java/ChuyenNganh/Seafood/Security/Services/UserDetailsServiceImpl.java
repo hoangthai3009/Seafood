@@ -1,6 +1,6 @@
 package ChuyenNganh.Seafood.Security.Services;
 
-import ChuyenNganh.Seafood.Constants.Provider;
+import ChuyenNganh.Seafood.Entity.EProvider;
 import ChuyenNganh.Seafood.Entity.ERole;
 import ChuyenNganh.Seafood.Entity.Role;
 import ChuyenNganh.Seafood.Entity.User;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.relation.RoleNotFoundException;
+import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -33,18 +34,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return UserDetailsImpl.build(user);
     }
 
-    public void saveOauthUser(String email, @NotNull String username) throws RoleNotFoundException {
-        if(userRepository.findByUsername(username).isPresent())
-            return;
-        var user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(new BCryptPasswordEncoder().encode(username));
-        user.setProvider(Provider.GOOGLE.value);
-        Role role = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RoleNotFoundException("Role is not found."));
-        user.getRoles().add(role);
-        userRepository.save(user);
-    }
+    public void processOAuthPostLogin(String username) {
+        Optional<User> existUser = userRepository.findByUsername(username);
 
+        if (existUser == null) {
+            User newUser = new User();
+            newUser.setUsername(username);
+            newUser.setProvider(EProvider.GOOGLE);
+            newUser.setEnabled(true);
+
+            userRepository.save(newUser);
+        }
+    }
 }

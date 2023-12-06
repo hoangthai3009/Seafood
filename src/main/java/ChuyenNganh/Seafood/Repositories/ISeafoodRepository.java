@@ -23,5 +23,9 @@ public interface ISeafoodRepository extends PagingAndSortingRepository<Seafood, 
             """)
     Page<Seafood> searchSeafood(String keyword, Pageable pageable);
 
+
+    @Query("SELECT s FROM Seafood s LEFT JOIN FETCH s.category")
+    Page<Seafood> findAllSeafoods(Pageable pageable);
+
     Page<Seafood> findByCategoryId(Long categoryId, Pageable pageable);
 }

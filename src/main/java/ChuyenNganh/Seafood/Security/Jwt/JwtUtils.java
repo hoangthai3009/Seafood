@@ -3,6 +3,7 @@ package ChuyenNganh.Seafood.Security.Jwt;
 import java.security.Key;
 import java.util.Date;
 
+import ChuyenNganh.Seafood.Security.Services.CustomOAuth2User;
 import ChuyenNganh.Seafood.Security.Services.UserDetailsImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,6 +43,12 @@ public class JwtUtils {
 
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).build();
+        return cookie;
+    }
+
+    public ResponseCookie generateJwtCookieGoogle(CustomOAuth2User customOAuth2User) {
+        String jwt = generateTokenFromUsername(customOAuth2User.getEmail());
         ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).build();
         return cookie;
     }

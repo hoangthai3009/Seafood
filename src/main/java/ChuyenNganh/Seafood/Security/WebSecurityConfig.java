@@ -2,11 +2,19 @@ package ChuyenNganh.Seafood.Security;
 
 import ChuyenNganh.Seafood.Security.Jwt.AuthEntryPointJwt;
 import ChuyenNganh.Seafood.Security.Jwt.AuthTokenFilter;
-import ChuyenNganh.Seafood.Security.Services.OAuthService;
+import ChuyenNganh.Seafood.Security.Jwt.JwtUtils;
+import ChuyenNganh.Seafood.Security.Services.CustomOAuth2User;
+import ChuyenNganh.Seafood.Security.Services.CustomOAuth2UserService;
+import ChuyenNganh.Seafood.Security.Services.UserDetailsImpl;
 import ChuyenNganh.Seafood.Security.Services.UserDetailsServiceImpl;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -14,13 +22,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.management.relation.RoleNotFoundException;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -33,7 +43,10 @@ public class WebSecurityConfig {
     private AuthEntryPointJwt unauthorizedHandler;
 
     @Autowired
-    private OAuthService oAuthService;
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private CustomOAuth2UserService oauthUserService;
 
 
     @Bean
@@ -70,23 +83,25 @@ public class WebSecurityConfig {
                         auth.requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated()
-                ).oauth2Login(
-                        oauth2Login -> oauth2Login
-                                .loginPage("/login")
-                                .failureUrl("/login?error")
-                                .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(oAuthService))
-                                .successHandler(
-                                        (request, response, authentication) -> {
-                                            var oidcUser = (DefaultOidcUser) authentication.getPrincipal();
-                                            try {
-                                                userDetailsService.saveOauthUser(oidcUser.getEmail(), oidcUser.getName());
-                                            } catch (RoleNotFoundException e) {
-                                                throw new RuntimeException(e);
-                                            }
-                                            response.sendRedirect("/");
-                                        }
-                                )
-                                .permitAll());
+                ).oauth2Login(oauth -> oauth.loginPage("/login").userInfoEndpoint(
+                        user -> user.userService(oauthUserService)
+                ).successHandler(new AuthenticationSuccessHandler() {
+
+                    @Override
+                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                                        Authentication authentication) throws IOException {
+
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                        CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+                        ResponseCookie jwtCookie = jwtUtils.generateJwtCookieGoogle(oauthUser);
+
+                        userDetailsService.processOAuthPostLogin(oauthUser.getEmail());
+
+                        response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+                        response.sendRedirect("/");
+                    }
+                }));
 
         http.authenticationProvider(authenticationProvider());
 

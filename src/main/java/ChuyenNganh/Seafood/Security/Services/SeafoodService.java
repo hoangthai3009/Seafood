@@ -22,7 +22,8 @@ public class SeafoodService {
         return seafoodRepository.findAll();
     }
     public Page<Seafood> getAllSeafoods(Pageable pageable) {
-        return seafoodRepository.findAll(pageable);
+
+        return seafoodRepository.findAllSeafoods(pageable);
     }
 
     public Page<Seafood> searchSeafood(String keyword, Pageable pageable) {

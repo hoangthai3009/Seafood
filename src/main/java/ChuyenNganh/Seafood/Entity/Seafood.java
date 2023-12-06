@@ -65,7 +65,6 @@ public class Seafood {
     @NotNull(message = "Hạn sử dụng không được để trống")
     private Date expiry_date;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ValidCategoryId

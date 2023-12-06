@@ -1,6 +1,7 @@
 package ChuyenNganh.Seafood.Controller.API;
 
 import ChuyenNganh.Seafood.Constants.Provider;
+import ChuyenNganh.Seafood.Entity.EProvider;
 import ChuyenNganh.Seafood.Entity.ERole;
 import ChuyenNganh.Seafood.Entity.Role;
 import ChuyenNganh.Seafood.Entity.User;
@@ -32,6 +33,7 @@ import javax.management.relation.RoleNotFoundException;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -59,13 +61,9 @@ public class AuthController {
 
 
     @GetMapping("/check-login")
-    public ResponseEntity<?> checkLoginStatus(HttpServletRequest request) {
-        Principal principal = request.getUserPrincipal();
-        if (principal != null) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public Map<String, Boolean> checkAuthentication(Authentication authentication) {
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
+        return Collections.singletonMap("authenticated", isAuthenticated);
     }
 
     @PostMapping("/login")
@@ -108,7 +106,7 @@ public class AuthController {
             user.getRoles().add(role);
             user.setEnabled(false);
             user.setPassword(encoder.encode(registerRequest.getPassword()));
-            user.setProvider(Provider.LOCAL.value);
+            user.setProvider(EProvider.LOCAL);
 
             String confirmationToken = UUID.randomUUID().toString();
             user.setToken(confirmationToken);

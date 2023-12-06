@@ -25,6 +25,9 @@ public class Category {
     @Size(max = 50, min = 1, message = "Tên không được vượt quá 50 kí tự")
     private String name;
 
+    @Column(name ="img")
+    private String img;
+
     @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Seafood> seafoods = new ArrayList<>();

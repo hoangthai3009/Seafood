@@ -60,10 +60,8 @@ public class Seafood {
     @NotNull(message = "Ngày sản xuất không được để trống")
     private Date manufacturing_date;
 
-    @Column(name = "expiry_date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = "Hạn sử dụng không được để trống")
-    private Date expiry_date;
+    @Column(name = "unit")
+    private String unit;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "id")

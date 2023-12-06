@@ -31,6 +31,7 @@
 </div>
 <!-- Header Section Begin -->
 <header class="header">
+<!--
     <div class="header__top">
         <div class="container">
             <div class="row">
@@ -55,7 +56,7 @@
                                     <span class="mr-2 d-none d-lg-inline text-gray-600 small text-uppercase" id="userName"></span>
                                     <i class="fa-solid fa-circle-user"></i>
                                 </a>
-                                <div id="logoutButton" class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                <div id="logoutButton" class="dropdown-menu dropdown-menu-right shadow animated&#45;&#45;grow-in"
                                      aria-labelledby="userDropdown">
                                     <a class="dropdown-item" href="#">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -86,18 +87,19 @@
             </div>
         </div>
     </div>
+-->
     <div class="container">
         <div class="row">
             <div class="col-lg-3">
                 <div class="header__logo">
-                    <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                    <a href="/index"><img src="img/logo.png" alt=""></a>
                 </div>
             </div>
             <div class="col-lg-6">
                 <nav class="header__menu">
                     <ul>
-                        <li class="active"><a href="./index.html">Trang chủ</a></li>
-                        <li><a href="./shop-grid.html">Sản phẩm</a></li>
+                        <li class="active"><a href="/">Trang chủ</a></li>
+                        <li><a href="/seafood/list">Sản phẩm</a></li>
                         <li><a href="#">Pages</a>
                             <ul class="header__menu__dropdown">
                                 <li><a href="./shop-details.html">Khuyến mãi</a></li>
@@ -115,8 +117,28 @@
                     <ul>
                         <li><a href="#"><i class="fas fa-heart"></i> <span>1</span></a></li>
                         <li><a href="#"><i class="fas fa-shopping-bag"></i> <span>3</span></a></li>
+                        <div class="header__cart__price">
+                            <!-- Đăng Nhập / Thông Tin Người Dùng -->
+                            <li class="nav-item" id="loginButton">
+                                <a class="nav-link" href="/login">
+                                    <i class="fas fa-user-circle"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown" id="userDropdown" style="display: none;">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                                    <i class="fas fa-user"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="#">Profile</a>
+                                    <a class="dropdown-item" href="#">Giỏ hàng</a>
+                                    <div class="dropdown-divider"></div>
+                                    <button class="dropdown-item" onclick="signoutUser()">Đăng Xuất</button>
+                                </div>
+                            </li>
+                        </div>
                     </ul>
                 </div>
+
             </div>
         </div>
     </div>

@@ -130,7 +130,7 @@ ol {
 	right: 0;
 	height: 4px;
 	width: 80px;
-	background: #7fad39;
+	background: royalblue;
 	content: "";
 	margin: 0 auto;
 }
@@ -168,7 +168,7 @@ ol {
 	color: #ffffff;
 	text-transform: uppercase;
 	font-weight: 700;
-	background: #7fad39;
+	background: royalblue;
 	letter-spacing: 2px;
 }
 
@@ -179,7 +179,7 @@ ol {
 	text-transform: uppercase;
 	display: inline-block;
 	padding: 13px 30px 12px;
-	background: #7fad39;
+	background: royalblue;
 	border: none;
 }
 
@@ -451,7 +451,7 @@ ol {
 }
 
 .header__menu ul li .header__menu__dropdown li:hover>a {
-	color: #7fad39;
+	color: royalblue;
 }
 
 .header__menu ul li .header__menu__dropdown li a {
@@ -462,7 +462,7 @@ ol {
 }
 
 .header__menu ul li.active a {
-	color: #7fad39;
+	color: royalblue;
 }
 
 .header__menu ul li:hover .header__menu__dropdown {
@@ -472,7 +472,7 @@ ol {
 }
 
 .header__menu ul li:hover>a {
-	color: #7fad39;
+	color: royalblue;
 }
 
 .header__menu ul li:last-child {
@@ -526,7 +526,7 @@ ol {
 .header__cart ul li a span {
 	height: 13px;
 	width: 13px;
-	background: #7fad39;
+	background: royalblue;
 	font-size: 10px;
 	color: #ffffff;
 	line-height: 13px;
@@ -540,9 +540,8 @@ ol {
 }
 
 .header__cart .header__cart__price {
-	font-size: 14px;
-	color: #6f6f6f;
 	display: inline-block;
+	margin-right: -50px;
 }
 
 .header__cart .header__cart__price span {
@@ -589,7 +588,7 @@ ol {
 }
 
 .hero__categories__all {
-	background: #7fad39;
+	background: royalblue;
 	position: relative;
 	padding: 10px 25px 10px 40px;
 	cursor: pointer;
@@ -611,8 +610,7 @@ ol {
 	position: absolute;
 	right: 18px;
 	top: 9px;
-	content: "3";
-	font-family: "Arial", "sans-serif";
+	font-family: "Roboto", "sans-serif";
 	font-size: 18px;
 	color: #ffffff;
 }
@@ -652,7 +650,7 @@ ol {
 	width: 30%;
 	float: left;
 	font-size: 16px;
-	color: #1c1c1c;
+	color: royalblue;
 	font-weight: 700;
 	padding-left: 18px;
 	padding-top: 11px;
@@ -667,7 +665,6 @@ ol {
 	width: 1px;
 	background: #000000;
 	opacity: 0.1;
-	content: "";
 }
 
 .hero__search__form form .hero__search__categories span {
@@ -681,12 +678,12 @@ ol {
 	border: none;
 	height: 48px;
 	font-size: 16px;
-	color: #b2b2b2;
+	color: black;
 	padding-left: 20px;
 }
 
 .hero__search__form form input::placeholder {
-	color: #b2b2b2;
+	color: royalblue;
 }
 
 .hero__search__form form button {
@@ -703,7 +700,7 @@ ol {
 
 .hero__search__phone__icon {
 	font-size: 18px;
-	color: #7fad39;
+	color: royalblue;
 	height: 50px;
 	width: 50px;
 	background: #f5f5f5;
@@ -741,7 +738,7 @@ ol {
 	text-transform: uppercase;
 	font-weight: 700;
 	letter-spacing: 4px;
-	color: #7fad39;
+	color: royalblue;
 }
 
 .hero__text h2 {
@@ -760,10 +757,26 @@ ol {
   Categories
 -----------------------*/
 
+.categories__slider {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 20px;
+}
+
 .categories__item {
 	height: 270px;
 	position: relative;
+	border: 1px solid #ccc; /* Thêm viền với màu và độ rộng tùy ý */
+	border-radius: 10px; /* Bo tròn các góc của viền */
+	overflow: hidden; /* Giữ nội dung trong phạm vi bo tròn */
 }
+
+.categories__item img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 10px; /* Bo tròn các góc của ảnh, phù hợp với container */
+}
+
 
 .categories__item h5 {
 	position: absolute;
@@ -772,6 +785,7 @@ ol {
 	padding: 0 20px;
 	bottom: 20px;
 	text-align: center;
+	background-color: rgba(200, 200, 200, 0.7); /* Điều chỉnh giá trị màu và độ trong suốt tại đây */
 }
 
 .categories__item h5 a {
@@ -781,13 +795,14 @@ ol {
 	text-transform: uppercase;
 	letter-spacing: 2px;
 	padding: 12px 0 10px;
-	background: #ffffff;
 	display: block;
 }
 
 .categories__slider .col-lg-3 {
 	max-width: 100%;
 }
+
+
 
 .categories__slider.owl-carousel .owl-nav button {
 	font-size: 18px;
@@ -843,7 +858,7 @@ ol {
 	bottom: -2px;
 	width: 100%;
 	height: 2px;
-	background: #7fad39;
+	background: royalblue;
 	content: "";
 	opacity: 0;
 }
@@ -854,6 +869,15 @@ ol {
 
 .featured__item {
 	margin-bottom: 50px;
+	border: 1px solid #ccc; /* Thêm viền mỏng */
+	border-radius: 15px; /* Bo tròn viền */
+	overflow: hidden; /* Giữ nội dung không tràn ra ngoài viền */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ nhẹ */
+	transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng chuyển đổi */
+}
+.featured__item:hover {
+	transform: translateY(-5px); /* Nhẹ nhàng nâng lên khi hover */
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Tăng bóng đổ khi hover */
 }
 
 .featured__item:hover .featured__item__pic .featured__item__pic__hover {
@@ -891,8 +915,8 @@ ol {
 }
 
 .featured__item__pic__hover li:hover a {
-	background: #7fad39;
-	border-color: #7fad39;
+	background: royalblue;
+	border-color: royalblue;
 }
 
 .featured__item__pic__hover li:hover a i {
@@ -931,21 +955,27 @@ ol {
 .featured__item__text {
 	text-align: center;
 	padding-top: 15px;
+	padding-bottom: 15px; /* Thêm padding phía dưới */
 }
 
 .featured__item__text h6 {
 	margin-bottom: 10px;
+	font-weight: bold;
 }
 
 .featured__item__text h6 a {
 	color: #252525;
+	transition: color 0.3s ease; /* Hiệu ứng chuyển màu */
+}
+
+.featured__item__text h6 a:hover {
+	color: #e53935; /* Thay đổi màu khi hover */
 }
 
 .featured__item__text h5 {
-	color: #252525;
-	font-weight: 700;
+	color: green;
+	font-weight: bold;
 }
-
 /*---------------------
   Latest Product
 -----------------------*/
@@ -1327,8 +1357,8 @@ ol {
 }
 
 .product__item__pic__hover li:hover a {
-	background: #7fad39;
-	border-color: #7fad39;
+	background: royalblue;
+	border-color: royalblue;
 }
 
 .product__item__pic__hover li:hover a i {
@@ -1526,7 +1556,7 @@ ol {
 }
 
 .filter__option span:hover {
-	color: #7fad39;
+	color: royalblue;
 }
 
 .product__item {
@@ -1567,8 +1597,8 @@ ol {
 }
 
 .product__item__pic__hover li:hover a {
-	background: #7fad39;
-	border-color: #7fad39;
+	background: royalblue;
+	border-color: royalblue;
 }
 
 .product__item__pic__hover li:hover a i {
@@ -1648,8 +1678,8 @@ ol {
 
 .product__pagination a:hover,
 .blog__pagination a:hover {
-	background: #7fad39;
-	border-color: #7fad39;
+	background: royalblue;
+	border-color: royalblue;
 	color: #ffffff;
 }
 
@@ -2157,8 +2187,8 @@ ol {
 }
 
 .checkout__input__checkbox label input:checked~.checkmark {
-	background: #7fad39;
-	border-color: #7fad39;
+	background: royalblue;
+	border-color: royalblue;
 }
 
 .checkout__input__checkbox label input:checked~.checkmark:after {
@@ -2385,7 +2415,7 @@ ol {
 }
 
 .blog__sidebar__item ul li a:hover {
-	color: #7fad39;
+	color: royalblue;
 }
 
 .blog__sidebar__search {
@@ -2605,7 +2635,7 @@ ol {
 }
 
 .blog__details__widget .blog__details__social a:hover {
-	color: #7fad39;
+	color: royalblue;
 }
 
 .blog__details__widget .blog__details__social a:last-child {
@@ -2723,7 +2753,7 @@ ol {
 }
 
 .footer__widget .footer__widget__social a:hover {
-	background: #7fad39;
+	background: royalblue;
 	color: #ffffff;
 	border-color: #ffffff;
 }
@@ -2761,7 +2791,7 @@ ol {
 
 .contact__widget span {
 	font-size: 36px;
-	color: #7fad39;
+	color: royalblue;
 }
 
 .contact__widget h4 {
@@ -2800,7 +2830,7 @@ ol {
 
 .map .map-inside i {
 	font-size: 48px;
-	color: #7fad39;
+	color: royalblue;
 	position: absolute;
 	bottom: -75px;
 	left: 50%;
@@ -2943,6 +2973,38 @@ ol {
 /* Tablet Device = 768px */
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
+	.categories__slider {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 20px;
+	}
+
+	.categories__item {
+		text-align: center;
+		border: 1px solid #ccc; /* Thêm viền mỏng */
+		border-radius: 15px; /* Bo tròn viền */
+		overflow: hidden; /* Giữ nội dung không tràn ra ngoài viền */
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ nhẹ */
+		transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng chuyển đổi */
+		margin-bottom: 20px; /* Khoảng cách giữa các mục */
+	}
+
+	.categories__item:hover {
+		transform: translateY(-5px); /* Nhẹ nhàng nâng lên khi hover */
+		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Tăng bóng đổ khi hover */
+	}
+
+	.categories__item img {
+		max-width: 100%;
+		height: auto;
+		border-radius: 15px 15px 0 0; /* Bo tròn phần trên của ảnh */
+	}
+
+	.categories__item h5 {
+		margin-top: 10px; /* Khoảng cách từ ảnh đến tiêu đề */
+		margin-bottom: 10px; /* Khoảng cách từ tiêu đề đến viền dưới */
+	}
+
 	.hero__categories {
 		margin-bottom: 30px;
 	}
@@ -3057,7 +3119,7 @@ ol {
 	.humberger__menu__cart ul li a span {
 		height: 13px;
 		width: 13px;
-		background: #7fad39;
+		background: royalblue;
 		font-size: 10px;
 		color: #ffffff;
 		line-height: 13px;
@@ -3123,7 +3185,7 @@ ol {
 		-webkit-border-radius: 0;
 		border-radius: 0;
 		background: transparent;
-		color: #7fad39;
+		color: royalblue;
 	}
 	.humberger__menu__wrapper .slicknav_nav .slicknav_row,
 	.humberger__menu__wrapper .slicknav_nav a {
@@ -3158,6 +3220,7 @@ ol {
 		text-align: center;
 		padding: 10px 0 24px;
 	}
+
 	.over_hid {
 		overflow: hidden;
 	}
@@ -3315,7 +3378,7 @@ ol {
 	.humberger__menu__cart ul li a span {
 		height: 13px;
 		width: 13px;
-		background: #7fad39;
+		background: royalblue;
 		font-size: 10px;
 		color: #ffffff;
 		line-height: 13px;
@@ -3332,10 +3395,7 @@ ol {
 		color: #6f6f6f;
 		display: inline-block;
 	}
-	.humberger__menu__cart .header__cart__price span {
-		color: #252525;
-		font-weight: 700;
-	}
+
 	.humberger__menu__cart {
 		margin-bottom: 25px;
 	}
@@ -3381,7 +3441,7 @@ ol {
 		-webkit-border-radius: 0;
 		border-radius: 0;
 		background: transparent;
-		color: #7fad39;
+		color: royalblue;
 	}
 	.humberger__menu__wrapper .slicknav_nav .slicknav_row,
 	.humberger__menu__wrapper .slicknav_nav a {

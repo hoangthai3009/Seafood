@@ -20,6 +20,6 @@ public class HomeController {
     public String index(Pageable pageable, Model model) {
         Page<Seafood> seafoods = seafoodService.getAllSeafoods(pageable);
         model.addAttribute("seafoods", seafoods);
-        return "home/index";
+        return "Home/index";
     }
 }

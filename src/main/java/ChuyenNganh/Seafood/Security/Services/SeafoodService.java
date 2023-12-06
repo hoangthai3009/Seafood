@@ -42,12 +42,7 @@ public class SeafoodService {
         seafoodRepository.deleteById(id);
     }
 
-    public Seafood getSeafoodById(Long id) {
-        Optional<Seafood> optionalProduct = seafoodRepository.findById(id);
-        if (optionalProduct.isPresent()) {
-            return optionalProduct.get();
-        } else {
-            throw new RuntimeException("Sản phẩm không tồn tại.");
-        }
+    public Seafood getSeafoodById(Long seafoodId) {
+        return seafoodRepository.findSeafoodById(seafoodId);
     }
 }

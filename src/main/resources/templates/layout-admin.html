@@ -218,9 +218,9 @@
         // Hàm kiểm tra trạng thái đăng nhập
         function checkLoginStatus() {
             fetch('/api/auth/check-login')
-                .then(response => {
-                    if (response.ok) {
-                        // Đã đăng nhập, ẩn nút đăng nhập và hiện dropdown
+                .then(response => response.json())
+                .then(data => {
+                    if (data.authenticated) {
                         document.getElementById('loginButton').style.display = 'none';
                         document.getElementById('userDropdown').style.display = 'block';
 
@@ -237,6 +237,7 @@
                     }
                 });
         }
+
 
         // Hàm đăng xuất
         function signoutUser() {

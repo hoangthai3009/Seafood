@@ -2,127 +2,200 @@
 <html lang="en" xmlns:th="">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${seafood.name}"></title>
+    <title ></title>
     <th:block th:replace="layout :: link-css"></th:block>
     <style>
-        textarea {
-            resize: none;
+        /* Thêm các định dạng CSS tại đây */
+        .product-details {
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .product__details__pic__item {
+            text-align: center;
+        }
+
+        .product__details__pic__item--large {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .product__details__text {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .product__details__text h3 {
+            margin-bottom: 15px;
+        }
+
+        .product__details__price {
+            font-size: 24px;
+            color: #e53e3e;
+            margin-bottom: 20px;
+        }
+
+        .primary-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .primary-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .heart-icon {
+            display: inline-block;
+            margin-left: 15px;
+            color: #ff4081;
+        }
+        #image-slider {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        #image-slider img {
+            width: 100px; /* Hoặc kích thước phù hợp với thiết kế của bạn */
+            height: auto;
+            cursor: pointer;
+            border: 2px solid #f0f0f0;
+            border-radius: 5px;
+        }
+
+        #image-slider img:hover {
+            border-color: #007bff;
+        }
+        #main-image {
+            transition: opacity 0.2s ease-in-out;
+            opacity: 1;
         }
     </style>
 </head>
-<body>
 <th:block th:replace="layout :: header"></th:block>
-<div class="container py-5">
-    <div class="row d-flex align-items-center">
-        <div class="col-md-4 item-photo">
-            <img style="max-width:100%;" th:src="@{'https://phuc-public-image.s3.ap-southeast-2.amazonaws.com/' + ${seafood.image_1}}"/>
-        </div>
-        <div class="col-md-6">
-            <h3 th:text="${seafood.name}"></h3>
-<!--
-            <p th:text="${product.note}"></p>
--->
-            <p style="color:orange;"><small th:text="${'Còn ' + seafood.quantity + ' sản phẩm'}"></small></p>
-            <h6 class="title-price"><small>Giá</small></h6>
-            <h3 class="mt-0" th:text="${seafood.price} + ' $'"></h3>
-
-            <div class="d-flex">
-                <button class="btn btn-success me-2">Đặt hàng</button>
-                <form th:action="@{/cart/add-to-cart}" method="POST">
-                    <input type="hidden" name="id" th:value="${seafood.getSeafoodId()}">
-                    <input type="hidden" name="name" th:value="${seafood.getSeafoodName()}">
-                    <input type="hidden" name="price" th:value="${seafood.getPrice()}">
-                    <input type="hidden" name="image" th:value="${seafood.getImage_1()}">
-                    <button class="btn btn-outline-danger" type="submit"
-                            onclick="return confirm('Bạn có muốn thêm sản phẩm này vào giỏ hàng?')">
-                        Thêm vào giỏ hàng
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <div class="row col-xs-9 mt-3">
-            <div class="col-md-8">
-                <div class="my-3 fw-bold" style="font-size:22px">Mô tả sản phẩm</div>
-                <div style="text-align: justify;" th:utext="${description}"></div>
-            </div>
-            <div class="col-md-4">
-                <div class="ms-4 fw-bold text-center">Thông tin chi tiết</div>
-            </div>
-        </div>
-
-       <!-- <div class="container my-5 py-5">
-            <div class="row d-flex justify-content-start">
-                <div class="col-md-12 col-lg-10">
-                    <div class="card text-dark">
-                        <div class="card-body p-4">
-                            <h4 class="mb-0">Recent comments</h4>
-                            <p class="fw-light mb-4 pb-2">Latest Comments section by users</p>
-
-                            <div th:each="comment, commentStatus : ${comments}">
-                                <div class="card-body p-4">
-                                    <div class="d-flex flex-start">
-                                        <img class="rounded-circle shadow-1-strong me-3"
-                                             src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(23).webp" alt="avatar" width="60"
-                                             height="60" />
-                                        <div>
-                                            <h6 class="fw-bold mb-1" th:text="${comment.user.fullname}"></h6>
-                                            <div class="d-flex align-items-center mb-3">
-                                                <p class="mb-0" th:text="${comment.createdAt}">
-                                                    <span class="badge bg-primary">Pending</span>
-                                                </p>
-                                                <a href="#!" class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a>
-                                                <a href="#!" class="link-muted"><i class="fas fa-heart ms-2"></i></a>
-                                                <div th:if="${comment.user.username == currentUsername}">
-                                                    <form th:action="@{/product/delete-comment/{commentId}(commentId=${comment.commentId})}" method="POST">
-                                                        <button class="btn btn-sm" type="submit" onclick="return confirm('Bạn có muốn xóa comment?')">
-                                                            <i class="fa-sharp fa-solid fa-xmark" style="color:red"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                            <p class="mb-0" th:utext="${comment.content}" style="white-space: pre-line;"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr class="my-0" th:if="${!commentStatus.last}"/>
-                            </div>
-                        </div>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="/img/banner/banner-cua.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Hải Sản Xanh</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/">Trang chủ</a>
+                        <a href="/seafood/list">Sản phẩm</a>
+                        <span></span>
                     </div>
                 </div>
             </div>
-        </div>-->
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
 
-<!--
-        <div class="container">
-            <div class="row d-flex justify-content-start">
-                <div class="col-md-12 col-lg-10">
-                    <form th:action="@{'/product/' + ${seafood.id}}" method="POST" th:object="${newComment}">
-                        <div class="card-footer py-3 border-0">
-                            <div class="d-flex flex-start w-100">
-                                <img class="rounded-circle shadow-1-strong me-3"
-                                     src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(23).webp" alt="avatar" width="40"
-                                     height="40" />
-                                <div class="form-outline w-100">
-                                    <textarea class="form-control" id="textAreaExample" rows="4"
-                                            style="background: #fff;" th:field="${newComment.content}">
-                                    </textarea>
-                                    <label class="form-label" for="textAreaExample">Message</label>
-                                    <div class="float-end mt-2">
-                                        <button type="submit" class="btn btn-success btn-sm" id="postCommentBtn">Post comment</button>
-                                        <button type="button" class="btn btn-outline-success btn-sm">Cancel</button>
-                                    </div>
-                                </div>
+<section class="product-details spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="product__details__pic">
+                    <div class="product__details__pic__item">
+                        <img id="main-image" class="product__details__pic__item--large" src="" alt="Hình ảnh chính">
+                    </div>
+                    <div id="image-slider" class="product__details__pic__slider owl-carousel slider-thumbnails">
+                        <!-- JavaScript sẽ thêm hình ảnh phụ ở đây -->
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="product__details__text">
+                    <h3 id="product-name"></h3>
+                    <div class="product__details__rating">
+                        <!-- Phần đánh giá, cũng có thể được cập nhật bởi JavaScript nếu cần -->
+                    </div>
+                    <div id="product-price" class="product__details__price"></div>
+                    <p id="product-description"></p>
+                    <div class="product__details__quantity">
+                        <div class="quantity">
+                            <div class="pro-qty">
+                                <input type="text" value="1">
                             </div>
                         </div>
-                    </form>
+                    </div>
+                    <a href="#" class="primary-btn">Thêm giỏ hàng</a>
+                    <ul>
+                        <li><b>Xuất xứ</b> <span id="product-origin"></span></li>
+                        <!-- Các thông tin khác -->
+                    </ul>
                 </div>
             </div>
         </div>
--->
     </div>
+</section>
+
+
+<body>
+<div class="container py-5">
 </div>
 <th:block th:replace="layout :: footer"></th:block>
-<script th:src="@{/js/product.js}"></script>
+<script>
+    function updateMainImage(src) {
+        const mainImage = document.getElementById('main-image');
+        mainImage.style.opacity = '0'; // Làm mờ hình ảnh chính
+
+        // Đợi cho hình ảnh mờ đi rồi thay đổi src
+        setTimeout(() => {
+            mainImage.src = src;
+            mainImage.style.opacity = '1'; // Làm hình ảnh trở nên rõ ràng trở lại
+        }, 500); // Thời gian đợi tương ứng với thời gian transition
+    }
+    function fetchSeafoodDetails(id) {
+        fetch(`http://localhost:8080/api/seafoods/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Seafood not found');
+                }
+                return response.json();
+            })
+            .then(data => updateSeafoodDetails(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function updateSeafoodDetails(seafood) {
+        const mainImage = document.getElementById('main-image');
+        mainImage.src = seafood.mainImage || 'path-to-default-image.jpg';
+        document.getElementById('product-name').innerText = seafood.name || 'Tên không xác định';
+        document.getElementById('product-price').innerText = seafood.price ? `${seafood.price.toLocaleString()} VND` : 'Giá không xác định';
+        document.getElementById('product-description').innerText = seafood.description || 'Không có mô tả';
+
+        const imageSlider = document.getElementById('image-slider');
+        imageSlider.innerHTML = '';
+
+        ['mainImage','extraImage1', 'extraImage2', 'extraImage3'].forEach(key => {
+            if (seafood[key]) {
+                let img = document.createElement('img');
+                img.src = seafood[key];
+                img.alt = 'Hình ảnh phụ';
+                img.classList.add('slider-thumbnail'); // Thêm class cho styling nếu cần
+                img.onclick = function() {
+                    updateMainImage(img.src); // Cập nhật hình ảnh chính khi click vào hình ảnh phụ
+                };
+                imageSlider.appendChild(img);
+            }
+        });
+    }
+
+    window.onload = function() {
+        const url = window.location.href;
+        const id = url.substring(url.lastIndexOf('/') + 1);
+        fetchSeafoodDetails(id);
+    };
+
+</script>
 </body>
 </html>

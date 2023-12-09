@@ -42,4 +42,10 @@ public class CartController {
         List<CartItem> cartItems = cartService.viewCart(session);
         return ResponseEntity.ok(cartItems);
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> viewQuantityCart(HttpSession session) {
+        int quantity = cartService.getTotalQuantity(session);
+        return ResponseEntity.ok(quantity);
+    }
 }

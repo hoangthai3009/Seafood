@@ -34,6 +34,12 @@ public class CartService {
         session.setAttribute(CART_SESSION_KEY, cartItems);
     }
 
+    public int getTotalQuantity(HttpSession session) {
+        List<CartItem> cartItems = getOrCreateCart(session);
+        return cartItems.size();
+    }
+
+
     public void updateCart(HttpSession session, Long seafoodId, int quantity) {
         List<CartItem> cartItems = getOrCreateCart(session);
 

@@ -1,6 +1,5 @@
 package ChuyenNganh.Seafood.Controller.API;
 
-import ChuyenNganh.Seafood.Constants.Provider;
 import ChuyenNganh.Seafood.Entity.EProvider;
 import ChuyenNganh.Seafood.Entity.ERole;
 import ChuyenNganh.Seafood.Entity.Role;
@@ -13,7 +12,6 @@ import ChuyenNganh.Seafood.Repositories.IUserRepository;
 import ChuyenNganh.Seafood.Security.Jwt.JwtUtils;
 import ChuyenNganh.Seafood.Security.Services.EmailSenderService;
 import ChuyenNganh.Seafood.Security.Services.UserDetailsImpl;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +28,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
-import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

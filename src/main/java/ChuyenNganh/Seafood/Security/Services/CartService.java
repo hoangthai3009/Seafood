@@ -12,7 +12,7 @@ public class CartService {
 
     public static final String CART_SESSION_KEY = "cart";
 
-    public void addToCart(HttpSession session, Long seafoodId, int quantity) {
+    public void addToCart(HttpSession session, Long seafoodId, String seafoodName, Double price, String image, String categoryName, int quantity) {
         List<CartItem> cartItems = getOrCreateCart(session);
 
         boolean seafoodExists = false;
@@ -27,6 +27,10 @@ public class CartService {
         if (!seafoodExists) {
             CartItem cartItem = new CartItem();
             cartItem.setSeafoodId(seafoodId);
+            cartItem.setSeafoodName(seafoodName);
+            cartItem.setPrice(price);
+            cartItem.setImage(image);
+            cartItem.setCategoryName(categoryName);
             cartItem.setQuantity(quantity);
             cartItems.add(cartItem);
         }

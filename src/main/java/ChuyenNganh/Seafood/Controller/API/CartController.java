@@ -20,9 +20,13 @@ public class CartController {
     @PostMapping("/add")
     public ResponseEntity<String> addToCart(@RequestBody CartItemRequest cartItemRequest, HttpSession session) {
         Long seafoodId = cartItemRequest.getSeafoodId();
+        String seafoodName = cartItemRequest.getSeafoodName();
+        Double price = cartItemRequest.getPrice();
+        String image = cartItemRequest.getImage();
+        String categoryName = cartItemRequest.getCategoryName();
         int quantity = cartItemRequest.getQuantity();
 
-        cartService.addToCart(session, seafoodId, quantity);
+        cartService.addToCart(session, seafoodId, seafoodName, price, image, categoryName, quantity);
 
         return ResponseEntity.ok("Seafood added to cart successfully");
     }

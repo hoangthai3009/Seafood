@@ -31,7 +31,10 @@ public class SeafoodService {
     }
 
     public Page<Seafood> getSeafoodsByCategory(Long categoryId, Pageable pageable) {
-        return seafoodRepository.findByCategoryId(categoryId, pageable);
+        return seafoodRepository.findSeafoodByCategoryId(categoryId, pageable);
+    }
+    public Page<Seafood> getSeafoodsByCategoryAndSearch(Long categoryId, String keyword, Pageable pageable) {
+        return seafoodRepository.findSeafoodByCategoryIdAndSearch(keyword, categoryId, pageable);
     }
 
     public Seafood saveSeafood(Seafood seafood) {

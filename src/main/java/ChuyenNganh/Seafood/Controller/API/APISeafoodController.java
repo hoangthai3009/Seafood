@@ -25,9 +25,14 @@ public class APISeafoodController {
     private SeafoodService seafoodService;
 
     @GetMapping
-    public ResponseEntity<Page<Seafood>> getAllSeafoods(Pageable pageable) {
-        Page<Seafood> seafoods = seafoodService.getAllSeafoods(pageable);
-        return ResponseEntity.ok(seafoods);
+    public ResponseEntity<Page<Seafood>> getAllSeafoods(@RequestParam String keyword, Pageable pageable) {
+        if(keyword != null){
+            Page<Seafood> matchingSeafoods = seafoodService.searchSeafood(keyword, pageable);
+            return ResponseEntity.ok(matchingSeafoods);
+        }else {
+            Page<Seafood> seafoods = seafoodService.getAllSeafoods(pageable);
+            return ResponseEntity.ok(seafoods);
+        }
     }
 
     @GetMapping("/{id}")
@@ -40,18 +45,15 @@ public class APISeafoodController {
         }
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<Page<Seafood>> searchSeafoods(@RequestParam String keyword, Pageable pageable) {
-        Page<Seafood> matchingSeafoods = seafoodService.searchSeafood(keyword, pageable);
-        return ResponseEntity.ok(matchingSeafoods);
-    }
-
     @GetMapping("/category")
-    public ResponseEntity<Page<Seafood>> getSeafoodsByCategory(@RequestParam Long categoryId, Pageable pageable) {
-        Page<Seafood> seafoodsByCategory = seafoodService.getSeafoodsByCategory(categoryId, pageable);
-        return ResponseEntity.ok(seafoodsByCategory);
+    public ResponseEntity<Page<Seafood>> getSeafoodsByCategory(@RequestParam Long categoryId, @RequestParam String keyword, Pageable pageable) {
+        if(keyword != null){
+            Page<Seafood> seafoodsByCategoryAndKeyword = seafoodService.getSeafoodsByCategoryAndSearch(categoryId, keyword, pageable);
+            return ResponseEntity.ok(seafoodsByCategoryAndKeyword);
+        }else {
+            Page<Seafood> seafoodsByCategory = seafoodService.getSeafoodsByCategory(categoryId, pageable);
+            return ResponseEntity.ok(seafoodsByCategory);
+        }
     }
-
-
 }
 

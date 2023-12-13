@@ -29,18 +29,19 @@
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
-        Interface
+        Quản lý
     </div>
 
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
            aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Components</span>
+            <i class="fas fa-fw fa-shop"></i>
+            <span>Cửa hàng</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Components:</h6>
+                <a class="collapse-item" th:href="@{/admin/seafoods}">Sản phẩm</a>
+                <a class="collapse-item" th:href="@{/admin/bills}">Hóa đơn</a>
             </div>
         </div>
     </li>
@@ -48,52 +49,23 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
            aria-expanded="true" aria-controls="collapseUtilities">
-            <i class="fas fa-fw fa-chart-pie"></i>
-            <span>Thống kê</span>
+            <i class="fas fa-fw fa-user"></i>
+            <span>Tài khoản</span>
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
              data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
 <!--                <h6 class="collapse-header">Custom Utilities:</h6>-->
-                <a class="collapse-item" href="/admin/thongKeTheoNgay">Theo ngày</a>
-                <a class="collapse-item" href="/admin/thongKeTheoThang">Theo tháng</a>
+                <a class="collapse-item" th:href="@{/admin/list-user}">Tài khoản</a>
+                <a class="collapse-item" th:href="@{/admin/roles}">Quyền tài khoản</a>
             </div>
         </div>
     </li>
 
-    <hr class="sidebar-divider">
-
-    <div class="sidebar-heading">
-        Quản lý
-    </div>
-
-<!--    <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN')">-->
-
-    <li class="nav-item" >
-        <a class="nav-link" th:href="@{/admin/list-user}">
-            <i class="fas fa-fw fa-users-rectangle"></i>
-            <span>Tables User</span></a>
-    </li>
-    <li class="nav-item" >
-        <a class="nav-link" th:href="@{/admin/roles}">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Tables Role</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" th:href="@{/admin/seafoods}">
-            <i class="fa-brands fa-fw fa-product-hunt"></i>
-            <span>Sản phẩm</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" th:href="@{/admin/bills}">
-            <i class="fas fa-fw fa-money-bill"></i>
-            <span>Hóa đơn</span></a>
-    </li>
-
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider mb-0">
 
     <li class="nav-item">
-        <a class="nav-link" th:href="@{/}">
+        <a class="nav-link mt-0" th:href="@{/}">
             <i class="fas fa-fw fa-arrow-right-from-bracket"></i>
             <span>Về trang sản phẩm</span></a>
     </li>

@@ -31,7 +31,8 @@ public class User {
     @Size(max = 120)
     private String password;
 
-    @Size(max = 50)
+    @Column(name = "fullname", length = 40)
+    @Size(max = 60, message = "Tên của bạn không được vượt quá 60 ký tự.")
     private String fullname;
 
     @Size(max=120)
@@ -53,6 +54,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private Set<Bill> bills;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Bill> bill;
 }

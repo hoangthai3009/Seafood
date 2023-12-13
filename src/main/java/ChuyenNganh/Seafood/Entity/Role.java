@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.Getter;
 
 @Data
 @Entity
 @Table(name = "role")
 public class Role {
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,4 +22,5 @@ public class Role {
     @NotBlank
     @Size(max = 50)
     private String description;
+
 }

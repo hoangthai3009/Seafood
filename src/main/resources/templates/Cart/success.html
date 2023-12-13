@@ -2,14 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Success Page</title>
-    <!-- Include any necessary CSS or other head content -->
+    <title>Thanh Toán</title>
+    <th:block th:replace="layout :: link-css"></th:block>
+
 </head>
-<body>
-<div>
-    <h2>Order Placed Successfully!</h2>
-    <p>Thank you for your purchase. Your order has been placed successfully.</p>
-    <!-- You can add more content or styling as needed -->
+<style>
+    body-success {
+        text-align: center;
+        padding: 40px 0;
+        background: #EBF0F5;
+    }
+    .h2s {
+        color: #88B04B;
+        font-weight: 900;
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+    .ps {
+        color: #404F5E;
+        font-size:20px;
+        margin: 0;
+    }
+    .is {
+        color: #88B04B;
+        font-size: 100px;
+        line-height: 200px;
+        margin-left:-15px;
+    }
+    .cardd {
+        background: white;
+        padding: 60px;
+        border-radius: 25px;
+        box-shadow: 0 2px 3px #C8D0D8;
+
+
+
+    }
+</style>
+<th:block th:replace="layout :: header"></th:block>
+<body-success class="text-center">
+<div class="cardd">
+    <div style="border-radius:200px; height:200px; width:200px; background: #F8FAF5; margin:0 auto;">
+        <i class="checkmark is">✓</i>
+    </div>
+    <h2 class="h2s">Đặt hàng thành công !</h2>
+    <p class="ps">Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn sẽ được sắp xếp và giao đến cho bạn trong thời gian nhanh nhất.</p>
 </div>
-</body>
+<th:block th:replace="layout :: footer"></th:block>
+
+</body-success>
 </html>

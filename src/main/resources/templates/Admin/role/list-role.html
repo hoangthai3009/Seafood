@@ -18,8 +18,6 @@
                         <h6 class="font-weight-bold text-primary">Quản Lý Quyền Tài Khoản</h6>
                     </div>
                     <div class="card-body">
-                        <a class="btn btn-primary" th:href="@{/Admin/add-role}">Thêm Quyền Mới</a>
-
                         <div class="mt-3 table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
@@ -31,12 +29,12 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="role: ${roles}">
-                                    <td th:text="${role.roleName}"></td>
+                                    <td th:text="${role.name}"></td>
                                     <td th:text="${role.description}"></td>
                                     <td class="text-center">
-                                        <a th:href="@{/Admin/edit-role/{roleId}(roleId=${role.roleId})}">
-                                            <i class="fas fa-pen-to-square mr-3"></i></a>
-                                        <a th:href="@{/Admin/delete-role/{roleId}(roleId=${role.roleId})}"
+                                        <!--<a th:href="@{/admin/edit-role/{roleId}(roleId=${role.id})}">
+                                            <i class="fas fa-pen-to-square mr-3"></i></a>-->
+                                        <a th:href="@{/admin/delete-role/{roleId}(roleId=${role.id})}"
                                            onclick="return confirm('Xác nhận xóa quyền này?')"><i class="fas fa-times" style="color:red"></i></a>
                                     </td>
                                 </tr>

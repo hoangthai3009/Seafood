@@ -113,7 +113,7 @@
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">
-                <div class="product__details__text">
+                <div class="product__details__text" id="data-seafood-id">
                     <h3 id="product-name"></h3>
                     <div class="product__details__rating">
                         <!-- Phần đánh giá, cũng có thể được cập nhật bởi JavaScript nếu cần -->
@@ -172,6 +172,7 @@
         document.getElementById('product-name').innerText = seafood.name || 'Tên không xác định';
         document.getElementById('product-price').innerText = seafood.price ? `${seafood.price.toLocaleString()} VND` : 'Giá không xác định';
         document.getElementById('product-description').innerText = seafood.description || 'Không có mô tả';
+        document.getElementById('product-origin').innerText = seafood.origin || 'Không rõ xuất xứ' ;
 
         const imageSlider = document.getElementById('image-slider');
         imageSlider.innerHTML = '';
@@ -189,12 +190,15 @@
             }
         });
         const addToCartButton = document.querySelector(".addToCartButton");
-        addToCartButton.addEventListener("click", function() {
+        addToCartButton.onclick = function() {
+            const quantity = parseInt($('.pro-qty input').val());
             const confirmation = confirm('Bạn có muốn thêm sản phẩm này vào giỏ hàng?');
+
             if (confirmation) {
-                addToCart(seafood.id, seafood.name, seafood.price, seafood.mainImage, 1, seafood.category.name);
+                // Gọi hàm addToCart với số lượng lấy từ input
+                addToCart(seafood.id, seafood.name, seafood.price, seafood.mainImage, quantity, seafood.category.name);
             }
-        });
+        };
     }
 
     window.onload = function() {
@@ -202,6 +206,32 @@
         const id = url.substring(url.lastIndexOf('/') + 1);
         fetchSeafoodDetails(id);
     };
+
+
+    $(document).ready(function() {
+        // Thêm nút tăng/giảm số lượng
+        var proQty = $('.pro-qty');
+        if (proQty.find('.qtybtn').length === 0) {
+            proQty.prepend('<span class="dec qtybtn">-</span>');
+            proQty.append('<span class="inc qtybtn">+</span>');
+        }
+
+        // Xử lý sự kiện click cho nút tăng/giảm
+        proQty.on('click', '.qtybtn', function() {
+            var $button = $(this);
+            var $input = $button.siblings('input');
+            var currentValue = parseInt($input.val());
+
+            if ($button.hasClass('inc')) {
+                $input.val(currentValue + 1);
+            } else {
+                // Không cho phép giảm xuống dưới 1
+                if (currentValue > 1) {
+                    $input.val(currentValue - 1);
+                }
+            }
+        });
+    });
 
 </script>
 </body>

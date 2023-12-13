@@ -27,17 +27,24 @@
                                     <th>Họ và tên</th>
                                     <th>Email</th>
                                     <th>Số điện thoại</th>
+                                    <th>Quyền</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="user: ${users}">
-                                    <td th:text="${user.userId}"></td>
+                                    <td th:text="${user.id}"></td>
                                     <td>
-                                        <a th:href="@{/Admin/assign-role/{id}(id=${user.userId})}" th:text="${user.username}"></a>
+                                        <a th:href="@{/admin/assign-role/{id}(id=${user.id})}" th:text="${user.username}"></a>
                                     </td>
                                     <td th:text="${user.fullname}"></td>
                                     <td th:text="${user.email}"></td>
                                     <td th:text="${user.phone}"></td>
+                                    <td>
+                                        <span th:each="role, iterStat : ${user.roles}">
+                                        <span th:text="${role.description}"></span>
+                                        <span th:if="${!iterStat.last}">,</span>
+                                        </span>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>

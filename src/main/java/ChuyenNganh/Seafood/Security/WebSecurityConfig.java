@@ -35,6 +35,7 @@ import java.io.IOException;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+
 public class WebSecurityConfig {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -79,10 +80,12 @@ public class WebSecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/**").permitAll()
-                                .requestMatchers("/**").permitAll()
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(auth ->auth
+                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/admin/**")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_MODERATOR")
+                        .anyRequest().permitAll()
                 ).oauth2Login(oauth -> oauth.loginPage("/login").userInfoEndpoint(
                         user -> user.userService(oauthUserService)
                 ).successHandler(new AuthenticationSuccessHandler() {

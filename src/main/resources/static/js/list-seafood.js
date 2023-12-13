@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const paginationContainer = document.querySelector('.product__pagination');
     const urlParams = new URLSearchParams(window.location.search);
     const categoryId = urlParams.get('categoryId');
+    const keyword = urlParams.get('keyword');
 
     // Hàm để hiển thị sản phẩm
     function displaySeafood(seafood) {
@@ -12,7 +13,9 @@ document.addEventListener('DOMContentLoaded', function () {
         column.innerHTML = `
             <div class="featured__item" data-filter="${seafood.category.id}">
                 <div class="featured__item__pic" href="${seafood.id}">
-                    <img src="${seafood.mainImage}" alt="Hình ảnh sản phẩm">
+                    <a href="/seafood/${seafood.id}">
+                        <img src="${seafood.mainImage}" alt="Hình ảnh sản phẩm">
+                    </a>
                     <ul class="featured__item__pic__hover">
                         <li><button><i class="fas fa-heart"></i></button></li>
                         <li>
@@ -51,22 +54,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Thêm tham số keyword nếu keyword khác null
         if (keyword) {
-            apiUrl += `&keyword=${keyword}`;
+            apiUrl += `&keyword=${encodeURIComponent(keyword)}`;
         }
 
         // Thêm tham số categoryId nếu có
         if (categoryId) {
-            apiUrl = `/api/seafoods/category?categoryId=${categoryId}&page=${pageNumber - 1}&size=8`;
+            apiUrl = `/api/seafoods/category?categoryId=${categoryId}&page=${pageNumber - 1}&size=8&keyword=`;
         }
 
         fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
                 seafoodList.innerHTML = ''; // Xóa danh sách hiện tại
-                data.content.forEach(seafood => {
-                    displaySeafood(seafood);
-                });
-                updatePagination(data.totalPages, pageNumber);
+                if (data.content && Array.isArray(data.content)) {
+                    data.content.forEach(seafood => {
+                        displaySeafood(seafood);
+                    });
+                    updatePagination(data.totalPages, pageNumber);
+                } else {
+                    // Xử lý trường hợp không có dữ liệu hoặc dữ liệu không hợp lệ
+                    console.log("Không có dữ liệu hoặc dữ liệu không hợp lệ");
+                }
             })
             .catch(error => console.error('Error fetching data:', error));
     }
@@ -80,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Gọi fetchData với categoryId lấy từ tham số URL (nếu có)
-    fetchData(1, getCurrentSortValue(), null);
+    fetchData(1, getCurrentSortValue(), keyword, categoryId);
 
     // Các hàm và sự kiện khác
     // ...

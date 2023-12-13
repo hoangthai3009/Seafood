@@ -16,11 +16,11 @@
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Sửa quyền</h6>
                     </div>
-                    <form class="p-4" th:action="@{/Admin/edit-role/{roleId}(roleId=${role.roleId})}" method="POST" th:object="${role}">
+                    <form class="p-4" th:action="@{/admin/edit-role/{roleId}(roleId=${role.roleId})}" method="POST" th:object="${role}">
                         <div>
                             <label class="form-label" for="roleName" style="width:90px">Tên Quyền:</label>
-                            <input class="form-control-sm" type="roleName" id="roleName" name="roleName" th:field="*{roleName}" th:value="*{roleName}"/>
-                            <span th:if="${#fields.hasErrors('roleName')}" th:errors="*{roleName}" class="error"></span>
+                            <input class="form-control-sm" type="text" id="roleName" name="roleName" th:field="*{name}" th:value="*{name}"/>
+                            <span th:if="${#fields.hasErrors('roleName')}" th:errors="*{name}" class="error"></span>
                         </div>
                         <div class="mt-2">
                             <label class="form-label" for="description" style="width:90px">Mô Tả:</label>

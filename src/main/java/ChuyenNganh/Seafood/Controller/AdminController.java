@@ -1,18 +1,21 @@
 package ChuyenNganh.Seafood.Controller;
 
-import ChuyenNganh.Seafood.Entity.Bill;
-import ChuyenNganh.Seafood.Entity.Seafood;
-import ChuyenNganh.Seafood.Security.Services.CategoryService;
-import ChuyenNganh.Seafood.Security.Services.IImageService;
-import ChuyenNganh.Seafood.Security.Services.RoleService;
-import ChuyenNganh.Seafood.Security.Services.SeafoodService;
+import ChuyenNganh.Seafood.DTO.BillDto;
+import ChuyenNganh.Seafood.Entity.*;
+import ChuyenNganh.Seafood.Mapper.BillMapper;
+import ChuyenNganh.Seafood.Security.Services.*;
 import ChuyenNganh.Seafood.Utils.FileUploadUlti;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -21,8 +24,10 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -37,9 +42,11 @@ public class AdminController {
     private SeafoodService seafoodService;
     @Autowired
     private CategoryService categoryService;
-
-
-
+    @Autowired
+    private BillService billService;
+    @Autowired
+    private BillMapper billMapper;
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
     @GetMapping
     public String index() {
         return "Admin/index";
@@ -142,65 +149,140 @@ public class AdminController {
         seafoodService.deleteSeafood(id);
         return "redirect:/admin/seafoods";
     }
+    @Autowired
+    private UserService userService;
+    Logger logger = LoggerFactory.getLogger(AdminController.class);
+    @GetMapping("/assign-role/{id}")
+    public String addRoleToUserForm(@PathVariable("id") Long id, Model model) {
+        User user = userService.getUserById(id);
+        List<Role> roles = roleService.getAllRoles();
+        String[] rolesOfUser = userService.getRolesOfUser(id);
 
-//    @PreAuthorize("hasAuthority('ADMIN')")
-    /*@GetMapping("/list-user")
+        model.addAttribute("user", user);
+        model.addAttribute("roles", roles);
+        model.addAttribute("roleOfUser", rolesOfUser);
+        return "Admin/role/assign-role";
+
+    }
+    @PostMapping("/assign-role")
+    public String addRoleToUser(@RequestParam Long userId,
+                                @RequestParam Long roleId, RedirectAttributes redirectAttributes) {
+        String[] roles = userService.getRolesOfUser(userId);
+        String roleName = String.valueOf(roleService.getRoleById(roleId).getName());
+
+        if (Arrays.asList(roles).contains(roleName)) {
+            redirectAttributes.addFlashAttribute("exists", "Quyền đã tồn tại cho người dùng này");
+            logger.warn("Quyền có Id {} đã tồn tại cho người dùng có Id {}", roleService.getRoleById(roleId).getId(), userId);
+            return "redirect:/admin/assign-role/" + userId;
+        } else {
+            userService.addRoleToUser(userId, roleId);
+            redirectAttributes.addFlashAttribute("success", "Đã thêm quyền cho người dùng này");
+            logger.info("Gán thành công quyền có Id {} cho user có Id {}", roleService.getRoleById(roleId).getId(), userId);
+            return "redirect:/admin/assign-role/" + userId;
+        }
+    }
+
+    @PostMapping("/remove-role-from-user")
+    public String removeRoleFromUser(@RequestParam("userId") Long userId,
+                                     @RequestParam("roleId") Long roleId, RedirectAttributes redirectAttributes) {
+        // Lấy danh sách các quyền của người dùng
+        String[] roles = userService.getRolesOfUser(userId);
+        // Lấy tên quyền dựa trên roleId
+        String roleName = String.valueOf(roleService.getRoleById(roleId).getDescription());
+
+        if (Arrays.asList(roles).contains(roleName)) {
+            userService.removeRoleFromUser(userId, roleId);
+            redirectAttributes.addFlashAttribute("success", "Đã xóa quyền cho người dùng này");
+            logger.info("Xóa thành công quyền có Id {} cho user có Id {}", roleService.getRoleById(roleId).getId(), userId);
+        } else {
+            // Người dùng không có quyền này
+            redirectAttributes.addFlashAttribute("notExist", "Người dùng không có quyền này");
+            logger.warn("Người dùng có Id {} không có quyền có Id {} để xóa", userId, roleService.getRoleById(roleId).getId());
+        }
+
+        // Chuyển hướng trở lại trang gán quyền cho người dùng
+        return "redirect:/admin/assign-role/" + userId;
+    }
+
+    @GetMapping("/list-user")
     public String getAllUser(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
         return "Admin/list-user";
     }
-    //endregion
 
-    //region Role
-//    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/roles")
     public String getAllRole(Model model) {
         List<Role> roles = roleService.getAllRoles();
         model.addAttribute("roles", roles);
         return "Admin/role/list-role";
     }
-
+// Thêm role
 //    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/add-role")
+    /*@GetMapping("/add-role")
     public String addRoleForm(Model model) {
         model.addAttribute("role", new Role());
         return "Admin/role/add-role";
     }
+
     @PostMapping("/add-role")
-    public String addRole(@Valid @ModelAttribute("role") Role role, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                logger.error("Lỗi binding trường {}: {}", error.getField(), error.getDefaultMessage());
-                model.addAttribute(error.getField() + "_error", error.getDefaultMessage());
-            }
+    public String addRole(
+            @RequestParam String roleName, // Change the parameter to a String
+            @Valid @ModelAttribute("role") Role role,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        Role newRole = new Role();
+        try {
+            ERole roleEnum = ERole.valueOf(roleName.toUpperCase());
+            newRole.setName(roleEnum);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("roleName_error", "Tên vai trò không hợp lệ.");
+            model.addAttribute("role", newRole);
             return "Admin/role/add-role";
         }
-        logger.info("Tạo thành công Quyền có Id{}", role.getRoleId());
-        roleService.saveRole(role);
+
+        newRole.setDescription(role.getDescription());
+        roleService.saveRole(newRole);
+
         return "redirect:/admin/roles";
     }
-
-*//*    @GetMapping("/edit-role/{roleId}")
-    public String editRoleForm(@PathVariable("roleId") UUID roleId, Model model) {
+*/
+    @GetMapping("/edit-role/{roleId}")
+    public String editRoleForm(@PathVariable("roleId") Long roleId, Model model) {
         Role role = roleService.getRoleById(roleId);
         model.addAttribute("role", role);
         return "Admin/role/edit-role";
-    }*//*
+    }
     @PostMapping("/edit-role/{roleId}")
     public String editRole(@Valid @ModelAttribute("role") Role role,
-                           BindingResult bindingResult, Model model) {
+                           BindingResult bindingResult, Model model, @PathVariable String roleId) {
         if (bindingResult.hasErrors()) {
             List<FieldError> errors = bindingResult.getFieldErrors();
             for (FieldError error : errors) {
-                logger.error("Lỗi binding trường {}: {}", error.getField(), error.getDefaultMessage());
                 model.addAttribute(error.getField() + "_error", error.getDefaultMessage());
             }
             return "Admin/role/edit-role";
         }
         roleService.saveRole(role);
-        logger.info("Sửa thành công role có Id {}", role.getRoleId());
         return "redirect:/admin/roles";
-    }*/
+    }
+    @GetMapping("/delete-role/{roleId}")
+    public String deleteRole(@PathVariable("roleId") Long roleId) {
+        Role role = roleService.getRoleById(roleId);
+        roleService.removeRole(roleId);
+        logger.info("Xóa thành công role {}", role.getName());
+        return "redirect:/admin/roles";
+    }
+
+    @GetMapping("/bills")
+    public String getAllBills(Model model) {
+        List<Bill> bills = billService.getAllBills();
+        List<BillDto> billDtos = bills.stream()
+                .map(billMapper::toDto)
+                .collect(Collectors.toList());
+
+        model.addAttribute("bills", billDtos);
+        return "Admin/bill/list-bill";
+    }
 }

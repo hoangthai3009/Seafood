@@ -12,5 +12,11 @@ public class BillDto {
     private Long billId;
     private BigDecimal totalPrice;
     private LocalDate createdAt;
-    private String name;
+    private String fullname;
+    private String address;
+    private String phone;
+    private String note;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

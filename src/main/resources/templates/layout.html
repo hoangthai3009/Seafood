@@ -17,10 +17,8 @@
     <!-- Css Styles -->
     <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/bootstrap.min.css}" type="text/css">
     <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/font-awesome.min.css}" type="text/css">
-    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/elegant-icons.css}" type="text/css">
     <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/nice-select.css}" type="text/css">
     <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/jquery-ui.min.css}" type="text/css">
-    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/owl.carousel.min.css}" type="text/css">
     <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/slicknav.min.css}" type="text/css">
     <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/style.css}" type="text/css">
 </header>
@@ -29,70 +27,13 @@
 <div id="preloder">
     <div class="loader"></div>
 </div>
-<!-- Header Section Begin -->
+
 <header class="header">
-<!--
-    <div class="header__top">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-md-6">
-                    <div class="header__top__left">
-                        <ul>
-                            <li><i class="fas fa-envelope"></i> hello@colorlib.com</li>
-                            <li>Free Shipping for all Order of $99</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <div class="header__top__right">
-
-                        <div class="header__top__right__auth" id="loginButton">
-                            <a href="/login"><i class="fas fa-user"></i>Đăng Nhập</a>
-                        </div>
-                        <div class="header__top__right__auth ml-4">
-                            <li class="nav-item dropdown no-arrow" id="userDropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small text-uppercase" id="userName"></span>
-                                    <i class="fa-solid fa-circle-user"></i>
-                                </a>
-                                <div id="logoutButton" class="dropdown-menu dropdown-menu-right shadow animated&#45;&#45;grow-in"
-                                     aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Profile
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Settings
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Activity Log
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <form method="POST" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">
-                                        <button class="btn btn-sm btn-outline-danger" onclick="signoutUser()">
-                                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                            Đăng Xuất
-                                        </button>
-                                    </form>
-                                </div>
-                            </li>
-
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
--->
     <div class="container">
         <div class="row">
             <div class="col-lg-3">
                 <div class="header__logo">
-                    <a href="/index"><img src="img/logo.png" alt=""></a>
+                    <a href="/"><img src="/static/img/banner/logo.png" alt=""></a>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -116,7 +57,7 @@
                 <div class="header__cart">
                     <ul>
                         <li><a href="#"><i class="fas fa-heart"></i> <span>1</span></a></li>
-                        <li><a href="#"><i class="fas fa-shopping-bag"></i> <span>3</span></a></li>
+                        <li><a href="/cart"><i class="fas fa-shopping-bag"></i> <span id="cartItemCount"></span></a></li>
                         <div class="header__cart__price">
                             <!-- Đăng Nhập / Thông Tin Người Dùng -->
                             <li class="nav-item" id="loginButton">
@@ -275,7 +216,72 @@
         }
 
     </script>
+    <script>
+        function addToCart(seafoodId, seafoodName, price, image, quantity, categoryName) {
+            // Tạo đối tượng FormData để chứa thông tin sản phẩm
+            const formData = new FormData();
+            formData.append("seafoodId", seafoodId);
+            formData.append("seafoodName", seafoodName);
+            formData.append("price", price);
+            formData.append("image", image);
+            formData.append("quantity", quantity);
+            formData.append("categoryName", categoryName);
 
+            // Thực hiện Ajax request sử dụng jQuery
+            $.ajax({
+                type: "POST",
+                url: "/cart/add-to-cart",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    // Xử lý phản hồi từ máy chủ nếu cần
+                    console.log("Sản phẩm đã được thêm vào giỏ hàng.");
+                    updateCartItemCount();
+
+                },
+                error: function(error) {
+                    console.error("Lỗi khi thêm sản phẩm vào giỏ hàng:", error);
+                }
+            });
+        }
+
+
+        // Hàm để cập nhật cartItemCount
+        function updateCartItemCount() {
+            const cartItemCountElement = document.getElementById("cartItemCount");
+
+            fetch('/cartItemCount')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+                .then(quantity => {
+                    cartItemCountElement.textContent = quantity;
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Gọi hàm cập nhật cartItemCount ban đầu
+            updateCartItemCount();
+        });
+
+        function formatNumberWithCommas(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        document.querySelectorAll(".price-value").forEach(function(element) {
+            var price = parseFloat(element.innerText);
+            if (!isNaN(price)) {
+                element.innerText = formatNumberWithCommas(price);
+            }
+        });
+    </script>
+    <script src="/js/list-seafood.js"></script>
 </footer>
 </body>
 </html>

@@ -1,10 +1,179 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Giỏ hàng</title>
+    <th:block th:replace="layout :: link-css"></th:block>
 </head>
 <body>
+<th:block th:replace="layout :: header"></th:block>
 
+<!-- Shoping Cart Section Begin -->
+<section class="shoping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shoping__cart__table">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th class="shoping__product">Mặt hàng</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Tổng cộng</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="item : ${cart}">
+                        <tr th:data-item-id="${item.getSeafoodId()}">
+                            <td class="shoping__cart__item">
+                                <img th:src="${item.getImage()}" alt="">
+                                <h5 th:text="${item.getSeafoodName()}" style="font-weight: bold"></h5>
+                            </td>
+                            <td class="shoping__cart__price price-value" th:text="${item.getPrice()} + '₫'"></td>
+                            <td class="shoping__cart__quantity">
+                                <div class="quantity">
+                                    <div class="pro-qty">
+                                        <input type="text" th:value="${item.getQuantity()}">
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="shoping__cart__total price-value" th:text="${(item.getPrice()) * (item.getQuantity())} + '₫'">
+
+                            </td>
+                            <td>
+                            <a class="shoping__cart__item__close btn btn-sm" th:href="@{'/cart/removeFromCart/' + ${item.getSeafoodId()}}"
+                                onclick="return confirm('Xóa sản phẩm này khỏi giỏ hàng?')">
+                                <i class="fas fa-times" style="color:red"></i>
+                            </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="position-absolute" style="bottom: -5%; left: 50%">
+                    <!-- Phân trang -->
+                    <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{|/cart?page=${currentPage - 1}|}" aria-label="Previous">
+                                    <span aria-hidden="true">&lt;</span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
+                                <a class="page-link" th:href="@{|/cart?page=${page}|}" th:text="${page + 1}"></a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{|/cart?page=${currentPage + 1}|}" aria-label="Next">
+                                    <span aria-hidden="true">&gt;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shoping__cart__btns">
+                    <a href="/seafood/list" class="primary-btn cart-btn">Quay lại</a>
+                    <a href="#" class="primary-btn cart-btn cart-btn-right" id="updateButton"><span class="icon_loading"></span>
+                        Cập nhật</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="shoping__continue">
+                    <div class="shoping__discount">
+                        <h5>Mã giảm giá</h5>
+                        <form action="#">
+                            <input type="text" placeholder="Nhập mã giảm giá ở đây">
+                            <button type="submit" class="site-btn">ÁP DỤNG</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="shoping__checkout">
+                    <h5>Tổng quan</h5>
+                    <ul>
+                        <li>Số lượng sản phẩm <span th:text="${totalQuantity}"></span></li>
+                        <li>Tổng tiền <span class="price-value" th:text="${totalPrice}">0</span> ₫</li>
+                    </ul>
+                    <a href="/cart/checkout" class="primary-btn">Tiếp tục</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shoping Cart Section End -->
+<th:block th:replace="layout :: footer"></th:block>
+<script>
+    /*$(document).ready(function() {
+        $("#thanh-toan").click(function(event) {
+            if (!isLoggedIn()) {
+                event.preventDefault(); // Ngăn chặn gửi biểu mẫu
+                alert("Bạn cần đăng nhập để sử dụng chức năng này");
+            }
+        });
+
+        function isLoggedIn() {
+            return $.ajax({
+                url: "/api/user/check-authentication",
+                method: "GET",
+                async: false
+            }).responseJSON.authenticated;
+        }
+    });*/
+    document.addEventListener("DOMContentLoaded", function () {
+        var updateButton = document.getElementById("updateButton");
+
+        updateButton.addEventListener("click", function () {
+            // Reload trang khi nút "Cập nhật" được click
+            location.reload();
+        });
+    });
+
+
+</script>
+<script>
+    var proQty = $('.pro-qty');
+    proQty.prepend('<span class="dec qtybtn">-</span>');
+    proQty.append('<span class="inc qtybtn">+</span>');
+    proQty.on('click', '.qtybtn', function () {
+        var $button = $(this);
+        var oldValue = $button.parent().find('input').val();
+        var newVal;
+        if ($button.hasClass('inc')) {
+            newVal = parseFloat(oldValue) + 1;
+        } else {
+            // Don't allow decrementing below zero
+            if (oldValue > 0) {
+                newVal = parseFloat(oldValue) - 1;
+            } else {
+                newVal = 0;
+            }
+        }
+        $button.parent().find('input').val(newVal);
+
+        // Get the item ID
+        var itemId = $button.closest('tr').data('item-id'); // Ensure your items have a data-item-id attribute
+
+        // Construct the URL for the GET request
+        var updateUrl = '/cart/updateCart/' + itemId + '/' + newVal; // Update with your actual URL structure
+
+        // Send a GET request to update the cart
+        $.get(updateUrl, function(data) {
+            // Handle the response if needed
+            console.log('Cart updated');
+        }).fail(function(error) {
+            console.log('Error updating cart: ', error);
+            // Handle errors here
+        });
+
+
+    });
+
+</script>
 </body>
 </html>

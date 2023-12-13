@@ -3,6 +3,7 @@ package ChuyenNganh.Seafood.Controller;
 import ChuyenNganh.Seafood.DTO.BillDto;
 import ChuyenNganh.Seafood.Entity.Bill;
 import ChuyenNganh.Seafood.Entity.Seafood;
+import ChuyenNganh.Seafood.Entity.User;
 import ChuyenNganh.Seafood.Mapper.BillMapper;
 import ChuyenNganh.Seafood.Security.Services.CategoryService;
 import ChuyenNganh.Seafood.Security.Services.IImageService;
@@ -162,13 +163,6 @@ public class AdminController {
     }
 
     // Thống kê theo tháng
-    @GetMapping("/thongKeTheoThang")
-    public String thongKeTheoThang(Model model) {
-        int year = LocalDate.now().getYear();
-        Map<Integer, BigDecimal> revenueByMonth = BillService.thongKeTongTienTheoThang(year);
-        model.addAttribute("revenueByMonth", revenueByMonth);
-        return "Admin/bill/thongKeTheoThang";
-    }
     @GetMapping("/thongKeTheoThang-data")
     @ResponseBody
     public Map<Integer, BigDecimal> thongKeData(@RequestParam("year") int year) {
@@ -201,9 +195,9 @@ public class AdminController {
         int currentYear = LocalDate.now().getYear();
         return BillService.tongTienNam(currentYear);
     }
-
+/*
 //    @PreAuthorize("hasAuthority('ADMIN')")
-    /*@GetMapping("/list-user")
+    @GetMapping("/list-user")
     public String getAllUser(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);

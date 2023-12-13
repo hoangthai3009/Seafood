@@ -1,8 +1,12 @@
 package ChuyenNganh.Seafood.Entity;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CartItem {
     private Long seafoodId;
     private String seafoodName;

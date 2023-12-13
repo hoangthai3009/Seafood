@@ -29,11 +29,11 @@
 /*----------------------------------------*/
 /* Template default CSS
 /*----------------------------------------*/
-
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap&subset=vietnamese');
 html,
 body {
 	height: 100%;
-	font-family: 'Sans Serif Collection', sans-serif;
+	font-family: 'Quicksand', sans-serif;
 	-webkit-font-smoothing: antialiased;
 	font-smoothing: antialiased;
 	font-weight: 700;
@@ -48,7 +48,7 @@ h6 {
 	margin: 0;
 	color: #111111;
 	font-weight: 400;
-	font-family: "Sans Serif Collection", sans-serif;
+	font-family: "Quicksand", sans-serif;
 }
 
 h1 {
@@ -77,7 +77,7 @@ h6 {
 
 p {
 	font-size: 16px;
-	font-family: "Arial", sans-serif;
+	font-family: "Quicksand", sans-serif;
 	color: #6f6f6f;
 	font-weight: 700;
 	line-height: 26px;
@@ -142,8 +142,8 @@ ol {
 }
 
 .spad {
-	padding-top: 100px;
-	padding-bottom: 100px;
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
 .text-white h1,
@@ -170,13 +170,13 @@ ol {
 	font-weight: 700;
 	background: royalblue;
 	letter-spacing: 2px;
+	border-radius: 50px;
 }
 
 .site-btn {
 	font-size: 14px;
 	color: #ffffff;
-	font-weight: 800;
-	text-transform: uppercase;
+	font-weight: bold;
 	display: inline-block;
 	padding: 13px 30px 12px;
 	background: royalblue;
@@ -562,7 +562,7 @@ ol {
 -----------------------*/
 
 .hero {
-	padding-bottom: 50px;
+	padding-bottom: 10px;
 }
 
 .hero.hero-normal {
@@ -572,7 +572,9 @@ ol {
 .hero.hero-normal .hero__categories {
 	position: relative;
 }
-
+.hero__categories {
+	position: relative; /* Để dropdown có thể sử dụng 'position: absolute;' đúng cách */
+}
 .hero.hero-normal .hero__categories ul {
 	display: none;
 	position: absolute;
@@ -592,6 +594,7 @@ ol {
 	position: relative;
 	padding: 10px 25px 10px 40px;
 	cursor: pointer;
+	border-radius: 50px;
 }
 
 .hero__categories__all i {
@@ -610,7 +613,7 @@ ol {
 	position: absolute;
 	right: 18px;
 	top: 9px;
-	font-family: "Roboto", "sans-serif";
+	font-family: "Quicksand", "sans-serif";
 	font-size: 18px;
 	color: #ffffff;
 }
@@ -644,6 +647,7 @@ ol {
 	border: 1px solid #ebebeb;
 	position: relative;
 	float: left;
+	border-radius: 50px;
 }
 
 .hero__search__form form .hero__search__categories {
@@ -672,7 +676,6 @@ ol {
 	right: 14px;
 	top: 14px;
 }
-
 .hero__search__form form input {
 	width: 70%;
 	border: none;
@@ -680,10 +683,13 @@ ol {
 	font-size: 16px;
 	color: black;
 	padding-left: 20px;
+	font-weight: bold;
+
 }
 
 .hero__search__form form input::placeholder {
 	color: royalblue;
+	font-weight: bold;
 }
 
 .hero__search__form form button {
@@ -692,6 +698,7 @@ ol {
 	top: -1px;
 	height: 50px;
 	font-weight: bold;
+	border-radius: 50px;
 }
 
 .hero__search__phone {
@@ -731,6 +738,16 @@ ol {
 	display: flex;
 	align-items: center;
 	padding-left: 75px;
+	border-radius: 15px;
+}
+.category-list {
+	position: absolute;
+	left: 0;
+	top: 46px;
+	z-index: 9;
+	background: #ffffff;
+	width: 100%; /* Đặt chiều ngang của dropdown bằng 100% */
+	display: none;
 }
 
 .hero__text span {
@@ -761,13 +778,14 @@ ol {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 20px;
+	border-radius: 50px;
 }
 
 .categories__item {
 	height: 270px;
 	position: relative;
-	border: 1px solid #ccc; /* Thêm viền với màu và độ rộng tùy ý */
-	border-radius: 10px; /* Bo tròn các góc của viền */
+	 /* Thêm viền với màu và độ rộng tùy ý */
+	border-radius: 15px; /* Bo tròn các góc của viền */
 	overflow: hidden; /* Giữ nội dung trong phạm vi bo tròn */
 }
 
@@ -817,11 +835,13 @@ ol {
 	top: 50%;
 	-webkit-transform: translateY(-35px);
 	background: #ffffff;
+	border-radius: 50px;
 }
 
 .categories__slider.owl-carousel .owl-nav button.owl-next {
 	left: auto;
 	right: -35px;
+	border-radius: 50px;
 }
 
 /*---------------------
@@ -914,17 +934,17 @@ ol {
 	margin-right: 0;
 }
 
-.featured__item__pic__hover li:hover a {
+.featured__item__pic__hover li:hover button {
 	background: royalblue;
 	border-color: royalblue;
 }
 
-.featured__item__pic__hover li:hover a i {
+.featured__item__pic__hover li:hover button i {
 	color: #ffffff;
 	transform: rotate(360deg);
 }
 
-.featured__item__pic__hover li a {
+.featured__item__pic__hover li button {
 	font-size: 16px;
 	color: #1c1c1c;
 	height: 40px;
@@ -942,7 +962,7 @@ ol {
 	transition: all, 0.5s;
 }
 
-.featured__item__pic__hover li a i {
+.featured__item__pic__hover li button i {
 	position: relative;
 	transform: rotate(0);
 	-webkit-transition: all, 0.3s;
@@ -1007,14 +1027,17 @@ ol {
 	margin-right: 10px;
 	line-height: 30px;
 	text-align: center;
+	border-radius: 50px;
 }
 
 .latest-product__slider.owl-carousel .owl-nav button span {
 	font-weight: 700;
+	border-radius: 50px;
 }
 
 .latest-product__slider.owl-carousel .owl-nav button:last-child {
 	margin-right: 0;
+	border-radius: 50px;
 }
 
 .latest-product__item {
@@ -1075,18 +1098,21 @@ ol {
 	display: flex;
 	align-items: center;
 	padding: 45px 0 40px;
+	margin-top: 0; /* Loại bỏ khoảng cách trên cùng */
+	margin-bottom: 0; /* Loại bỏ khoảng cách dưới cùng */
 }
+
 
 .breadcrumb__text h2 {
 	font-size: 46px;
-	color: #ffffff;
+	color: royalblue;
 	font-weight: 700;
 }
 
 .breadcrumb__option a {
 	display: inline-block;
 	font-size: 16px;
-	color: #ffffff;
+	color: black;
 	font-weight: 700;
 	margin-right: 20px;
 	position: relative;
@@ -1105,7 +1131,7 @@ ol {
 .breadcrumb__option span {
 	display: inline-block;
 	font-size: 16px;
-	color: #ffffff;
+	color: black;
 }
 
 /*---------------------
@@ -1287,7 +1313,7 @@ ol {
 -----------------------*/
 
 .product {
-	padding-top: 80px;
+	padding-top: 0;
 	padding-bottom: 80px;
 }
 
@@ -1447,10 +1473,12 @@ ol {
 .product__discount__slider.owl-carousel .owl-dots button.active {
 	background: #707070;
 	border-color: #6f6f6f;
+	border-radius: 50px;
 }
 
 .product__discount__slider.owl-carousel .owl-dots button:last-child {
 	margin-right: 0;
+	border-radius: 50px;
 }
 
 .filter__item {
@@ -1664,7 +1692,7 @@ ol {
 	height: 30px;
 	border: 1px solid #b2b2b2;
 	font-size: 14px;
-	color: #b2b2b2;
+	color: black;
 	font-weight: 700;
 	line-height: 28px;
 	text-align: center;
@@ -1674,6 +1702,7 @@ ol {
 	-ms-transition: all, 0.3s;
 	-o-transition: all, 0.3s;
 	transition: all, 0.3s;
+	border-radius: 1px;
 }
 
 .product__pagination a:hover,
@@ -1952,6 +1981,8 @@ ol {
 .shoping__cart__table table tbody tr td.shoping__cart__item img {
 	display: inline-block;
 	margin-right: 25px;
+	width: 100px;
+	border-radius: 15px;
 }
 
 .shoping__cart__table table tbody tr td.shoping__cart__item h5 {
@@ -1990,6 +2021,7 @@ ol {
 .shoping__cart__table table tbody tr td.shoping__cart__quantity .pro-qty {
 	width: 120px;
 	height: 40px;
+	border-radius: 20px;
 }
 
 .shoping__cart__table table tbody tr td.shoping__cart__quantity .pro-qty input {
@@ -2038,6 +2070,7 @@ ol {
 	text-align: center;
 	display: inline-block;
 	margin-right: 15px;
+	border-radius: 25px;
 }
 
 .shoping__discount form input::placeholder {
@@ -2045,10 +2078,9 @@ ol {
 }
 
 .shoping__discount form button {
-	padding: 15px 30px 11px;
-	font-size: 12px;
-	letter-spacing: 4px;
-	background: #6f6f6f;
+	background: royalblue;
+	border-radius: 50px;
+	font-family: "Quicksand";
 }
 
 .shoping__checkout {
@@ -2056,6 +2088,7 @@ ol {
 	padding: 30px;
 	padding-top: 20px;
 	margin-top: 50px;
+	border-radius: 25px;
 }
 
 .shoping__checkout h5 {
@@ -2300,6 +2333,7 @@ ol {
 	letter-spacing: 2px;
 	width: 100%;
 	margin-top: 10px;
+	border-radius: 50px;
 }
 
 /*---------------------
@@ -2450,6 +2484,7 @@ ol {
 	top: 0;
 	height: 100%;
 	padding: 0px 18px;
+	border-radius: 50px;
 }
 
 .blog__sidebar__recent .blog__sidebar__recent__item {
@@ -2727,6 +2762,7 @@ ol {
 	top: 0;
 	padding: 0 26px;
 	height: 100%;
+	border-radius: 50px;
 }
 
 .footer__widget .footer__widget__social a {
@@ -2931,6 +2967,7 @@ ol {
 .contact-form form button {
 	font-size: 18px;
 	letter-spacing: 2px;
+	border-radius: 50px;
 }
 
 /*--------------------------------- Responsive Media Quaries -----------------------------*/
@@ -3013,9 +3050,11 @@ ol {
 	}
 	.categories__slider.owl-carousel .owl-nav button {
 		left: -20px;
+		border-radius: 50px;
 	}
 	.categories__slider.owl-carousel .owl-nav button.owl-next {
 		right: -20px;
+		border-radius: 50px;
 	}
 	.filter__sort .nice-select {
 		padding-left: 5px;
@@ -3257,9 +3296,11 @@ ol {
 		left: 0;
 		top: 0;
 		-webkit-transform: translateY(0);
+		border-radius: 50px;
 	}
 	.categories__slider.owl-carousel .owl-nav button.owl-next {
 		right: -10px;
+		border-radius: 50px;
 	}
 	.footer__copyright {
 		text-align: center;
@@ -3554,6 +3595,59 @@ ol {
 	.user-icon:hover .tooltip {
 		visibility: visible;
 		opacity: 1;
+	}
+	/* CSS */
+	.button-4 {
+		appearance: none;
+		background-color: #FAFBFC;
+		border: 1px solid rgba(27, 31, 35, 0.15);
+		border-radius: 6px;
+		box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+		box-sizing: border-box;
+		color: #24292E;
+		cursor: pointer;
+		display: inline-block;
+		font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		list-style: none;
+		padding: 6px 16px;
+		position: relative;
+		transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+		user-select: none;
+		-webkit-user-select: none;
+		touch-action: manipulation;
+		vertical-align: middle;
+		white-space: nowrap;
+		word-wrap: break-word;
+	}
+
+	.button-4:hover {
+		background-color: #F3F4F6;
+		text-decoration: none;
+		transition-duration: 0.1s;
+	}
+
+	.button-4:disabled {
+		background-color: #FAFBFC;
+		border-color: rgba(27, 31, 35, 0.15);
+		color: #959DA5;
+		cursor: default;
+	}
+
+	.button-4:active {
+		background-color: #EDEFF2;
+		box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+		transition: none 0s;
+	}
+
+	.button-4:focus {
+		outline: 1px transparent;
+	}
+
+	.button-4:before {
+		display: none;
 	}
 
 }

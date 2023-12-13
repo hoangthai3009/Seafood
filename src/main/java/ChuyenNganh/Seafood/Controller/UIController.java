@@ -47,4 +47,5 @@ public class UIController {
     public String getSeafoodDetail() {
         return "Seafood/detail";
     }
+
 }

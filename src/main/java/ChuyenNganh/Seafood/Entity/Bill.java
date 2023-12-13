@@ -23,10 +23,14 @@ public class Bill {
     @Column(name = "created_at")
     private LocalDate createdAt;
 
+    @Column(name = "note")
+    private String note;
+
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
     private Set<BillDetail> billDetails;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
 }

@@ -34,6 +34,9 @@ public class User {
     @Size(max = 50)
     private String fullname;
 
+    @Size(max=120)
+    private String address;
+
     @Pattern(regexp = "^[0-9]{10}$")
     private String phone;
 

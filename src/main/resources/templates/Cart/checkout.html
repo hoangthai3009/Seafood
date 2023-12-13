@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán</title>
+    <th:block th:replace="layout :: link-css"></th:block>
+
+</head>
+<th:block th:replace="layout :: header"></th:block>
+
+<body>
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <h4>Chi tiết đơn hàng</h4>
+            <form action="/checkout" th:action="@{/checkout}" th:object="${billDto}" method="post">
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <!-- Họ và tên -->
+                        <div class="checkout__input">
+                            <p>Họ và tên<span>*</span></p>
+                            <input type="text" th:field="*{fullname}" placeholder="Họ và tên">
+                        </div>
+                        <!-- Địa chỉ -->
+                        <div class="checkout__input">
+                            <p>Địa chỉ<span>*</span></p>
+                            <input type="text" th:field="*{address}" placeholder="Địa chỉ giao hàng" class="checkout__input__add">
+                        </div>
+                        <!-- Số điện thoại và Email -->
+                                <div class="checkout__input">
+                                    <p>Số điện thoại<span>*</span></p>
+                                    <input type="text" th:field="*{phone}" placeholder="Số điện thoại liên hệ">
+                                </div>
+                        <!-- Ghi chú đơn hàng -->
+                        <div class="checkout__input">
+                            <p>Ghi chú đơn hàng<span>*</span></p>
+                            <input type="text" th:field="*{note}" placeholder="Ghi chú chỉ dẫn giao hàng hoặc lưu ý cho shop.">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <div class="checkout__order__products">Products <span>Total</span></div>
+                            <ul th:each="item : ${cartItems}">
+                                <li>
+                                    <th:block th:text="${item.seafoodName}"></th:block>
+                                    <span class="price-value" th:text="${(item.price * item.quantity)}"></span>
+                                </li>
+                            </ul>
+                            <div class="checkout__order__subtotal">Số lượng<span th:text="${totalQuantity}"></span></div>
+                            <div class="checkout__order__total">Tổng tiền<span class="price-value" th:text="${totalPrice}"></span> ₫</div>
+                            <button type="submit" class="site-btn">Đặt Hàng</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- Checkout Section End -->
+<th:block th:replace="layout :: footer"></th:block>
+
+</body>
+</html>

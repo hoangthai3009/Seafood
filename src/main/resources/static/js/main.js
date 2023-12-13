@@ -202,23 +202,80 @@
     /*-------------------
 		Quantity change
 	--------------------- */
-    var proQty = $('.pro-qty');
+
+    /*var proQty = $('.pro-qty');
     proQty.prepend('<span class="dec qtybtn">-</span>');
     proQty.append('<span class="inc qtybtn">+</span>');
     proQty.on('click', '.qtybtn', function () {
         var $button = $(this);
         var oldValue = $button.parent().find('input').val();
+        var newVal;
         if ($button.hasClass('inc')) {
-            var newVal = parseFloat(oldValue) + 1;
+            newVal = parseFloat(oldValue) + 1;
         } else {
             // Don't allow decrementing below zero
             if (oldValue > 0) {
-                var newVal = parseFloat(oldValue) - 1;
+                newVal = parseFloat(oldValue) - 1;
             } else {
                 newVal = 0;
             }
         }
         $button.parent().find('input').val(newVal);
+
+        // Get the item ID
+        var itemId = $button.closest('tr').data('item-id'); // Ensure your items have a data-item-id attribute
+
+        // Construct the URL for the GET request
+        var updateUrl = '/cart/updateCart/' + itemId + '/' + newVal; // Update with your actual URL structure
+
+        // Send a GET request to update the cart
+        /!*$.get(updateUrl, function(data) {
+            // Handle the response if needed
+            console.log('Cart updated');
+        }).fail(function(error) {
+            console.log('Error updating cart: ', error);
+            // Handle errors here
+        });
+        *!/
+        $.ajax({
+            type: 'GET',
+            url: updateUrl,
+            data: {
+                quantity: newVal
+            },
+            success: function(data) {
+                // Handle the response if needed
+                console.log('Cart updated');
+
+                // Reload only the part of the page that needs updating
+                updateCartUI(data);
+            },
+            error: function(error) {
+                console.log('Error updating cart: ', error);
+                // Handle errors here
+            }
+        });
     });
 
+    function updateCartUI(data) {
+        // Cập nhật giao diện dựa trên dữ liệu từ phản hồi AJAX
+        // Ví dụ: cập nhật tổng số lượng sản phẩm, tổng tiền, hoặc bất kỳ thông tin nào khác trên trang giỏ hàng của bạn
+
+        // Cập nhật số lượng sản phẩm và tổng tiền
+        $('#total-quantity').text(data.totalQuantity);
+        $('.price-value').text(formatNumberWithCommas(data.totalPrice) + ' ₫');
+
+        // Lặp qua từng hàng trong bảng giỏ hàng để cập nhật thông tin
+        $('tbody tr').each(function () {
+            var itemId = $(this).data('item-id');
+            var itemData = data.cart.find(item => item.seafoodId === itemId);
+
+            if (itemData) {
+                // Cập nhật số lượng và tổng cộng cho từng sản phẩm
+                $(this).find('.pro-qty input').val(itemData.quantity);
+                $(this).find('.shoping__cart__total').text(formatNumberWithCommas(itemData.total) + ' ₫');
+            }
+        });
+    }
+*/
 })(jQuery);

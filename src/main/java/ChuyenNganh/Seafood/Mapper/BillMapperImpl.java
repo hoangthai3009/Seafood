@@ -12,7 +12,7 @@ public class BillMapperImpl implements BillMapper {
         dto.setBillId(bill.getId());
         dto.setTotalPrice(bill.getTotalPrice());
         dto.setCreatedAt(bill.getCreatedAt());
-        dto.setName(bill.getUser().getFullname());
+        dto.setFullname(bill.getUser().getFullname());
         return dto;
     }
 }

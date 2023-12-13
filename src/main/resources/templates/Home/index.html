@@ -7,7 +7,7 @@
     <meta name="keywords" content="Ogani, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Ogani | Template</title>
+    <title>Hải Sản Xanh</title>
     <th:block th:replace="layout :: link-css"></th:block>
 </head>
 <th:block th:replace="layout :: header"></th:block>
@@ -18,11 +18,11 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="hero__categories">
-                    <div class="hero__categories__all">
+                    <div class="hero__categories__all" id="categoryButton">
                         <i class="fas fa-bars"></i>
                         <span>Danh mục</span>
                     </div>
-                    <ul id="categoryList">
+                    <ul id="categoryList" class="category-list" style="display: none;">
                         <!-- Danh sách thể loại sẽ được cập nhật từ API -->
                     </ul>
                 </div>
@@ -30,13 +30,13 @@
             <div class="col-lg-9">
                 <div class="hero__search">
                     <div class="hero__search__form">
-                        <form action="/search" th:method="GET">
+                        <form>
                             <div class="hero__search__categories">
                                 Danh mục
                                 <span class="arrow_carrot-down"></span>
                             </div>
-                            <input type="text" placeholder="Bạn cần tìm kiếm gì ?">
-                            <button type="submit" class="site-btn">Tìm kiếm</button>
+                            <input id="searchInputIndex" type="text" placeholder="Bạn cần tìm kiếm gì ?">
+                            <button id="searchButtonIndex" type="submit" class="site-btn">Tìm kiếm</button>
                         </form>
                     </div>
                     <div class="hero__search__phone">
@@ -49,16 +49,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="hero__item set-bg" data-setbg="img/banner/banner-hero.jpg">
-                    <div class="hero__text">
-                        <span>Hải sản tươi sống</span>
-                        <h2>Chất lượng <br />100% độ uy tín</h2>
-                        <p>Còn ngại gì mà không mua sắm ngay nào</p>
-                        <a href="#" class="primary-btn">Mua ngay</a>
-                    </div>
-                </div>
+
             </div>
         </div>
+        <div class="hero__item set-bg" data-setbg="img/banner/banner-hero.jpg">
+        <div class="hero__text">
+            <span>Hải sản tươi sống</span>
+            <h2>Chất lượng <br />100% độ uy tín</h2>
+            <p>Còn ngại gì mà không mua sắm ngay nào</p>
+            <a href="/seafood/list" class="primary-btn">Mua ngay</a>
+        </div>
+    </div>
+        <hr>
     </div>
 </section>
 <!-- Hero Section End -->
@@ -102,17 +104,18 @@
 </div>
 <!-- Featured Section End -->
 <!-- Banner Begin -->
-<div class="banner">
+<hr>
+<div class="banner mb-3">
     <div class="container">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="banner__pic">
-                    <img src="/img/banner/banner-1.jpg" alt="">
+                    <img src="/img/banner/banner-1.jpg" alt="" style="border-radius: 15px">
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="banner__pic">
-                    <img src="/img/banner/banner-2.png" alt="">
+                    <img src="/img/banner/banner-2.png" alt="" style="border-radius: 15px">
                 </div>
             </div>
         </div>
@@ -136,8 +139,12 @@
                 <div class="featured__item__pic">
                     <img src="${seafood.mainImage}" alt="Seafood Image">
                     <ul class="featured__item__pic__hover">
-                        <li><a href="#"><i class="fas fa-heart"></i></a></li>
-                        <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                        <li><button><i class="fas fa-heart"></i></button></li>
+                        <li>
+                            <button class="addToCartButton" onclick="updateCartItemCount()">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </li>
                     </ul>
                 </div>
                 <div class="featured__item__text">
@@ -146,6 +153,14 @@
                 </div>
             </div>`;
             seafoodList.appendChild(column);
+            // Gán sự kiện click cho nút thêm vào giỏ hàng sau khi thêm vào DOM
+            const addToCartButton = column.querySelector(".addToCartButton");
+            addToCartButton.addEventListener("click", function() {
+                const confirmation = confirm('Bạn có muốn thêm sản phẩm này vào giỏ hàng?');
+                if (confirmation) {
+                    addToCart(seafood.id, seafood.name, seafood.price, seafood.mainImage, 1, seafood.category.name);
+                }
+            });
         }
 
         // Hàm lọc sản phẩm theo category
@@ -178,31 +193,6 @@
     });
 </script>
 <script>
-    // Sử dụng fetch để gọi API và cập nhật danh sách thể loại
-    fetch('api/categories')
-        .then(response => response.json())
-        .then(data => {
-            const categoryList = document.getElementById('categoryList');
-
-            // Xóa mọi thẻ li hiện tại trong danh sách thể loại
-            categoryList.innerHTML = '';
-
-            // Duyệt qua dữ liệu từ API và thêm các thẻ li mới
-            data.forEach(category => {
-                const li = document.createElement('li');
-                const a = document.createElement('a');
-
-                // Sử dụng category.id hoặc một trường nào đó từ API để đặt giá trị href
-                a.href = `#${category.id}`;
-                a.textContent = category.name;
-
-                li.appendChild(a);
-                categoryList.appendChild(li);
-            });
-        })
-        .catch(error => console.error('Lỗi khi gọi API:', error));
-</script>
-<script>
     $(document).ready(function () {
         // Sử dụng fetch để gọi API và cập nhật danh sách thể loại
         fetch('api/categories')
@@ -213,8 +203,8 @@
                 // Xóa mọi phần tử hiện tại trong danh sách thể loại
                 categorySlider.empty();
 
-                // Duyệt qua dữ liệu từ API và thêm các phần tử mới
-                data.forEach(category => {
+                // Duyệt qua dữ liệu từ API và thêm các phần tử mới, nhưng chỉ đến 4 mục
+                data.slice(0, 4).forEach(category => { // Sử dụng .slice(0, 4) để lấy chỉ 4 mục đầu tiên
                     const item = $('<div class="categories__item">' +
                         `<img src="${category.img}" alt="${category.name}">` +
                         `<h5><a href="${category.id}">${category.name}</a></h5>` +
@@ -225,7 +215,56 @@
             })
             .catch(error => console.error('Lỗi khi gọi API:', error));
     });
+
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const categoryButton = document.getElementById('categoryButton');
+        const categoryList = document.getElementById('categoryList');
+        let isHidden = true;
+
+        // Function to toggle the display of the categoryList
+        function toggleCategoryList() {
+            if (isHidden) {
+                categoryList.style.display = 'block';
+            } else {
+                categoryList.style.display = 'none';
+            }
+            isHidden = !isHidden;
+        }
+
+        // Click event handler for the categoryButton
+        categoryButton.addEventListener('click', function() {
+            toggleCategoryList();
+        });
+
+        // Fetch categories from API and update the list when the page loads
+        fetch('api/categories')
+            .then(response => response.json())
+            .then(data => {
+                categoryList.innerHTML = ''; // Clear the existing list
+
+                data.forEach(category => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = `#${category.id}`;
+                    a.textContent = category.name;
+
+                    li.appendChild(a);
+                    categoryList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Lỗi khi gọi API:', error));
+    });
+
+    document.getElementById("searchButtonIndex").addEventListener("click", function (event) {
+        event.preventDefault();
+        const keyword = document.getElementById("searchInputIndex").value;
+        // Chuyển hướng sang trang /seafood/list và truyền tham số keyword
+        window.location.href = `/seafood/list?keyword=${encodeURIComponent(keyword)}`;
+    });
+</script>
+
 </body>
 </html>
 

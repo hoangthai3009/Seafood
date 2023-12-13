@@ -12,4 +12,5 @@ public interface BillMapper {
 
     @Mapping(source = "user.fullname", target = "name")
     BillDto toDto(Bill bill);
+
 }

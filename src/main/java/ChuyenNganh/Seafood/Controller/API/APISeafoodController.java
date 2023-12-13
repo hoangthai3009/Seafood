@@ -7,7 +7,9 @@ import ChuyenNganh.Seafood.Security.Services.SeafoodService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -25,15 +27,33 @@ public class APISeafoodController {
     private SeafoodService seafoodService;
 
     @GetMapping
-    public ResponseEntity<Page<Seafood>> getAllSeafoods(@RequestParam String keyword, Pageable pageable) {
-        if(keyword != null){
-            Page<Seafood> matchingSeafoods = seafoodService.searchSeafood(keyword, pageable);
-            return ResponseEntity.ok(matchingSeafoods);
-        }else {
-            Page<Seafood> seafoods = seafoodService.getAllSeafoods(pageable);
-            return ResponseEntity.ok(seafoods);
+    public ResponseEntity<Page<Seafood>> getAllSeafoods(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "null") String sort,
+            Pageable pageable) {
+
+        Page<Seafood> seafoods;
+
+        if (keyword != null) {
+            seafoods = seafoodService.searchSeafood(keyword, pageable);
+        } else {
+            // Nếu không có từ khóa, thực hiện lấy tất cả và sắp xếp theo giá
+            Sort sorting;
+            if ("giaTang".equals(sort)) {
+                sorting = Sort.by("price").ascending();
+            } else if ("giaGiam".equals(sort)) {
+                sorting = Sort.by("price").descending();
+            } else {
+                sorting = Sort.unsorted();
+            }
+
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sorting);
+            seafoods = seafoodService.getAllSeafoods(pageable);
         }
+
+        return ResponseEntity.ok(seafoods);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Seafood> getSeafood(@PathVariable Long id) {

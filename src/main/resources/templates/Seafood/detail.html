@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="">
 <head>
     <meta charset="UTF-8">
-    <title ></title>
+    <title>Chi tiết sản phẩm</title>
     <th:block th:replace="layout :: link-css"></th:block>
     <style>
         /* Thêm các định dạng CSS tại đây */
@@ -80,7 +80,7 @@
 </head>
 <th:block th:replace="layout :: header"></th:block>
 <!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-section set-bg" data-setbg="/img/banner/banner-cua.jpg">
+<section class="breadcrumb-section set-bg" data-setbg="/img/banner/banner-sea.png">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -127,7 +127,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="primary-btn">Thêm giỏ hàng</a>
+                    <a href="javascript:void(0)" class="primary-btn addToCartButton">Thêm giỏ hàng</a>
                     <ul>
                         <li><b>Xuất xứ</b> <span id="product-origin"></span></li>
                         <!-- Các thông tin khác -->
@@ -186,6 +186,13 @@
                     updateMainImage(img.src); // Cập nhật hình ảnh chính khi click vào hình ảnh phụ
                 };
                 imageSlider.appendChild(img);
+            }
+        });
+        const addToCartButton = document.querySelector(".addToCartButton");
+        addToCartButton.addEventListener("click", function() {
+            const confirmation = confirm('Bạn có muốn thêm sản phẩm này vào giỏ hàng?');
+            if (confirmation) {
+                addToCart(seafood.id, seafood.name, seafood.price, seafood.mainImage, 1, seafood.category.name);
             }
         });
     }

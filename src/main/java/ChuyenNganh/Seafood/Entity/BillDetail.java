@@ -1,17 +1,14 @@
 package ChuyenNganh.Seafood.Entity;
 
-import ChuyenNganh.Seafood.Entity.compositeKey.BillDetailKey;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @Entity
-@Table(name = "bill_detail")
 public class BillDetail {
+
     @EmbeddedId
-    private BillDetailKey id;
+    private BillDetailId id;
 
     @ManyToOne
     @MapsId("seafoodId")
@@ -23,6 +20,10 @@ public class BillDetail {
     @JoinColumn(name = "bill_id")
     private Bill bill;
 
-    @Column(name = "amount")
-    private Long amount;
+    @Column(nullable = false)
+    private int quantity;
+
+    @Column(nullable = false)
+    private double price;
 }
+

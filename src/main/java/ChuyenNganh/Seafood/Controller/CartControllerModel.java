@@ -1,11 +1,11 @@
 package ChuyenNganh.Seafood.Controller;
 
 import ChuyenNganh.Seafood.DAOS.Cart;
-import ChuyenNganh.Seafood.DTO.BillDto;
 import ChuyenNganh.Seafood.Entity.Bill;
 import ChuyenNganh.Seafood.Entity.BillDetail;
 import ChuyenNganh.Seafood.Entity.CartItem;
 import ChuyenNganh.Seafood.Entity.Seafood;
+import ChuyenNganh.Seafood.Payload.Request.CheckoutRequest;
 import ChuyenNganh.Seafood.Repositories.IBillRepository;
 import ChuyenNganh.Seafood.Security.Services.CartService;
 import ChuyenNganh.Seafood.Security.Services.SeafoodService;
@@ -85,61 +85,18 @@ public class CartControllerModel {
         return "redirect:" + previousPage;
     }
 
-    @Autowired
-    private IBillRepository billRepository;
-
-    @Autowired
-    private SeafoodService seafoodService;
     @GetMapping("/checkout")
     public String showCheckoutForm(HttpSession session, Model model) {
         Cart cart = cartService.getCart(session);
+        model.addAttribute("checkoutRequest", new CheckoutRequest());
         model.addAttribute("cartItems", cart.getCartItems());
         model.addAttribute("totalPrice", cartService.getSumPrice(session));
         model.addAttribute("totalQuantity", cartService.getSumQuantity(session));
-        model.addAttribute("billDto", new BillDto());  // Tạo một đối tượng BillDto rỗng để form sử dụng
-        model.addAttribute("phone");
 
         return "Cart/checkout";  // Tên của template Thymeleaf cho trang checkout
     }
-    @PostMapping("/checkout")
-    public String processCheckout(@ModelAttribute BillDto billDTO, HttpSession session) {
-        List<CartItem> cartItems = (List<CartItem>) session.getAttribute("cart");
-
-        if (cartItems == null || cartItems.isEmpty()) {
-            // Xử lý trường hợp giỏ hàng rỗng
-            return "redirect:/cart-empty";
-        }
-
-        Bill bill = new Bill();
-        bill.setCreatedAt(LocalDate.now());
-        bill.setTotalPrice(BigDecimal.valueOf(cartService.getSumPrice(session)));
-        bill.setNote(billDTO.getNote());
-        billDTO.setPhone(billDTO.getPhone()); // Sử dụng trường phone từ BillDto
-
-        Set<BillDetail> billDetails = new HashSet<>();
-        BigDecimal totalPrice = BigDecimal.ZERO;
-
-        for (CartItem item : cartItems) {
-            Seafood seafood = seafoodService.getSeafoodById(item.getSeafoodId());
-            if (seafood == null) {
-                // Xử lý trường hợp không tìm thấy sản phẩm
-                continue;
-            }
-
-            BillDetail detail = new BillDetail();
-            detail.setBill(bill);
-            detail.setSeafood(seafood);
-            detail.setAmount((long) item.getQuantity());
-            billDetails.add(detail);
-        }
-
-        bill.setBillDetails(billDetails);
-        billRepository.save(bill);
-
-        cartService.removeCart(session);
-
-        // Xóa giỏ hàng từ session và chuyển hướng người dùng
-        session.removeAttribute("cart");
+    @GetMapping("/success")
+    public String showSuccessPage() {
         return "Cart/success";
     }
 

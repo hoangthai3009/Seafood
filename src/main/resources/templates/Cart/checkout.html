@@ -14,42 +14,34 @@
     <div class="container">
         <div class="checkout__form">
             <h4>Chi tiết đơn hàng</h4>
-            <form action="/checkout" th:action="@{/checkout}" th:object="${billDto}" method="post">
+            <form id="checkoutForm" method="post" th:action="@{/api/checkout}" th:object="${checkoutRequest}">
                 <div class="row">
                     <div class="col-lg-8 col-md-6">
-                        <!-- Họ và tên -->
-                        <div class="checkout__input">
-                            <p>Họ và tên<span>*</span></p>
-                            <input type="text" th:field="*{fullname}" placeholder="Họ và tên">
-                        </div>
                         <!-- Địa chỉ -->
                         <div class="checkout__input">
                             <p>Địa chỉ<span>*</span></p>
                             <input type="text" th:field="*{address}" placeholder="Địa chỉ giao hàng" class="checkout__input__add">
                         </div>
-                        <!-- Số điện thoại và Email -->
-                                <div class="checkout__input">
-                                    <p>Số điện thoại<span>*</span></p>
-                                    <input type="text" th:field="*{phone}" placeholder="Số điện thoại liên hệ">
-                                </div>
                         <!-- Ghi chú đơn hàng -->
                         <div class="checkout__input">
                             <p>Ghi chú đơn hàng<span>*</span></p>
                             <input type="text" th:field="*{note}" placeholder="Ghi chú chỉ dẫn giao hàng hoặc lưu ý cho shop.">
                         </div>
+                        <input type="hidden" id="totalPrice" th:value="${totalPrice}" />
+
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="checkout__order">
                             <div class="checkout__order__products">Products <span>Total</span></div>
-                            <ul th:each="item : ${cartItems}">
-                                <li>
-                                    <th:block th:text="${item.seafoodName}"></th:block>
+                            <ul id="cartItems" th:each="item, status : ${cartItems}">
+                                <li th:id="${'cartItem-' + status.index}" th:data-seafood-id="${item.seafoodId}" th:data-quantity="${item.quantity}" th:data-price="${item.price}">
+                                    <th:block th:text="${item.seafoodName}" ></th:block>
                                     <span class="price-value" th:text="${(item.price * item.quantity)}"></span>
                                 </li>
                             </ul>
                             <div class="checkout__order__subtotal">Số lượng<span th:text="${totalQuantity}"></span></div>
                             <div class="checkout__order__total">Tổng tiền<span class="price-value" th:text="${totalPrice}"></span> ₫</div>
-                            <button type="submit" class="site-btn">Đặt Hàng</button>
+                            <button type="submit" id="placeOrderBtn" class="site-btn">Đặt Hàng</button>
                         </div>
                     </div>
                 </div>
@@ -58,6 +50,64 @@
     </div>
 </section>
 <!-- Checkout Section End -->
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Your existing script block -->
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $("#placeOrderBtn").click(function (event) {
+            event.preventDefault();
+
+            $(this).prop('disabled', true);
+
+            // Get the total price from the hidden input field
+            var totalPrice = $('#totalPrice').val();
+
+            // Create an array of billDetails objects from cartItems
+            var billDetails = [];
+
+            // Iterate over cartItems and add each item to billDetails
+            $('#cartItems li').each(function () {
+                var item = $(this);
+                var seafoodId = item.data('seafood-id');
+                var quantity = item.data('quantity');
+                var price = item.data('price');
+
+                // Add the item to the billDetails array
+                billDetails.push({
+                    seafood: {
+                        id: seafoodId
+                    },
+                    quantity: quantity,
+                    price: price
+                });
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/api/checkout",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    totalPrice: totalPrice,
+                    note: $('#note').val(), // Replace with the actual ID of the note input
+                    address: $('#address').val(), // Replace with the actual ID of the address input
+                    billDetails: billDetails
+                }),
+                success: function (response) {
+                    alert("Checkout successful");
+                    window.location.href = "/cart/success";
+                },
+                error: function (error) {
+                    console.log(this.data);
+                    alert("Error during checkout: " + error.responseText);
+                    $("#placeOrderBtn").prop('disabled', false);
+                }
+            });
+        });
+    });
+</script>
+
 <th:block th:replace="layout :: footer"></th:block>
 
 </body>

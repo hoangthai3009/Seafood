@@ -1,36 +1,35 @@
 package ChuyenNganh.Seafood.Entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "bill")
 public class Bill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "total_price")
-    private BigDecimal totalPrice;
-
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private Date createdAt;
 
-    @Column(name = "note")
+    @Column(name = "total_price")
+    private double totalPrice;
+
     private String note;
 
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
-    private Set<BillDetail> billDetails;
+    private String address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
+    private Set<BillDetail> billDetails;
 }
+

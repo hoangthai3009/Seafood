@@ -1,10 +1,7 @@
 package ChuyenNganh.Seafood.Controller;
 
-import ChuyenNganh.Seafood.DTO.BillDto;
 import ChuyenNganh.Seafood.Entity.Bill;
 import ChuyenNganh.Seafood.Entity.Seafood;
-import ChuyenNganh.Seafood.Entity.User;
-import ChuyenNganh.Seafood.Mapper.BillMapper;
 import ChuyenNganh.Seafood.Security.Services.CategoryService;
 import ChuyenNganh.Seafood.Security.Services.IImageService;
 import ChuyenNganh.Seafood.Security.Services.RoleService;
@@ -32,11 +29,6 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-
-    @Autowired
-    private ChuyenNganh.Seafood.Security.Services.BillService BillService;
-    @Autowired
-    private BillMapper BillMapper;
     @Autowired
     IImageService imageService;
     @Autowired
@@ -151,53 +143,8 @@ public class AdminController {
         return "redirect:/admin/seafoods";
     }
 
-    @GetMapping("/bills")
-    public String getAllBills(Model model) {
-        List<Bill> bills = BillService.getAllBill();
-        List<BillDto> billDtos = bills.stream()
-                .map(BillMapper::toDto)
-                .collect(Collectors.toList());
-
-        model.addAttribute("bills", billDtos);
-        return "Admin/bill/list-bill";
-    }
-
-    // Thống kê theo tháng
-    @GetMapping("/thongKeTheoThang-data")
-    @ResponseBody
-    public Map<Integer, BigDecimal> thongKeData(@RequestParam("year") int year) {
-        return BillService.thongKeTongTienTheoThang(year);
-    }
-
-    // Thống kê theo ngày
-    @GetMapping("/thongKeTheoNgay")
-    public String thongKeNgay(Model model) {
-        int month = LocalDate.now().getMonthValue();
-        int year = LocalDate.now().getYear();
-        Map<Integer, BigDecimal> revenueByDay = BillService.thongKeTongTienTheoNgay(month, year);
-        model.addAttribute("revenueByDay", revenueByDay);
-        return "Admin/bill/thongKeTheoNgay";
-    }
-    @GetMapping("/thongKeTheoNgay-data")
-    @ResponseBody
-    public Map<Integer, BigDecimal> thongKeNgayData(@RequestParam("month") int month,
-                                                    @RequestParam("year") int year) {
-        return BillService.thongKeTongTienTheoNgay(month, year);
-    }
-    @GetMapping("/thongKeTheoTuan-data")
-    @ResponseBody
-    public Map<Integer, BigDecimal> thongKeTuanData(@RequestParam("year") int year){
-        return BillService.thongKeTongTienTheoTuan(year);
-    }
-    @GetMapping("/thongKeTheoNam-data")
-    @ResponseBody
-    public BigDecimal thongKeNamData() {
-        int currentYear = LocalDate.now().getYear();
-        return BillService.tongTienNam(currentYear);
-    }
-/*
 //    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/list-user")
+    /*@GetMapping("/list-user")
     public String getAllUser(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="layout-admin :: link-css"></th:block>
+    <title>Chỉnh Sửa Bill</title>
+    <link th:fragment="link-css" th:href="@{/css/seafood-admin.css}" rel="stylesheet" type="text/css">
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <th:block th:replace="layout-admin :: header"></th:block>
+    <div id="content-wrapper">
+        <div id="content">
+            <th:block th:replace="layout-admin :: nav"></th:block>
+            <div class="container-fluid">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold" style="font-size: 25px">CHỈNH SỬA BILL</h6>
+                    </div>
+                    <form class="p-4" th:action="@{/admin/edit-bill}" th:object="${bill}" method="post">
+                        <input type="hidden" name="billId" th:value="${bill.id}" />
+                        <input type="hidden" name="user" th:field="*{user}"/>
+                        <div class="form-group">
+                            <label for="userFullname">Khách hàng</label>
+                            <input class="form-control" type="text" id="userFullname" th:value="${bill.user.fullname}" readonly>
+                            <span class="text-danger" th:if="${#fields.hasErrors('user.fullname')}" th:errors="*{user.fullname}"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="totalPrice">Tổng tiền:</label>
+                            <input class="form-control" type="text" id="totalPrice" th:field="*{totalPrice}">
+                            <span class="text-danger" th:if="${#fields.hasErrors('totalPrice')}" th:errors="*{totalPrice}"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Địa chỉ:</label>
+                            <input class="form-control" type="text" id="address" th:field="*{address}">
+                            <span class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="createdAt">Ngày tạo:</label>
+                            <input class="form-control" type="date" id="createdAt" th:field="*{createdAt}">
+                            <span class="text-danger" th:if="${#fields.hasErrors('createdAt')}" th:errors="*{createdAt}"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="note">Ghi chú:</label>
+                            <input class="form-control" type="text" id="note" th:field="*{note}">
+                            <span class="text-danger" th:if="${#fields.hasErrors('note')}" th:errors="*{note}"></span>
+                        </div>
+                        <!-- Thêm các trường khác nếu cần -->
+
+                        <input type="submit" class="mt-2 btn btn-primary form-control" value="Cập nhật Bill">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <th:block th:replace="layout-admin :: footer"></th:block>
+    </div>
+</div>
+</body>
+</html>

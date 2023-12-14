@@ -109,22 +109,7 @@
 <!-- Shoping Cart Section End -->
 <th:block th:replace="layout :: footer"></th:block>
 <script>
-    /*$(document).ready(function() {
-        $("#thanh-toan").click(function(event) {
-            if (!isLoggedIn()) {
-                event.preventDefault(); // Ngăn chặn gửi biểu mẫu
-                alert("Bạn cần đăng nhập để sử dụng chức năng này");
-            }
-        });
 
-        function isLoggedIn() {
-            return $.ajax({
-                url: "/api/user/check-authentication",
-                method: "GET",
-                async: false
-            }).responseJSON.authenticated;
-        }
-    });*/
     document.addEventListener("DOMContentLoaded", function () {
         var updateButton = document.getElementById("updateButton");
 

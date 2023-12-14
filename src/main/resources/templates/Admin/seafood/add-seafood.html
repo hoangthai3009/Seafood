@@ -74,11 +74,11 @@
                                               th:errors="*{manufacturing_date}"></span>
                                     </div>
                                 <div class="col mt-3">
-                                    <label class="d-flex justify-content-center" for="expiry_date">Hạn sử dụng: </label>
-                                        <input class="form-control" type="date" th:field="*{expiry_date}"
-                                               id="expiry_date">
-                                        <span class="text-danger" th:if="${#fields.hasErrors('expiry_date')}"
-                                              th:errors="*{expiry_date}"></span>
+                                    <label class="d-flex justify-content-center" for="unit">Quy cách: </label>
+                                        <input class="form-control" type="text" th:field="*{unit}"
+                                               id="unit">
+                                        <span class="text-danger" th:if="${#fields.hasErrors('unit')}"
+                                              th:errors="*{unit}"></span>
                                 </div>
                             </div>
                         </div>

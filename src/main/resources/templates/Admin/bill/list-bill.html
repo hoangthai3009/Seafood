@@ -25,21 +25,28 @@
                                     <th>Mã hóa đơn</th>
                                     <th>Tên khách hàng</th>
                                     <th>Tổng tiền</th>
+                                    <th>SĐT</th>
+                                    <th>Địa chỉ</th>
                                     <th>Ngày tạo</th>
+                                    <th>Ghi chú</th>
                                     <th>Chức năng</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="bill: ${bills}">
-                                    <td th:text="${bill.billId}"></td>
-                                    <td th:text="${bill.name}"></td>
+                                    <td th:text="${bill.id}"></td>
+                                    <td th:text="${bill.user.getFullname()}"></td>
                                     <td th:text="${bill.totalPrice}"></td>
+                                    <td th:text="${bill.user.getPhone()}"></td>
+                                    <td th:text="${bill.address}"></td>
                                     <td th:text="${bill.createdAt}"></td>
+                                    <td th:text="${bill.note}"></td>
+
                                     <td>
-                                        <a th:href="@{#}" class="mr-2">
+                                        <a th:href="@{/admin/edit-bill/{id}(id=${bill.id})}" class="mr-2">
                                             <i class="fa-regular fa-pen-to-square"></i></a>
-                                        <a th:href="@{#}"
-                                           onclick="return confirm('Xóa sản phẩm này?')"><i class="fas fa-times" style="color:red"></i></a>
+                                        <a th:href="@{/admin/delete-bill/{billId}(billId=${bill.id})}"
+                                           onclick="return confirm('Xóa hóa đơn phẩm này?')"><i class="fas fa-times" style="color:red"></i></a>
                                     </td>
                                 </tr>
                                 </tbody>

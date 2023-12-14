@@ -54,7 +54,23 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <!-- Your existing script block -->
-<script th:inline="javascript">
+<!--<script th:inline="javascript">
+    /*$(document).ready(function() {
+        $("#thanh-toan").click(function(event) {
+            if (!isLoggedIn()) {
+                event.preventDefault(); // Ngăn chặn gửi biểu mẫu
+                alert("Bạn cần đăng nhập để sử dụng chức năng này");
+            }
+        });
+
+        function isLoggedIn() {
+            return $.ajax({
+                url: "/api/user/check-authentication",
+                method: "GET",
+                async: false
+            }).responseJSON.authenticated;
+        }
+    });*/
     $(document).ready(function () {
         $("#placeOrderBtn").click(function (event) {
             event.preventDefault();
@@ -105,6 +121,84 @@
                 }
             });
         });
+    });
+</script>-->
+<script th:inline="javascript">
+    $(document).ready(function() {
+        $("#placeOrderBtn").click(function (event) {
+            event.preventDefault();
+
+            // Kiểm tra trạng thái đăng nhập và lấy ID người dùng
+            getUserInfo(function(userId) {
+                if (userId) {
+                    processOrder(userId); // Thực hiện hành động thanh toán
+                } else {
+                    alert('Bạn cần đăng nhập để sử dụng chức năng này');
+                }
+            });
+        });
+
+        function getUserInfo(callback) {
+            $.ajax({
+                url: '/api/auth/check-login',
+                method: 'GET',
+                success: function(data) {
+                    if (data.authenticated) {
+                        callback(data.userId); // Gọi hàm callback với ID người dùng
+                    } else {
+                        callback(null); // Người dùng chưa đăng nhập
+                    }
+                },
+                error: function(err) {
+                    console.error("Error checking authentication status: ", err);
+                    callback(null); // Có lỗi xảy ra
+                }
+            });
+        }
+
+        function processOrder(userId) {
+            $("#placeOrderBtn").prop('disabled', true);
+
+            var totalPrice = $('#totalPrice').val();
+            var billDetails = [];
+
+            $('#cartItems li').each(function () {
+                var item = $(this);
+                var seafoodId = item.data('seafood-id');
+                var quantity = item.data('quantity');
+                var price = item.data('price');
+
+                billDetails.push({
+                    seafood: { id: seafoodId },
+                    quantity: quantity,
+                    price: price
+                });
+            });
+
+            // Thêm userId vào dữ liệu bill
+            var billData = {
+                userId: userId,
+                totalPrice: totalPrice,
+                note: $('#note').val(),
+                address: $('#address').val(),
+                billDetails: billDetails
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/api/checkout",
+                contentType: "application/json",
+                data: JSON.stringify(billData),
+                success: function (response) {
+                    alert("Checkout successful");
+                    window.location.href = "/cart/success";
+                },
+                error: function (error) {
+                    console.error("Error during checkout: ", error);
+                    $("#placeOrderBtn").prop('disabled', false);
+                }
+            });
+        }
     });
 </script>
 

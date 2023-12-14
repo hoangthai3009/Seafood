@@ -76,7 +76,6 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/**").permitAll()
                 ).oauth2Login(oauth -> oauth.loginPage("/login").userInfoEndpoint(
                         user -> user.userService(oauthUserService)

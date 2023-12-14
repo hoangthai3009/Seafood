@@ -54,9 +54,16 @@ public class AuthController {
 
 
     @GetMapping("/check-login")
-    public Map<String, Object> checkAuthentication(Authentication authentication) {
-        boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
-        return Collections.singletonMap("authenticated", isAuthenticated);
+    public ResponseEntity<?> checkAuthentication(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            Long userId = userDetails.getId();
+            return ResponseEntity.ok(Map.of(
+                    "authenticated", true,
+                    "userId", userId
+            ));
+        }
+        return ResponseEntity.ok(Map.of("authenticated", false));
     }
 
     @PostMapping("/login")

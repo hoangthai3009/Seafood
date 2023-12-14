@@ -3,8 +3,10 @@ package ChuyenNganh.Seafood.Controller.API;
 import ChuyenNganh.Seafood.Entity.Bill;
 import ChuyenNganh.Seafood.Entity.BillDetail;
 import ChuyenNganh.Seafood.Entity.BillDetailId;
+import ChuyenNganh.Seafood.Entity.User;
 import ChuyenNganh.Seafood.Payload.Request.BillDetailRequest;
 import ChuyenNganh.Seafood.Payload.Request.CheckoutRequest;
+import ChuyenNganh.Seafood.Repositories.IUserRepository;
 import ChuyenNganh.Seafood.Security.Services.BillDetailService;
 import ChuyenNganh.Seafood.Security.Services.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +31,14 @@ public class APIBillController {
         this.billService = billService;
         this.billDetailService = billDetailService;
     }
-
+    @Autowired
+    IUserRepository userRepository;
     @PostMapping
     public ResponseEntity<String> checkout(@RequestBody CheckoutRequest checkoutRequest) {
         try {
             // Create a new Bill
+            User user = userRepository.findById(checkoutRequest.getUserId())
+                    .orElseThrow(() -> new Exception("User not found"));
             Bill newBill = new Bill();
             newBill.setCreatedAt(new Date());
             newBill.setTotalPrice(checkoutRequest.getTotalPrice());

@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -266,5 +267,55 @@ public class AdminController {
         logger.info("Xóa thành công role {}", role.getName());
         return "redirect:/admin/roles";
     }
+    @GetMapping("/bills")
+    public String getAllBills(Model model) {
+        List<Bill> bills = billService.getAllBills();
+        model.addAttribute("bills", bills);
+        return "Admin/bill/list-bill";
+    }
+    @GetMapping("/edit-bill/{billId}")
+    public String showEditBillForm(@PathVariable Long billId, Model model, RedirectAttributes redirectAttributes) {
+        Optional<Bill> bill = billService.getBillById(billId);
+        if (bill.isPresent()) {
+            model.addAttribute("bill", bill.get());
+            // Thêm bất kỳ thuộc tính nào khác cần thiết cho view
+            return "Admin/bill/edit-bill"; // Tên của view template chỉnh sửa bill
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Bill không tồn tại.");
+            return "redirect:/admin/bills";
+        }
+    }
+    @PostMapping("/edit-bill")
+    public String editBill(@RequestParam Long billId, @ModelAttribute Bill bill, RedirectAttributes redirectAttributes) {
+        Optional<Bill> existingBillOpt = billService.getBillById(billId);
+        if (existingBillOpt.isPresent()) {
+            Bill existingBill = existingBillOpt.get();
 
+            // Cập nhật các thuộc tính của existingBill từ bill, KHÔNG cập nhật ID
+            existingBill.setTotalPrice(bill.getTotalPrice());
+            existingBill.setNote(bill.getNote());
+            existingBill.setAddress(bill.getAddress());
+            existingBill.setCreatedAt(bill.getCreatedAt());
+            existingBill.setUser(bill.getUser());
+            billService.saveBill(existingBill);
+            redirectAttributes.addFlashAttribute("success", "Bill đã được cập nhật thành công.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Bill không tồn tại.");
+        }
+        return "redirect:/admin/bills";
+    }
+
+
+    // Phương thức xóa bill
+    @GetMapping("/delete-bill/{billId}")
+    public String deleteBill(@PathVariable Long billId, RedirectAttributes redirectAttributes) {
+        Optional<Bill> bill = billService.getBillById(billId);
+        if (bill.isPresent()) {
+            billService.deleteBill(billId);
+            redirectAttributes.addFlashAttribute("success", "Bill đã được xóa thành công.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Bill không tồn tại.");
+        }
+        return "redirect:/admin/bills";
+    }
 }

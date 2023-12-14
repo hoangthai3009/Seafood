@@ -5,9 +5,7 @@ import ChuyenNganh.Seafood.Security.Jwt.AuthTokenFilter;
 import ChuyenNganh.Seafood.Security.Jwt.JwtUtils;
 import ChuyenNganh.Seafood.Security.Services.CustomOAuth2User;
 import ChuyenNganh.Seafood.Security.Services.CustomOAuth2UserService;
-import ChuyenNganh.Seafood.Security.Services.UserDetailsImpl;
 import ChuyenNganh.Seafood.Security.Services.UserDetailsServiceImpl;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,9 +30,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 
 @Configuration
-@EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
-
+@EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -80,12 +75,9 @@ public class WebSecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->auth
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/**").permitAll()
-                        .requestMatchers("/admin/**")
-                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_MODERATOR")
-                        .anyRequest().permitAll()
                 ).oauth2Login(oauth -> oauth.loginPage("/login").userInfoEndpoint(
                         user -> user.userService(oauthUserService)
                 ).successHandler(new AuthenticationSuccessHandler() {

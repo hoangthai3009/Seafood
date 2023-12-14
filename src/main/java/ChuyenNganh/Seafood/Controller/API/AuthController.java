@@ -13,8 +13,6 @@ import ChuyenNganh.Seafood.Security.Jwt.JwtUtils;
 import ChuyenNganh.Seafood.Security.Services.EmailSenderService;
 import ChuyenNganh.Seafood.Security.Services.UserDetailsImpl;
 import jakarta.validation.Valid;
-
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +54,7 @@ public class AuthController {
 
 
     @GetMapping("/check-login")
-    public Map<String, Boolean> checkAuthentication(Authentication authentication) {
+    public Map<String, Object> checkAuthentication(Authentication authentication) {
         boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
         return Collections.singletonMap("authenticated", isAuthenticated);
     }

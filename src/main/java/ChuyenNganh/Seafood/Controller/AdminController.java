@@ -1,17 +1,14 @@
 package ChuyenNganh.Seafood.Controller;
 
-import ChuyenNganh.Seafood.DTO.BillDto;
-import ChuyenNganh.Seafood.Entity.*;
-import ChuyenNganh.Seafood.Mapper.BillMapper;
+import ChuyenNganh.Seafood.Entity.Bill;
+import ChuyenNganh.Seafood.Entity.Role;
+import ChuyenNganh.Seafood.Entity.Seafood;
+import ChuyenNganh.Seafood.Entity.User;
 import ChuyenNganh.Seafood.Security.Services.*;
-import ChuyenNganh.Seafood.Utils.FileUploadUlti;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,15 +16,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -44,8 +36,6 @@ public class AdminController {
     private CategoryService categoryService;
     @Autowired
     private BillService billService;
-    @Autowired
-    private BillMapper billMapper;
 //    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
     @GetMapping
     public String index() {
@@ -275,14 +265,4 @@ public class AdminController {
         return "redirect:/admin/roles";
     }
 
-    @GetMapping("/bills")
-    public String getAllBills(Model model) {
-        List<Bill> bills = billService.getAllBills();
-        List<BillDto> billDtos = bills.stream()
-                .map(billMapper::toDto)
-                .collect(Collectors.toList());
-
-        model.addAttribute("bills", billDtos);
-        return "Admin/bill/list-bill";
-    }
 }

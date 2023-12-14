@@ -35,7 +35,7 @@ public class User {
     @Size(max = 60, message = "Tên của bạn không được vượt quá 60 ký tự.")
     private String fullname;
 
-    @Size(max=120)
+    @Size(max = 120)
     private String address;
 
     @Pattern(regexp = "^[0-9]{10}$")

@@ -28,10 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -78,9 +75,18 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("id", userDetails.getId());
+        responseBody.put("fullname", userDetails.getFullname());
+        responseBody.put("username", userDetails.getUsername());
+        responseBody.put("email", userDetails.getEmail());
+        responseBody.put("address", userDetails.getAddress());
+        responseBody.put("phone", userDetails.getPhone());
+        responseBody.put("roles", roles);
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(Collections.singletonMap("roles", roles));
+                .body(responseBody);
     }
 
     @PostMapping("/register")

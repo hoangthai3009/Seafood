@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import ChuyenNganh.Seafood.Entity.User;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,17 +29,20 @@ public class UserDetailsImpl implements UserDetails {
 
     private String fullname;
 
+    private String address;
+
     private String phone;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String email, String password, String fullname, String phone,
+    public UserDetailsImpl(Long id, String username, String email, String password, String fullname, String address, String phone,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.fullname = fullname;
+        this.address = address;
         this.phone = phone;
         this.authorities = authorities;
     }
@@ -54,6 +58,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 user.getFullname(),
+                user.getAddress(),
                 user.getPhone(),
                 authorities);
     }

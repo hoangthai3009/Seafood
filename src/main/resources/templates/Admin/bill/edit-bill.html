@@ -29,7 +29,7 @@
                         <div class="form-group">
                             <label for="totalPrice">Tổng tiền:</label>
                             <input class="form-control" type="text" id="totalPrice" th:field="*{totalPrice}">
-                            <span class="text-danger" th:if="${#fields.hasErrors('totalPrice')}" th:errors="*{totalPrice}"></span>
+                            <span class="text-danger price-value" th:if="${#fields.hasErrors('totalPrice')}" th:errors="*{totalPrice}"></span>
                         </div>
                         <div class="form-group">
                             <label for="address">Địa chỉ:</label>
@@ -38,7 +38,7 @@
                         </div>
                         <div class="form-group">
                             <label for="createdAt">Ngày tạo:</label>
-                            <input class="form-control" type="date" id="createdAt" th:field="*{createdAt}">
+                            <input class="form-control" type="date" id="createdAt" th:value="${formattedCreatedAt}" readonly>
                             <span class="text-danger" th:if="${#fields.hasErrors('createdAt')}" th:errors="*{createdAt}"></span>
                         </div>
                         <div class="form-group">

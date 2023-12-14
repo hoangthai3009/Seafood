@@ -52,79 +52,62 @@
 <!-- Checkout Section End -->
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-<!-- Your existing script block -->
-<!--<script th:inline="javascript">
-    /*$(document).ready(function() {
-        $("#thanh-toan").click(function(event) {
-            if (!isLoggedIn()) {
-                event.preventDefault(); // Ngăn chặn gửi biểu mẫu
-                alert("Bạn cần đăng nhập để sử dụng chức năng này");
-            }
-        });
-
-        function isLoggedIn() {
-            return $.ajax({
-                url: "/api/user/check-authentication",
-                method: "GET",
-                async: false
-            }).responseJSON.authenticated;
-        }
-    });*/
-    $(document).ready(function () {
-        $("#placeOrderBtn").click(function (event) {
-            event.preventDefault();
-
-            $(this).prop('disabled', true);
-
-            // Get the total price from the hidden input field
-            var totalPrice = $('#totalPrice').val();
-
-            // Create an array of billDetails objects from cartItems
-            var billDetails = [];
-
-            // Iterate over cartItems and add each item to billDetails
-            $('#cartItems li').each(function () {
-                var item = $(this);
-                var seafoodId = item.data('seafood-id');
-                var quantity = item.data('quantity');
-                var price = item.data('price');
-
-                // Add the item to the billDetails array
-                billDetails.push({
-                    seafood: {
-                        id: seafoodId
-                    },
-                    quantity: quantity,
-                    price: price
-                });
-            });
-
-            $.ajax({
-                type: "POST",
-                url: "/api/checkout",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    totalPrice: totalPrice,
-                    note: $('#note').val(), // Replace with the actual ID of the note input
-                    address: $('#address').val(), // Replace with the actual ID of the address input
-                    billDetails: billDetails
-                }),
-                success: function (response) {
-                    alert("Checkout successful");
-                    window.location.href = "/cart/success";
-                },
-                error: function (error) {
-                    console.log(this.data);
-                    alert("Error during checkout: " + error.responseText);
-                    $("#placeOrderBtn").prop('disabled', false);
-                }
-            });
-        });
-    });
-</script>-->
 <script th:inline="javascript">
     $(document).ready(function() {
+        // Hàm kiểm tra và sử dụng dữ liệu giỏ hàng từ localStorage
+        function checkAndUseCartData() {
+            var cartData = localStorage.getItem('cartData');
+
+            if (cartData) {
+                var cart = JSON.parse(cartData);
+
+                // Sử dụng dữ liệu giỏ hàng để xây dựng đơn đặt hàng
+                var totalPrice = 0;
+                var billDetails = [];
+
+                cart.forEach(function(item) {
+                    var seafoodId = item.seafoodId;
+                    var quantity = item.quantity;
+                    var price = item.price;
+
+                    totalPrice += price;
+                    billDetails.push({
+                        seafood: { id: seafoodId },
+                        quantity: quantity,
+                        price: price
+                    });
+                });
+
+                // Thêm userId vào dữ liệu bill
+                var billData = {
+                    userId: userId, // Được lấy từ đăng nhập
+                    totalPrice: totalPrice,
+                    note: $('#note').val(),
+                    address: $('#address').val(),
+                    billDetails: billDetails
+                };
+
+                // Gửi đơn đặt hàng lên máy chủ
+                $.ajax({
+                    type: "POST",
+                    url: "/api/checkout",
+                    contentType: "application/json",
+                    data: JSON.stringify(billData),
+                    success: function (response) {
+                        alert("Checkout successful");
+                        window.location.href = "/cart/success";
+                    },
+                    error: function (error) {
+                        console.error("Error during checkout: ", error);
+                        $("#placeOrderBtn").prop('disabled', false);
+                    }
+                });
+
+                // Xóa dữ liệu giỏ hàng sau khi sử dụng
+                localStorage.removeItem('cartData');
+            }
+        }
+
         $("#placeOrderBtn").click(function (event) {
             event.preventDefault();
 
@@ -184,6 +167,7 @@
                 billDetails: billDetails
             };
 
+            // Gửi đơn đặt hàng lên máy chủ
             $.ajax({
                 type: "POST",
                 url: "/api/checkout",
@@ -199,6 +183,9 @@
                 }
             });
         }
+
+        // Gọi hàm kiểm tra và sử dụng dữ liệu giỏ hàng sau khi đăng nhập
+        checkAndUseCartData();
     });
 </script>
 

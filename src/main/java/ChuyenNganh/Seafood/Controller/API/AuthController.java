@@ -58,9 +58,11 @@ public class AuthController {
         if (authentication != null && authentication.isAuthenticated()) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             Long userId = userDetails.getId();
+            String fullname = userDetails.getFullname(); // Thêm dòng này
             return ResponseEntity.ok(Map.of(
                     "authenticated", true,
-                    "userId", userId
+                    "userId", userId,
+                    "fullname", fullname // Thêm trường fullname
             ));
         }
         return ResponseEntity.ok(Map.of("authenticated", false));

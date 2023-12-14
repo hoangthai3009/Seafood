@@ -24,7 +24,7 @@
                                 <tr>
                                     <th>Mã hóa đơn</th>
                                     <th>Tên khách hàng</th>
-                                    <th>Tổng tiền</th>
+                                    <th>Tổng tiền (đ)</th>
                                     <th>SĐT</th>
                                     <th>Địa chỉ</th>
                                     <th>Ngày tạo</th>
@@ -36,10 +36,10 @@
                                 <tr th:each="bill: ${bills}">
                                     <td th:text="${bill.id}"></td>
                                     <td th:text="${bill.user.getFullname()}"></td>
-                                    <td th:text="${bill.totalPrice}"></td>
+                                    <td class="price-value" th:text="${bill.totalPrice}"></td>
                                     <td th:text="${bill.user.getPhone()}"></td>
                                     <td th:text="${bill.address}"></td>
-                                    <td th:text="${bill.createdAt}"></td>
+                                    <td th:text="${#dates.format(bill.createdAt, 'dd/MM/yyyy - h:mm a')}"></td>
                                     <td th:text="${bill.note}"></td>
 
                                     <td>

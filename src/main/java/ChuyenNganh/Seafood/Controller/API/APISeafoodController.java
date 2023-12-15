@@ -75,38 +75,6 @@ public class APISeafoodController {
         }
     }
 
-    @GetMapping("/{seafoodId}/comments")
-    public ResponseEntity<List<Comment>> getCommentsBySeafood(@PathVariable Long seafoodId) {
-        List<Comment> comments = commentService.getCommentBySeafoodId(seafoodId);
-        return ResponseEntity.ok(comments);
-    }
-    @PostMapping("/{seafoodId}/comments")
-    public ResponseEntity<Comment> addComment(@PathVariable Long seafoodId, @RequestBody Comment comment) {
-        Comment newComment = commentService.addComment(seafoodId, comment);
-        if (newComment != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(newComment);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-    @PutMapping("/comments/{commentId}")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long commentId, @RequestBody Comment comment) {
-        Comment updatedComment = commentService.updateComment(commentId, comment);
-        if (updatedComment != null) {
-            return ResponseEntity.ok(updatedComment);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
-        try {
-            commentService.deleteComment(commentId);
-            return ResponseEntity.ok().build(); // Trả về phản hồi thành công
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Trả về lỗi server nếu có vấn đề xảy ra
-        }
-    }
 
 }
 

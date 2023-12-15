@@ -36,19 +36,7 @@
             color: #e53e3e;
             margin-bottom: 20px;
         }
-
-        .primary-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .primary-btn:hover {
-            background-color: #0056b3;
-        }
-
+        
         .heart-icon {
             display: inline-block;
             margin-left: 15px;
@@ -76,6 +64,66 @@
             transition: opacity 0.2s ease-in-out;
             opacity: 1;
         }
+
+
+        .comments-section {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #ddd;
+            max-width: 65%;
+        }
+
+        .comments-section h3, .add-comment h4 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        #comments-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .comment {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px; /* Bo tròn mỗi bình luận */
+            border: 1px solid #ddd; /* Thêm viền */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+        }
+
+        .comment strong {
+            font-weight: bold;
+            margin-right: 5px;
+            color: royalblue;
+        }
+
+        .comment em {
+            font-style: italic;
+            color: #666;
+            margin-left: 5px;
+            font-size: 13px;
+        }
+
+        #comment-content {
+            margin-top: 10px;
+        }
+
+        .add-comment textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            height: 80px;
+            resize: vertical;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <th:block th:replace="layout :: header"></th:block>
@@ -98,7 +146,7 @@
 </section>
 <!-- Breadcrumb Section End -->
 
-<section class="product-details spad">
+<section class="product-details spad mb-3">
     <div class="container">
         <div class="row">
             <div class="col-lg-6 col-md-6">
@@ -106,7 +154,7 @@
                     <div class="product__details__pic__item">
                         <img id="main-image" class="product__details__pic__item--large" src="" alt="Hình ảnh chính">
                     </div>
-                    <div id="image-slider" class="product__details__pic__slider owl-carousel slider-thumbnails">
+                    <div id="image-slider" class="product__details__pic__slider owl-carousel slider-thumbnails mb-5">
                         <!-- JavaScript sẽ thêm hình ảnh phụ ở đây -->
                     </div>
 
@@ -137,12 +185,23 @@
         </div>
     </div>
 </section>
+<div class="comments-section">
+    <h3>Bình Luận</h3>
+    <div id="comments-list">
+        <!-- Các bình luận sẽ được thêm vào đây bởi JavaScript -->
+    </div>
+    <div class="mt-3 add-comment">
+        <h4>Thêm Bình Luận</h4>
+        <textarea id="new-comment-text" placeholder="Nhập bình luận của bạn..." th:required></textarea>
+        <button id="submit-comment" class="btn primary-btn">Gửi Bình Luận</button>
+    </div>
+</div>
 
 
 <body>
 <div class="container py-5">
 </div>
-<th:block th:replace="layout :: footer"></th:block>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     function updateMainImage(src) {
         const mainImage = document.getElementById('main-image');
@@ -155,7 +214,7 @@
         }, 500); // Thời gian đợi tương ứng với thời gian transition
     }
     function fetchSeafoodDetails(id) {
-        fetch(`http://localhost:8080/api/seafoods/${id}`)
+        fetch(`/api/seafoods/${id}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Seafood not found');
@@ -172,8 +231,7 @@
         document.getElementById('product-name').innerText = seafood.name || 'Tên không xác định';
         document.getElementById('product-price').innerText = seafood.price ? `${seafood.price.toLocaleString()} VND` : 'Giá không xác định';
         document.getElementById('product-description').innerText = seafood.description || 'Không có mô tả';
-        document.getElementById('product-origin').innerText = seafood.origin || 'Không rõ xuất xứ' ;
-
+        document.getElementById('product-origin').innerText = seafood.origin || 'Không rõ xuất xứ';
         const imageSlider = document.getElementById('image-slider');
         imageSlider.innerHTML = '';
 
@@ -182,57 +240,164 @@
                 let img = document.createElement('img');
                 img.src = seafood[key];
                 img.alt = 'Hình ảnh phụ';
-                img.classList.add('slider-thumbnail'); // Thêm class cho styling nếu cần
+                img.classList.add('slider-thumbnail');
                 img.onclick = function() {
-                    updateMainImage(img.src); // Cập nhật hình ảnh chính khi click vào hình ảnh phụ
+                    updateMainImage(img.src);
                 };
                 imageSlider.appendChild(img);
             }
         });
+
         const addToCartButton = document.querySelector(".addToCartButton");
         addToCartButton.onclick = function() {
             const quantity = parseInt($('.pro-qty input').val());
             const confirmation = confirm('Bạn có muốn thêm sản phẩm này vào giỏ hàng?');
 
             if (confirmation) {
-                // Gọi hàm addToCart với số lượng lấy từ input
                 addToCart(seafood.id, seafood.name, seafood.price, seafood.mainImage, quantity, seafood.category.name);
             }
         };
+        $(document).ready(function() {
+            // Thêm nút tăng/giảm số lượng
+            const proQty = $('.pro-qty');
+            if (proQty.find('.qtybtn').length === 0) {
+                proQty.prepend('<span class="dec qtybtn">-</span>');
+                proQty.append('<span class="inc qtybtn">+</span>');
+            }
+
+            // Xử lý sự kiện click cho nút tăng/giảm
+            proQty.on('click', '.qtybtn', function() {
+                const $button = $(this);
+                const $input = $button.siblings('input');
+                const currentValue = parseInt($input.val());
+
+                if ($button.hasClass('inc')) {
+                    $input.val(currentValue + 1);
+                } else {
+                    // Không cho phép giảm xuống dưới 1
+                    if (currentValue > 1) {
+                        $input.val(currentValue - 1);
+                    }
+                }
+            });
+        })
+    }
+// Phần comment
+    function fetchComments(seafoodId) {
+        fetch(`/api/comment/${seafoodId}`)
+            .then(response => response.json())
+            .then(comments => updateCommentsList(comments));
+    }
+    function getSeafoodIdFromUrl() {
+        const url = window.location.href;
+        const parts = url.split('/');
+        const seafoodId = parts[parts.length - 1];
+        return seafoodId;
     }
 
-    window.onload = function() {
-        const url = window.location.href;
-        const id = url.substring(url.lastIndexOf('/') + 1);
-        fetchSeafoodDetails(id);
-    };
-
-
-    $(document).ready(function() {
-        // Thêm nút tăng/giảm số lượng
-        var proQty = $('.pro-qty');
-        if (proQty.find('.qtybtn').length === 0) {
-            proQty.prepend('<span class="dec qtybtn">-</span>');
-            proQty.append('<span class="inc qtybtn">+</span>');
+    function submitComment() {
+        const commentText = document.getElementById('new-comment-text').value.trim();
+        if (!commentText) {
+            alert('Vui lòng nhập bình luận của bạn.');
+            return;
         }
+        getUserId().then(userId => {
+            if (userId) {
+                const commentText = document.getElementById('new-comment-text').value;
+                const seafoodId = getSeafoodIdFromUrl();
 
-        // Xử lý sự kiện click cho nút tăng/giảm
-        proQty.on('click', '.qtybtn', function() {
-            var $button = $(this);
-            var $input = $button.siblings('input');
-            var currentValue = parseInt($input.val());
+                let commentData = {
+                    content: commentText,
+                    userId: userId
+                };
 
-            if ($button.hasClass('inc')) {
-                $input.val(currentValue + 1);
+                fetch(`/api/comment/${seafoodId}/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(commentData)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to post comment');
+                        }
+                        return response.json();
+                    })
+                    .then(newComment => {
+                        addCommentToDOM(newComment);
+                        document.getElementById('new-comment-text').value = '';
+                    })
+                    .catch(error => console.error("Error when submitting comment:", error));
             } else {
-                // Không cho phép giảm xuống dưới 1
-                if (currentValue > 1) {
-                    $input.val(currentValue - 1);
-                }
+                alert('Bạn cần đăng nhập để đăng bình luận!');
             }
         });
+    }
+
+    // Thêm trình xử lý sự kiện cho textarea
+    document.getElementById('new-comment-text').addEventListener('keypress', handleCommentSubmission);
+
+    // Cũng giữ lại trình xử lý sự kiện click cho nút, nếu vẫn cần
+    $("#submit-comment").click(function(event) {
+        event.preventDefault();
+        submitComment();
     });
 
+    function updateCommentsList(comments) {
+        const commentsList = document.getElementById('comments-list');
+        commentsList.innerHTML = ''; // Xóa tất cả các bình luận cũ trước khi cập nhật
+
+        comments.forEach(comment => {
+            let commentElement = document.createElement('div');
+            commentElement.classList.add('comment');
+            commentElement.innerHTML = `
+            <strong id="comment-fullname">${comment.user.fullname || 'Tên không xác định'}</strong> - <em id="comment-createAt">${new Date(comment.createdAt).toLocaleDateString()}</em>
+            <p id="comment-content">${comment.content || 'Nội dung không xác định'}</p>
+        `;
+            commentsList.appendChild(commentElement);
+        });
+    }
+
+    function addCommentToDOM(comment) {
+        const commentsList = document.getElementById('comments-list');
+
+        let commentElement = document.createElement('div');
+        commentElement.classList.add('comment');
+        commentElement.innerHTML = `
+            <strong id="comment-fullname">${comment.user.fullname || 'Tên không xác định'}</strong> - <em id="comment-createAt">${new Date(comment.createdAt).toLocaleDateString()}</em>
+            <p id="comment-content">${comment.content || 'Nội dung không xác định'}</p>
+        `;
+        commentsList.appendChild(commentElement);
+    }
+    function handleCommentSubmission(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {  // Kiểm tra xem phím Enter có được nhấn mà không giữ phím Shift không
+            event.preventDefault();  // Ngăn chặn hành vi mặc định (chẳng hạn như xuống dòng mới)
+            submitComment();  // Gọi hàm để gửi bình luận
+        }
+    }
+// Kết thúc phần comment
+    function getUserId() {
+        return $.ajax({
+            url: '/api/auth/check-login',
+            method: 'GET'
+        }).then(data => {
+            if (data.authenticated) {
+                return data.userId;
+            }
+            return null;
+        }).catch(err => {
+            console.error("Error checking authentication status: ", err);
+            return null;
+        });
+    }
+    window.onload = function() {
+        const seafoodId = getSeafoodIdFromUrl();
+        fetchSeafoodDetails(seafoodId);
+        fetchComments(seafoodId);
+    };
 </script>
+
+<th:block th:replace="layout :: footer"></th:block>
 </body>
 </html>

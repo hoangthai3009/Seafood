@@ -20,8 +20,7 @@ public class CommentService {
     private ICommentRepository commentRepository;
     @Autowired
     private ISeafoodRepository seafoodRepository;
-    @Autowired
-    private CommentService commentService;
+
     public List<Comment> getCommentBySeafoodId(Long id) {
         List<Comment> comment = commentRepository.findCommentBySeafoodId(id);
         return comment;

@@ -1,6 +1,9 @@
 package ChuyenNganh.Seafood.Config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.context.annotation.Bean;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -120,5 +123,12 @@ public class Config {
             sb.append(chars.charAt(rnd.nextInt(chars.length())));
         }
         return sb.toString();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        return objectMapper;
     }
 }

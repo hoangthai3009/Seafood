@@ -86,7 +86,7 @@ var myLineChartThang = new Chart(ctxThang, {
             yAxes: [{
                 scaleLabel: {
                     display: false,
-                    labelString: 'VNĐ',
+                    labelString: '₫',
                     padding: { right: 10 }
                 },
                 ticks: {
@@ -96,7 +96,7 @@ var myLineChartThang = new Chart(ctxThang, {
                         if (value % 1000000 === 0) {
                             return number_format(value / 1000000) + ' triệu';
                         } else {
-                            return number_format(value) + ' VNĐ';
+                            return number_format(value) + ' ₫';
                         }
                     }
                 },
@@ -129,7 +129,7 @@ var myLineChartThang = new Chart(ctxThang, {
             callbacks: {
                 label: function (tooltipItem, chart) {
                     var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                    return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + ' VNĐ';
+                    return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + ' ₫';
                 }
             }
         }
@@ -189,7 +189,7 @@ var myLineChartNgay = new Chart(ctxNgay, {
             yAxes: [{
                 scaleLabel: {
                     display: false,
-                    labelString: 'VNĐ',
+                    labelString: '₫',
                     padding: { right: 10 }
                 },
                 ticks: {
@@ -199,7 +199,7 @@ var myLineChartNgay = new Chart(ctxNgay, {
                         if (value % 1000000 === 0) {
                             return number_format(value / 1000000) + ' triệu';
                         } else {
-                            return number_format(value) + ' VNĐ';
+                            return number_format(value) + ' ₫';
                         }
                     }
                 },
@@ -232,7 +232,7 @@ var myLineChartNgay = new Chart(ctxNgay, {
             callbacks: {
                 label: function (tooltipItem, chart) {
                     var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                    return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + ' VNĐ';
+                    return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + ' ₫';
                 }
             }
         }
@@ -249,7 +249,7 @@ document.getElementById('yearSelectNgay').value = currentYear;
 // Load dữ liệu thống kê ban đầu cho Thang và Ngay
 // Load dữ liệu thống kê ban đầu
 function thongKeTheoThang(year) {
-    fetch('/Admin/thongKeTheoThang-data?year=' + year)
+    fetch('/api/thongKeTheoThang-data?year=' + year)
         .then(response => response.json())
         .then(data => {
             revenueValuesThang = data;
@@ -262,7 +262,7 @@ function thongKeTheoThang(year) {
 
 // Load dữ liệu thống kê ban đầu
 function thongKeTheoNgay(month, year) {
-    fetch('/Admin/thongKeTheoNgay-data?month=' + month + '&year=' + year)
+    fetch('/api/thongKeTheoNgay-data?month=' + month + '&year=' + year)
         .then(response => response.json())
         .then(data => {
             revenueValuesNgay = data;
@@ -305,7 +305,7 @@ function updateTotalRevenue() {
     const currentYear = new Date().getFullYear();
 
     // Lấy dữ liệu tổng doanh thu theo tháng
-    fetch('/Admin/thongKeTheoThang-data?year=' + currentYear)
+    fetch('/api/thongKeTheoThang-data?year=' + currentYear)
         .then(response => response.json())
         .then(data => {
             const currentMonth = new Date().getMonth() + 1;
@@ -318,7 +318,7 @@ function updateTotalRevenue() {
             console.error('Error fetching monthly data:', error);
         });
 
-    fetch('/Admin/thongKeTheoTuan-data?year=' + currentYear)
+    fetch('/api/thongKeTheoTuan-data?year=' + currentYear)
         .then(response => response.json())
         .then(data => {
             const totalRevenueWeek = data[1] || 0; // 1 là số tuần hiện tại, có thể cần điều chỉnh
@@ -328,7 +328,7 @@ function updateTotalRevenue() {
             console.error('Error fetching weekly data:', error);
         });
     // Lấy dữ liệu tổng doanh thu theo năm
-    fetch('/Admin/thongKeTheoNam-data')
+    fetch('/api/thongKeTheoNam-data')
         .then(response => response.json())
         .then(data => {
             const totalRevenueNam = data || 0;
@@ -349,8 +349,8 @@ function formatCurrency(value) {
         maximumFractionDigits: 0,
     });
 
-    // Thay thế "đ" thành "VNĐ" trong chuỗi định dạng
-    const formattedValue = formatter.format(value).replace('₫', 'VNĐ');
+    // Thay thế "đ" thành "₫" trong chuỗi định dạng
+    const formattedValue = formatter.format(value).replace('₫', '₫');
 
     return formattedValue;
 }

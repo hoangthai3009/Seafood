@@ -40,11 +40,11 @@ public class APIBillController {
             User user = userRepository.findById(checkoutRequest.getUserId())
                     .orElseThrow(() -> new Exception("User not found"));
             Bill newBill = new Bill();
+            newBill.setUser(user);
             newBill.setCreatedAt(new Date());
             newBill.setTotalPrice(checkoutRequest.getTotalPrice());
             newBill.setNote(checkoutRequest.getNote());
             newBill.setAddress(checkoutRequest.getAddress());
-            newBill.setUser(checkoutRequest.getUser());
             // Save the Bill
             Bill savedBill = billService.saveBill(newBill);
 
@@ -67,7 +67,7 @@ public class APIBillController {
                 billDetailService.saveBillDetail(billDetail);
             }
 
-            return new ResponseEntity<>("Checkout successful", HttpStatus.OK);
+            return new ResponseEntity<>("THÀNH CÔNG !", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error during checkout: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

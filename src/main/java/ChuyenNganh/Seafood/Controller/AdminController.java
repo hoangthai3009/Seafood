@@ -17,11 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -304,6 +303,7 @@ public class AdminController {
         }
         return "redirect:/admin/bills";
     }
+
     // Phương thức xóa bill
     @GetMapping("/delete-bill/{billId}")
     public String deleteBill(@PathVariable Long billId, RedirectAttributes redirectAttributes) {
@@ -319,6 +319,7 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "Bill không tồn tại.");
         }
         return "redirect:/admin/bills";
+
     }
 
 }

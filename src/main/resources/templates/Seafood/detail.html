@@ -294,11 +294,6 @@
         })
     }
 // Phần comment
-    function fetchComments(seafoodId) {
-        fetch(`/api/comment/${seafoodId}`)
-            .then(response => response.json())
-            .then(comments => updateCommentsList(comments));
-    }
     function getSeafoodIdFromUrl() {
         const url = window.location.href;
         const parts = url.split('/');
@@ -477,7 +472,7 @@
     async function getUserId() {
         try {
             const response = await $.ajax({
-                url: '/api/auth/check-login',
+                url: '/check-login',
                 method: 'GET'
             });
             return response.authenticated ? response.userId : null;

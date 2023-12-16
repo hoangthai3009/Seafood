@@ -66,10 +66,9 @@
                 }
             });
         });
-
         function getUserInfo(callback) {
             $.ajax({
-                url: '/api/auth/check-login',
+                url: '/check-login',
                 method: 'GET',
                 success: function(data) {
                     if (data.authenticated) {
@@ -118,7 +117,7 @@
                 url: "/api/checkout",
                 contentType: "application/json",
                 data: JSON.stringify(billData),
-                success: function (response) {
+                success: function() {
                     alert("Checkout successful");
                     window.location.href = "/cart/success";
                 },

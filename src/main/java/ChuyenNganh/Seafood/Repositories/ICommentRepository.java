@@ -11,5 +11,5 @@ import java.util.UUID;
 @Repository
 public interface ICommentRepository extends JpaRepository<Comment, Long> {
     @Query("SELECT c FROM Comment c, Seafood s WHERE c.seafood.id = s.id AND s.id = ?1")
-    List<Comment> findCommentBySeafoodId(Long productId);
+    List<Comment> findCommentBySeafoodId(Long seafoodId);
 }

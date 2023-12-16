@@ -35,16 +35,22 @@ public class CommentService {
         comment.setSeafood(seafood);
         return commentRepository.save(comment);
     }
-    public Comment updateComment(Long commentId, Comment updatedComment) {
+    public Comment editComment(Long commentId, Long userId, Comment updatedComment) {
         Comment existingComment = commentRepository.findById(commentId).orElse(null);
-        if (existingComment == null) {
-            return null;
+        if (existingComment != null && existingComment.getUser().getId().equals(userId)) {
+            existingComment.setContent(updatedComment.getContent());
+            return commentRepository.save(existingComment);
         }
-        existingComment.setContent(updatedComment.getContent());
-        return commentRepository.save(existingComment);
+        return null;
     }
-    public void deleteComment(Long id) {
-        commentRepository.deleteById(id);
+
+    public boolean deleteComment(Long commentId, Long userId) {
+        Comment existingComment = commentRepository.findById(commentId).orElse(null);
+        if (existingComment != null && existingComment.getUser().getId().equals(userId)) {
+            commentRepository.deleteById(commentId);
+            return true;
+        }
+        return false;
     }
 
 }

@@ -36,26 +36,21 @@ public class APIBillController {
     @PostMapping
     public ResponseEntity<String> checkout(@RequestBody CheckoutRequest checkoutRequest) {
         try {
-            // Create a new Bill
-            User user = userRepository.findById(checkoutRequest.getUserId())
-                    .orElseThrow(() -> new Exception("User not found"));
             Bill newBill = new Bill();
-            newBill.setUser(user);
+            newBill.setUser(checkoutRequest.getUser());
             newBill.setCreatedAt(new Date());
             newBill.setTotalPrice(checkoutRequest.getTotalPrice());
             newBill.setNote(checkoutRequest.getNote());
             newBill.setAddress(checkoutRequest.getAddress());
-            // Save the Bill
+
             Bill savedBill = billService.saveBill(newBill);
 
-            // Create BillDetails
             for (BillDetailRequest detailRequest : checkoutRequest.getBillDetails()) {
                 BillDetail billDetail = new BillDetail();
 
-                // Create BillDetailId
                 BillDetailId billDetailId = new BillDetailId();
-                billDetailId.setBillId(savedBill.getId());  // Assuming getId() returns the generated ID of the savedBill
-                billDetailId.setSeafoodId(detailRequest.getSeafood().getId());  // Assuming getId() returns the ID of the seafood
+                billDetailId.setBillId(savedBill.getId());
+                billDetailId.setSeafoodId(detailRequest.getSeafood().getId());
 
                 billDetail.setId(billDetailId);
 
@@ -63,7 +58,7 @@ public class APIBillController {
                 billDetail.setSeafood(detailRequest.getSeafood());
                 billDetail.setQuantity(detailRequest.getQuantity());
                 billDetail.setPrice(detailRequest.getPrice());
-                // Save the BillDetail
+
                 billDetailService.saveBillDetail(billDetail);
             }
 

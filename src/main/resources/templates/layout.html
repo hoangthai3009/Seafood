@@ -179,7 +179,7 @@
 
         // Hàm kiểm tra trạng thái đăng nhập
         function checkLoginStatus() {
-            fetch('/api/auth/check-login')
+            fetch('/check-login')
                 .then(response => response.json())
                 .then(data => {
                     if (data.authenticated) {

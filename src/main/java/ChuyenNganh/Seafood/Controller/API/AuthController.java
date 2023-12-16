@@ -27,7 +27,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -53,11 +56,6 @@ public class AuthController {
     private JwtUtils jwtUtils;
 
 
-    @GetMapping("/check-login")
-    public Map<String, Object> checkAuthentication(Authentication authentication) {
-        boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
-        return Collections.singletonMap("authenticated", isAuthenticated);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {

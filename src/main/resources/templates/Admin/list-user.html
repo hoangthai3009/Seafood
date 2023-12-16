@@ -47,7 +47,7 @@
                                     <td>
                                         <a th:href="@{/admin/assign-role/{id}(id=${user.id})}" class="mr-2">
                                             <i class="fa-regular fa-pen-to-square"></i></a>
-                                        <a th:href="@{/admin/delete/{id}(id=${seafood.id})}"
+                                        <a th:href="@{/admin/delete-user/{userId}(userId=${user.id})}"
                                            onclick="return confirm('Xóa người dùng này?')"><i class="fas fa-times" style="color:red"></i></a>
                                     </td>
                                 </tr>

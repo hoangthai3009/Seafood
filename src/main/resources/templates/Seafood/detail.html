@@ -304,44 +304,40 @@
     async function submitComment() {
         const commentText = document.getElementById('new-comment-text').value.trim();
         const userId = await getUserId();
+        const seafoodId = getSeafoodIdFromUrl(); // Lấy seafoodId từ URL
         if (!commentText) {
             alert('Vui lòng nhập bình luận của bạn.');
             return;
         }
 
-            if (userId) {
-                const commentText = document.getElementById('new-comment-text').value;
-                const seafoodId = getSeafoodIdFromUrl();
+        if (userId) {
+            const commentData = {
+                content: commentText,
+                userId: userId
+            };
 
-                let commentData = {
-                    content: commentText,
-                    userId: userId
-                };
-
-                fetch(`/api/comment/${seafoodId}/add`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(commentData)
+            fetch(`/api/comment/${seafoodId}/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(commentData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to post comment');
+                    }
+                    return response.json();
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to post comment');
-                        }
-                        return response.json();
-                    })
-                    .then(newComment => {
-                        addCommentToDOM(newComment);
-                        document.getElementById('new-comment-text').value = '';
-                    })
-                    .catch(error => console.error("Error when submitting comment:", error));
-            } else {
-                alert('Bạn cần đăng nhập để đăng bình luận!');
-            }
-        ;
+                .then(newComment => {
+                    addCommentToDOM(newComment, userId); // Thêm bình luận mới vào DOM
+                    document.getElementById('new-comment-text').value = '';
+                })
+                .catch(error => console.error("Error when submitting comment:", error));
+        } else {
+            alert('Bạn cần đăng nhập để đăng bình luận!');
+        }
     }
-
     // Thêm trình xử lý sự kiện cho textarea
     document.getElementById('new-comment-text').addEventListener('keypress', handleCommentSubmission);
 
@@ -386,25 +382,27 @@
         commentElement.classList.add('comment');
         commentElement.id = `comment-${comment.commentId}`;
         let commentHTML = `
-            <div class="comment-header">
-                <span class="comment-info">
-                    <strong id="comment-fullname">${comment.user.fullname || 'Tên không xác định'}</strong> -
-                    <em id="comment-createAt">${new Date(comment.createdAt).toLocaleDateString()}</em>
-                </span>
-                <span class="comment-actions">`;
+        <div class="comment-header">
+            <span class="comment-info">
+                <strong id="comment-fullname">${comment.user.fullname || 'Tên không xác định'}</strong> -
+                <em id="comment-createAt">${new Date(comment.createdAt).toLocaleDateString()}</em>
+            </span>
+            <span class="comment-actions">`;
+
         if (comment.user.id === userId) {
             commentHTML += `
-                <a onclick="editComment(${comment.commentId}, ${userId})" class="edit-comment-icon">
-                    <i class="fa-regular fa-pen-to-square ml-3"></i></a>
-                <a onclick="deleteComment(${comment.commentId}, ${userId})" class="delete-comment-icon">
-                    <i class="fas fa-times" style="color:red"></i></a>`;
+            <a onclick="editComment(${comment.commentId}, ${userId})" class="edit-comment-icon">
+                <i class="fa-regular fa-pen-to-square ml-3"></i></a>
+            <a onclick="deleteComment(${comment.commentId}, ${userId})" class="delete-comment-icon">
+                <i class="fas fa-times" style="color:red"></i></a>`;
         }
         commentHTML += `
-                </span>
-            </div>
-            <p id="comment-content-${comment.commentId}" class="comment-body">${comment.content || 'Nội dung không xác định'}</p>`;
+            </span>
+        </div>
+        <p id="comment-content-${comment.commentId}" class="comment-body">${comment.content || 'Nội dung không xác định'}</p>`;
         commentElement.innerHTML = commentHTML;
         commentsList.appendChild(commentElement);
+
     }
     function handleCommentSubmission(event) {
         if (event.key === 'Enter' && !event.shiftKey) {  // Kiểm tra xem phím Enter có được nhấn mà không giữ phím Shift không

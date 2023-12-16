@@ -5,6 +5,48 @@
     <title>Giỏ hàng</title>
     <th:block th:replace="layout :: link-css"></th:block>
 </head>
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+    }
+
+    .pagination li {
+        margin: 0 5px;
+    }
+
+    .pagination li a {
+        display: block;
+        padding: 8px 12px;
+        text-decoration: none;
+        color: #6f6f6f;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: color 0.3s, background-color 0.3s, border-color 0.3s;
+    }
+
+    .pagination li a:hover {
+        background-color: #b2b2b2; /* Màu xanh khi hover */
+        color: #fff;
+        border-color: #b2b2b2;
+    }
+
+    .pagination .active a {
+        background-color: #0069d9; /* Màu xanh đậm hơn cho trang hiện tại */
+        color: white;
+        border-color: #0069d9;
+    }
+
+    .pagination .disabled a {
+        color: #6c757d; /* Màu xám cho trang không hoạt động */
+        pointer-events: none;
+        cursor: default;
+    }
+
+</style>
 <body>
 <th:block th:replace="layout :: header"></th:block>
 
@@ -51,35 +93,35 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="position-absolute" style="bottom: -5%; left: 50%">
-                    <!-- Phân trang -->
-                    <nav aria-label="Page navigation" th:if="${totalPages > 1}">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item">
-                                <a class="page-link" th:href="@{|/cart?page=${currentPage - 1}|}" aria-label="Previous">
-                                    <span aria-hidden="true">&lt;</span>
-                                </a>
-                            </li>
-                            <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
-                                <a class="page-link" th:href="@{|/cart?page=${page}|}" th:text="${page + 1}"></a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" th:href="@{|/cart?page=${currentPage + 1}|}" aria-label="Next">
-                                    <span aria-hidden="true">&gt;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
 
-                </div>
             </div>
         </div>
+        <!-- Phân trang -->
+        <ul class="pagination cart-btn" th:if="${totalPages > 1}">
+            <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+                <a class="page-link" th:attr="href=${currentPage > 0} ? '/cart?page=' + (${currentPage} - 1) : '#'" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
+                <a class="page-link" th:href="@{|/cart?page=${page}|}" th:text="${page + 1}"></a>
+            </li>
+            <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                <a class="page-link" th:attr="href=${currentPage < totalPages - 1} ? '/cart?page=' + (${currentPage} + 1) : '#'" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
         <div class="row">
             <div class="col-lg-12">
                 <div class="shoping__cart__btns">
                     <a href="/seafood/list" class="primary-btn cart-btn">Quay lại</a>
                     <a href="#" class="primary-btn cart-btn cart-btn-right" id="updateButton"><span class="icon_loading"></span>
                         Cập nhật</a>
+                    <a href="/cart/clearCart" class="primary-btn btn-danger cart-btn cart-btn-right mr-2" style="background-color:#dc3545 ; color:black" onclick="return confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm có trong giỏ hàng không?');">
+                        Xóa giỏ hàng
+                    </a>
+
                 </div>
             </div>
             <div class="col-lg-6">

@@ -40,7 +40,6 @@ public class CartControllerModel {
         Pageable pageable = PageRequest.of(page, size);
         Page<CartItem> cartPage = cartService.getCartPage(session, pageable);
         List<CartItem> cartItems = cartPage.getContent();
-
         model.addAttribute("cart", cartItems);
         model.addAttribute("totalPrice", cartService.getSumPrice(session));
         model.addAttribute("totalQuantity", cartService.getSumQuantity(session));
@@ -96,7 +95,8 @@ public class CartControllerModel {
         return "Cart/checkout";  // Tên của template Thymeleaf cho trang checkout
     }
     @GetMapping("/success")
-    public String showSuccessPage() {
+    public String showSuccessPage(HttpSession session) {
+        clearCart(session);
         return "Cart/success";
     }
 

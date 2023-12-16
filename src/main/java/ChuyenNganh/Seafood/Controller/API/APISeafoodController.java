@@ -1,14 +1,19 @@
 package ChuyenNganh.Seafood.Controller.API;
 
+import ChuyenNganh.Seafood.Entity.Comment;
 import ChuyenNganh.Seafood.Entity.Seafood;
+import ChuyenNganh.Seafood.Security.Services.CommentService;
 import ChuyenNganh.Seafood.Security.Services.SeafoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -17,6 +22,8 @@ public class APISeafoodController {
 
     @Autowired
     private SeafoodService seafoodService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping
     public ResponseEntity<Page<Seafood>> getAllSeafoods(
@@ -67,5 +74,7 @@ public class APISeafoodController {
             return ResponseEntity.ok(seafoodsByCategory);
         }
     }
+
+
 }
 

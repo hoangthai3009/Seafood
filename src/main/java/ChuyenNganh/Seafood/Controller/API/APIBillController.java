@@ -3,8 +3,10 @@ package ChuyenNganh.Seafood.Controller.API;
 import ChuyenNganh.Seafood.Entity.Bill;
 import ChuyenNganh.Seafood.Entity.BillDetail;
 import ChuyenNganh.Seafood.Entity.BillDetailId;
+import ChuyenNganh.Seafood.Entity.User;
 import ChuyenNganh.Seafood.Payload.Request.BillDetailRequest;
 import ChuyenNganh.Seafood.Payload.Request.CheckoutRequest;
+import ChuyenNganh.Seafood.Repositories.IUserRepository;
 import ChuyenNganh.Seafood.Security.Services.BillDetailService;
 import ChuyenNganh.Seafood.Security.Services.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +31,20 @@ public class APIBillController {
         this.billService = billService;
         this.billDetailService = billDetailService;
     }
-
+    @Autowired
+    IUserRepository userRepository;
     @PostMapping
     public ResponseEntity<String> checkout(@RequestBody CheckoutRequest checkoutRequest) {
         try {
             // Create a new Bill
+            User user = userRepository.findById(checkoutRequest.getUserId())
+                    .orElseThrow(() -> new Exception("User not found"));
             Bill newBill = new Bill();
+            newBill.setUser(user);
             newBill.setCreatedAt(new Date());
             newBill.setTotalPrice(checkoutRequest.getTotalPrice());
             newBill.setNote(checkoutRequest.getNote());
             newBill.setAddress(checkoutRequest.getAddress());
-            newBill.setUser(checkoutRequest.getUser());
             // Save the Bill
             Bill savedBill = billService.saveBill(newBill);
 
@@ -62,7 +67,7 @@ public class APIBillController {
                 billDetailService.saveBillDetail(billDetail);
             }
 
-            return new ResponseEntity<>("Checkout successful", HttpStatus.OK);
+            return new ResponseEntity<>("THÀNH CÔNG !", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error during checkout: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

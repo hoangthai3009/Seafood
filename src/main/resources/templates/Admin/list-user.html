@@ -28,14 +28,13 @@
                                     <th>Email</th>
                                     <th>Số điện thoại</th>
                                     <th>Quyền</th>
+                                    <th>Chức năng</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="user: ${users}">
                                     <td th:text="${user.id}"></td>
-                                    <td>
-                                        <a th:href="@{/admin/assign-role/{id}(id=${user.id})}" th:text="${user.username}"></a>
-                                    </td>
+                                    <td th:text="${user.username}"></td>
                                     <td th:text="${user.fullname}"></td>
                                     <td th:text="${user.email}"></td>
                                     <td th:text="${user.phone}"></td>
@@ -44,6 +43,12 @@
                                         <span th:text="${role.description}"></span>
                                         <span th:if="${!iterStat.last}">,</span>
                                         </span>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/admin/assign-role/{id}(id=${user.id})}" class="mr-2">
+                                            <i class="fa-regular fa-pen-to-square"></i></a>
+                                        <a th:href="@{/admin/delete/{id}(id=${seafood.id})}"
+                                           onclick="return confirm('Xóa người dùng này?')"><i class="fas fa-times" style="color:red"></i></a>
                                     </td>
                                 </tr>
                                 </tbody>

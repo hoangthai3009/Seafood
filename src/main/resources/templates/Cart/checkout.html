@@ -52,59 +52,82 @@
 <!-- Checkout Section End -->
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-<!-- Your existing script block -->
 <script th:inline="javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         $("#placeOrderBtn").click(function (event) {
             event.preventDefault();
 
-            $(this).prop('disabled', true);
+            // Kiểm tra trạng thái đăng nhập và lấy ID người dùng
+            getUserInfo(function(userId) {
+                if (userId) {
+                    processOrder(userId); // Thực hiện hành động thanh toán
+                } else {
+                    alert('Bạn cần đăng nhập để sử dụng chức năng này');
+                }
+            });
+        });
 
-            // Get the total price from the hidden input field
-            var totalPrice = $('#totalPrice').val();
+        function getUserInfo(callback) {
+            $.ajax({
+                url: '/api/auth/check-login',
+                method: 'GET',
+                success: function(data) {
+                    if (data.authenticated) {
+                        callback(data.userId); // Gọi hàm callback với ID người dùng
+                    } else {
+                        callback(null); // Người dùng chưa đăng nhập
+                    }
+                },
+                error: function(err) {
+                    console.error("Error checking authentication status: ", err);
+                    callback(null); // Có lỗi xảy ra
+                }
+            });
+        }
 
-            // Create an array of billDetails objects from cartItems
-            var billDetails = [];
+        function processOrder(userId) {
+            $("#placeOrderBtn").prop('disabled', true);
 
-            // Iterate over cartItems and add each item to billDetails
+            const totalPrice = $('#totalPrice').val();
+            const billDetails = [];
+
             $('#cartItems li').each(function () {
-                var item = $(this);
-                var seafoodId = item.data('seafood-id');
-                var quantity = item.data('quantity');
-                var price = item.data('price');
+                const item = $(this);
+                const seafoodId = item.data('seafood-id');
+                const quantity = item.data('quantity');
+                const price = item.data('price');
 
-                // Add the item to the billDetails array
                 billDetails.push({
-                    seafood: {
-                        id: seafoodId
-                    },
+                    seafood: { id: seafoodId },
                     quantity: quantity,
                     price: price
                 });
             });
 
+            // Thêm userId vào dữ liệu bill
+            const billData = {
+                userId: userId,
+                totalPrice: totalPrice,
+                note: $('#note').val(),
+                address: $('#address').val(),
+                billDetails: billDetails
+            };
+
             $.ajax({
                 type: "POST",
                 url: "/api/checkout",
                 contentType: "application/json",
-                data: JSON.stringify({
-                    totalPrice: totalPrice,
-                    note: $('#note').val(), // Replace with the actual ID of the note input
-                    address: $('#address').val(), // Replace with the actual ID of the address input
-                    billDetails: billDetails
-                }),
+                data: JSON.stringify(billData),
                 success: function (response) {
                     alert("Checkout successful");
                     window.location.href = "/cart/success";
                 },
                 error: function (error) {
-                    console.log(this.data);
-                    alert("Error during checkout: " + error.responseText);
+                    console.error("Error during checkout: ", error);
                     $("#placeOrderBtn").prop('disabled', false);
                 }
             });
-        });
+        }
     });
 </script>
 

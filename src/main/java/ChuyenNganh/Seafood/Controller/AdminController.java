@@ -1,9 +1,6 @@
 package ChuyenNganh.Seafood.Controller;
 
-import ChuyenNganh.Seafood.Entity.Bill;
-import ChuyenNganh.Seafood.Entity.Role;
-import ChuyenNganh.Seafood.Entity.Seafood;
-import ChuyenNganh.Seafood.Entity.User;
+import ChuyenNganh.Seafood.Entity.*;
 import ChuyenNganh.Seafood.Security.Services.*;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -20,8 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -265,6 +264,62 @@ public class AdminController {
         roleService.removeRole(roleId);
         logger.info("Xóa thành công role {}", role.getName());
         return "redirect:/admin/roles";
+    }
+    @GetMapping("/bills")
+    public String getAllBills(Model model) {
+        List<Bill> bills = billService.getAllBills();
+        model.addAttribute("bills", bills);
+        return "Admin/bill/list-bill";
+    }
+    @GetMapping("/edit-bill/{billId}")
+    public String showEditBillForm(@PathVariable Long billId, Model model, RedirectAttributes redirectAttributes) {
+        Optional<Bill> bill = billService.getBillById(billId);
+        if (bill.isPresent()) {
+            SimpleDateFormat isoDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDate = isoDateFormatter.format(bill.get().getCreatedAt());
+
+            model.addAttribute("bill", bill.get());
+            model.addAttribute("formattedCreatedAt", formattedDate);
+
+            return "Admin/bill/edit-bill";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Bill không tồn tại.");
+            return "redirect:/admin/bills";
+        }
+    }
+    @PostMapping("/edit-bill")
+    public String editBill(@RequestParam Long billId, @ModelAttribute Bill bill, RedirectAttributes redirectAttributes) {
+        Optional<Bill> existingBillOpt = billService.getBillById(billId);
+        if (existingBillOpt.isPresent()) {
+            Bill existingBill = existingBillOpt.get();
+            existingBill.setTotalPrice(bill.getTotalPrice());
+            existingBill.setNote(bill.getNote());
+            existingBill.setAddress(bill.getAddress());
+            existingBill.setUser(bill.getUser());
+            billService.saveBill(existingBill);
+            redirectAttributes.addFlashAttribute("success", "Bill đã được cập nhật thành công.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Bill không tồn tại.");
+        }
+        return "redirect:/admin/bills";
+    }
+
+    // Phương thức xóa bill
+    @GetMapping("/delete-bill/{billId}")
+    public String deleteBill(@PathVariable Long billId, RedirectAttributes redirectAttributes) {
+        Optional<Bill> bill = billService.getBillById(billId);
+        if (bill.isPresent()) {
+            Set<BillDetail> billDetails = bill.get().getBillDetails();
+            for (BillDetail billDetail : billDetails) {
+                bill.get().removeBillDetail(billDetail);
+            }
+            billService.deleteBill(billId);
+            redirectAttributes.addFlashAttribute("success", "Bill đã được xóa thành công.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Bill không tồn tại.");
+        }
+        return "redirect:/admin/bills";
+
     }
 
 }

@@ -32,7 +32,7 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="header__logo">
-                    <a href="/"><img src="/static/img/banner/logo.png" alt=""></a>
+                    <a href="/"><img src="" alt=""></a>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -42,10 +42,10 @@
                         <li><a href="/seafood/list">Sản phẩm</a></li>
                         <li><a href="#">Pages</a>
                             <ul class="header__menu__dropdown">
-                                <li><a href="./shop-details.html">Khuyến mãi</a></li>
-                                <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                                <li><a href="./checkout.html">Check Out</a></li>
-                                <li><a href="./blog-details.html">Blog Details</a></li>
+                                <li><a href="./">Khuyến mãi</a></li>
+                                <li><a href="./">Shoping Cart</a></li>
+                                <li><a href="/cart/checkout">Check Out</a></li>
+                                <li><a href="./">Blog Details</a></li>
                             </ul>
                         </li>
                         <li><a href="./blog.html">Khuyến mãi</a></li>
@@ -69,8 +69,10 @@
                                     <i class="fas fa-user"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="/" id="userNameLink"></a>
+                                    <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">Profile</a>
-                                    <a class="dropdown-item" href="#">Giỏ hàng</a>
+                                    <a class="dropdown-item" href="">Giỏ hàng</a>
                                     <div class="dropdown-divider"></div>
                                     <button class="dropdown-item" onclick="signoutUser()">Đăng Xuất</button>
                                 </div>
@@ -94,7 +96,7 @@
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="footer__about">
                     <div class="footer__about__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                        <a href="/"><img src="" alt=""></a>
                     </div>
                     <ul>
                         <li>Address: 60-49 Road 11378 New York</li>
@@ -175,8 +177,10 @@
         // Kiểm tra trạng thái đăng nhập khi trang được tải
         document.addEventListener('DOMContentLoaded', function() {
             checkLoginStatus();
+
         });
 
+        // Hàm kiểm tra trạng thái đăng nhập
         // Hàm kiểm tra trạng thái đăng nhập
         function checkLoginStatus() {
             fetch('/check-login')
@@ -185,13 +189,12 @@
                     if (data.authenticated) {
                         document.getElementById('loginButton').style.display = 'none';
                         document.getElementById('userDropdown').style.display = 'block';
-
                         // Lấy thông tin người dùng và hiển thị tên người dùng
-                        /*fetch('/user-info')
-                            .then(response => response.json())
-                            .then(data => {
-                                document.getElementById('userName').innerText = data.username;
-                            });*/
+                        // Đặt nội dung của thẻ a có id là "userNameLink" thành tên người dùng
+                        const userNameLink = document.getElementById('userNameLink');
+                        if (userNameLink) {
+                            userNameLink.innerText = data.fullname;
+                        }
                     } else {
                         // Chưa đăng nhập, ẩn dropdown và hiện nút đăng nhập
                         document.getElementById('loginButton').style.display = 'block';
@@ -199,6 +202,7 @@
                     }
                 });
         }
+
 
         // Hàm đăng xuất
         function signoutUser() {
@@ -279,6 +283,8 @@
                 element.innerText = formatNumberWithCommas(price);
             }
         });
+
+
     </script>
 </footer>
 </body>

@@ -31,5 +31,10 @@ public class Bill {
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
     private Set<BillDetail> billDetails;
+
+    public void removeBillDetail(BillDetail billDetail) {
+        this.billDetails.remove(billDetail);
+        billDetail.setBill(null); // Đặt Bill của BillDetail này thành null
+    }
 }
 

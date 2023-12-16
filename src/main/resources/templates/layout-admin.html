@@ -224,7 +224,15 @@
                     alert('Đăng xuất thất bại. Vui lòng thử lại.');
                 });
         }
-
+        function formatNumberWithCommas(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        document.querySelectorAll(".price-value").forEach(function(element) {
+            var price = parseFloat(element.innerText);
+            if (!isNaN(price)) {
+                element.innerText = formatNumberWithCommas(price);
+            }
+        });
     </script>
 </footer>
 <!-- End footer -->

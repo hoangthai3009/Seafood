@@ -36,8 +36,10 @@ public class APIBillController {
     @PostMapping
     public ResponseEntity<String> checkout(@RequestBody CheckoutRequest checkoutRequest) {
         try {
+            User user = userRepository.findById(checkoutRequest.getUserId())
+                    .orElseThrow(() -> new Exception("User not found"));
             Bill newBill = new Bill();
-            newBill.setUser(checkoutRequest.getUser());
+            newBill.setUser(user);
             newBill.setCreatedAt(new Date());
             newBill.setTotalPrice(checkoutRequest.getTotalPrice());
             newBill.setNote(checkoutRequest.getNote());

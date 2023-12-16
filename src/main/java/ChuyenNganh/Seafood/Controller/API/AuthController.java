@@ -12,6 +12,8 @@ import ChuyenNganh.Seafood.Repositories.IUserRepository;
 import ChuyenNganh.Seafood.Security.Jwt.JwtUtils;
 import ChuyenNganh.Seafood.Security.Services.EmailSenderService;
 import ChuyenNganh.Seafood.Security.Services.UserDetailsImpl;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -130,7 +132,11 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser() {
+    public ResponseEntity<?> logoutUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
     }

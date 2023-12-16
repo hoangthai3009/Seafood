@@ -80,7 +80,7 @@ public class WebSecurityConfig {
                             response.sendRedirect("Error/404");
                         })
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**").permitAll()
                 )

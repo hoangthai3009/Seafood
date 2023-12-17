@@ -13,4 +13,7 @@ public class CheckoutRequest {
     private User user;
     private List<BillDetailRequest> billDetails;
     private  Long userId;
+
+    private String paymentMethod;
+
 }

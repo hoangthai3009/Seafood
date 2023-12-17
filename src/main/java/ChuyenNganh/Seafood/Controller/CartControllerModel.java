@@ -94,10 +94,5 @@ public class CartControllerModel {
 
         return "Cart/checkout";  // Tên của template Thymeleaf cho trang checkout
     }
-    @GetMapping("/success")
-    public String showSuccessPage(HttpSession session) {
-        clearCart(session);
-        return "Cart/success";
-    }
 
 }

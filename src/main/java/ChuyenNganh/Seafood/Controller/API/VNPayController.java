@@ -22,10 +22,10 @@ import java.util.*;
 @RequestMapping("/api/payment")
 public class VNPayController {
     @GetMapping("/create_payment")
-    public ResponseEntity<?> createPayment(HttpServletRequest req) throws UnsupportedEncodingException {
+    public ResponseEntity<?> createPayment(HttpServletRequest req, @RequestParam Double totalPrice) throws UnsupportedEncodingException {
 
-//        long amount = Integer.parseInt(req.getParameter("amount"))*100;
-//        String bankCode = req.getParameter("bankCode");
+        long amount = (long) (totalPrice * 100L); // Nhân với 100 để chuyển đổi sang đơn vị nhỏ nhất, ví dụ đồng
+        String bankCode = req.getParameter("bankCode");
         String orderType = "other";
 
         String vnp_TxnRef = Config.getRandomNumber(8);
@@ -39,14 +39,14 @@ public class VNPayController {
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        long amount = 100000*100;
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_BankCode", "NCB");
+        if (bankCode != null && !bankCode.isEmpty()) {
+            vnp_Params.put("vnp_BankCode", bankCode);
+        }
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));

@@ -9,6 +9,7 @@ import ChuyenNganh.Seafood.Payload.Request.CheckoutRequest;
 import ChuyenNganh.Seafood.Repositories.IUserRepository;
 import ChuyenNganh.Seafood.Security.Services.BillDetailService;
 import ChuyenNganh.Seafood.Security.Services.BillService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +34,17 @@ public class APIBillController {
     }
     @Autowired
     IUserRepository userRepository;
+    @Autowired
+    private VNPayController vnpayController;
     @PostMapping
-    public ResponseEntity<String> checkout(@RequestBody CheckoutRequest checkoutRequest) {
+    public ResponseEntity<String> checkout(@RequestBody CheckoutRequest checkoutRequest, HttpServletRequest request) {
         try {
+            if ("VNPay".equals(checkoutRequest.getPaymentMethod())) {
+                String paymentUrl = String.valueOf(vnpayController.createPayment(request, checkoutRequest.getTotalPrice()));
+                // Chuyển hướng người dùng đến URL VNPay
+                return new ResponseEntity<>(paymentUrl, HttpStatus.OK);
+            }
+
             User user = userRepository.findById(checkoutRequest.getUserId())
                     .orElseThrow(() -> new Exception("User not found"));
             Bill newBill = new Bill();

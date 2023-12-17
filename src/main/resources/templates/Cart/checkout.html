@@ -20,27 +20,41 @@
                         <!-- Địa chỉ -->
                         <div class="checkout__input">
                             <p>Địa chỉ<span>*</span></p>
-                            <input type="text" th:field="*{address}" placeholder="Địa chỉ giao hàng" class="checkout__input__add">
+                            <input id="addressInput" type="text" th:field="*{address}" placeholder="Địa chỉ giao hàng"
+                                   class="checkout__input__add" required>
                         </div>
                         <!-- Ghi chú đơn hàng -->
                         <div class="checkout__input">
-                            <p>Ghi chú đơn hàng<span>*</span></p>
-                            <input type="text" th:field="*{note}" placeholder="Ghi chú chỉ dẫn giao hàng hoặc lưu ý cho shop.">
+                            <p>Ghi chú đơn hàng<span></span></p>
+                            <input type="text" th:field="*{note}"
+                                   placeholder="Ghi chú chỉ dẫn giao hàng hoặc lưu ý cho shop." required>
                         </div>
-                        <input type="hidden" id="totalPrice" th:value="${totalPrice}" />
+                        <!-- Phương thức thanh toán -->
+                        <div class="checkout__input">
+                            <p>Phương thức thanh toán<span></span></p>
+                            <select id="paymentMethod" required>
+                                <option style="font-weight: bold" value="COD">Thanh toán khi nhận hàng (COD)</option>
+                                <option style="font-weight: bold" value="VNPay">Thanh toán trực tuyến (ONLINE)</option>
+                            </select>
+                        </div>
+                        <input type="hidden" id="totalPrice" th:value="${totalPrice}"/>
 
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="checkout__order">
                             <div class="checkout__order__products">Products <span>Total</span></div>
                             <ul id="cartItems" th:each="item, status : ${cartItems}">
-                                <li th:id="${'cartItem-' + status.index}" th:data-seafood-id="${item.seafoodId}" th:data-quantity="${item.quantity}" th:data-price="${item.price}">
-                                    <th:block th:text="${item.seafoodName}" ></th:block>
+                                <li th:id="${'cartItem-' + status.index}" th:data-seafood-id="${item.seafoodId}"
+                                    th:data-quantity="${item.quantity}" th:data-price="${item.price}">
+                                    <th:block th:text="${item.seafoodName}"></th:block>
                                     <span class="price-value" th:text="${(item.price * item.quantity)}"></span>
                                 </li>
                             </ul>
-                            <div class="checkout__order__subtotal">Số lượng<span th:text="${totalQuantity}"></span></div>
-                            <div class="checkout__order__total">Tổng tiền<span class="price-value" th:text="${totalPrice}"></span> ₫</div>
+                            <div class="checkout__order__subtotal">Số lượng<span th:text="${totalQuantity}"></span>
+                            </div>
+                            <div class="checkout__order__total">Tổng tiền<span class="price-value"
+                                                                               th:text="${totalPrice}"></span> ₫
+                            </div>
                             <button type="submit" id="placeOrderBtn" class="site-btn">Đặt Hàng</button>
                         </div>
                     </div>
@@ -50,17 +64,26 @@
     </div>
 </section>
 <!-- Checkout Section End -->
-
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script th:inline="javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
+        // Lắng nghe sự kiện click của nút đặt hàng
         $("#placeOrderBtn").click(function (event) {
             event.preventDefault();
-
-            // Kiểm tra trạng thái đăng nhập và lấy ID người dùng
-            getUserInfo(function(userId) {
+            const address = $('#addressInput').val(); // Lấy giá trị từ trường địa chỉ
+            // Kiểm tra xem địa chỉ có trống hay không
+            if (!address) {
+                alert('Vui lòng nhập địa chỉ giao hàng.');
+                return;
+            }
+            getUserInfo(function (userId) {
                 if (userId) {
-                    processOrder(userId); // Thực hiện hành động thanh toán
+                    const paymentMethod = $('#paymentMethod').val();
+                    if (paymentMethod === 'VNPay') {
+                        initiateVNPayPayment(userId); // Gọi hàm thanh toán VNPay
+                    } else {
+                        processOrder(userId); // Gọi hàm thanh toán thông thường
+                    }
                 } else {
                     alert('Bạn cần đăng nhập để sử dụng chức năng này');
                 }
@@ -70,56 +93,53 @@
             $.ajax({
                 url: '/check-login',
                 method: 'GET',
-                success: function(data) {
+                success: function (data) {
                     if (data.authenticated) {
-                        callback(data.userId); // Gọi hàm callback với ID người dùng
+                        callback(data.userId);
                     } else {
-                        callback(null); // Người dùng chưa đăng nhập
+                        callback(null);
                     }
                 },
-                error: function(err) {
+                error: function (err) {
                     console.error("Error checking authentication status: ", err);
-                    callback(null); // Có lỗi xảy ra
+                    callback(null);
                 }
             });
         }
-
-        function processOrder(userId) {
-            $("#placeOrderBtn").prop('disabled', true);
-
-            const totalPrice = $('#totalPrice').val();
+        function getBillDetails() {
             const billDetails = [];
-
             $('#cartItems li').each(function () {
                 const item = $(this);
-                const seafoodId = item.data('seafood-id');
-                const quantity = item.data('quantity');
-                const price = item.data('price');
-
                 billDetails.push({
-                    seafood: { id: seafoodId },
-                    quantity: quantity,
-                    price: price
+                    seafood: {id: item.data('seafood-id')},
+                    quantity: item.data('quantity'),
+                    price: item.data('price')
                 });
             });
-
-            // Thêm userId vào dữ liệu bill
+            return billDetails;
+        }
+        // Hàm xử lý đặt hàng bình thường
+        function processOrder(userId) {
+            $("#placeOrderBtn").prop('disabled', true);
             const billData = {
                 userId: userId,
-                totalPrice: totalPrice,
+                totalPrice: $('#totalPrice').val(),
                 note: $('#note').val(),
-                address: $('#address').val(),
-                billDetails: billDetails
+                address: $('#addressInput').val(),
+                billDetails: getBillDetails()
             };
-
             $.ajax({
                 type: "POST",
                 url: "/api/checkout",
                 contentType: "application/json",
                 data: JSON.stringify(billData),
-                success: function() {
-                    alert("Checkout successful");
-                    window.location.href = "/cart/success";
+                success: function () {
+                    alert("\n                              ĐẶT HÀNG THÀNH CÔNG !\n\nĐơn hàng của bạn sẽ được sắp xếp và giao đến cho bạn trong thời gian sớm nhất.");
+                    window.location.href = "/";
+                    clearCartSession();
+                    // paymentSuccess = true;
+                    localStorage.setItem('paymentSuccess', 'true');
+
                 },
                 error: function (error) {
                     console.error("Error during checkout: ", error);
@@ -127,9 +147,92 @@
                 }
             });
         }
+        // Hàm khởi tạo thanh toán VNPay
+        function initiateVNPayPayment(userId) {
+            const totalPrice = $('#totalPrice').val();
+            // Lưu thông tin cần thiết vào sessionStorage trước khi chuyển hướng
+            sessionStorage.setItem('userId', userId);
+            sessionStorage.setItem('totalPrice', totalPrice);
+            sessionStorage.setItem('billDetails', JSON.stringify(getBillDetails()));
+            sessionStorage.setItem('note', $('#note').val());
+            sessionStorage.setItem('address', $('#addressInput').val());
+            sessionStorage.setItem('paymentInitiated', 'true');
+            // Gửi yêu cầu thanh toán VNPay
+            $.ajax({
+                type: "GET",
+                url: `/api/payment/create_payment?totalPrice=${totalPrice}`,
+                success: function (response) {
+                    if (response.status === "OK") {
+                        // Chuyển hướng người dùng đến URL
+                        window.location.href = response.url;
+                    } else {
+                        // Xử lý trường hợp lỗi nếu cần
+                        console.error("Error during VNPay payment initiation: ", response.message);
+                        $("#placeOrderBtn").prop('disabled', false);
+                    }
+                },
+                error: function (error) {
+                    console.error("Error during VNPay payment initiation: ", error);
+                    $("#placeOrderBtn").prop('disabled', false);
+                }
+            });
+        }
+        // Hàm lấy thông tin hóa đơn từ giỏ hàng
+        if (sessionStorage.getItem('paymentInitiated') === 'true') {
+            checkVNPayPayment();
+            sessionStorage.removeItem('paymentInitiated'); // Xóa trạng thái đã lưu
+        }
+        function checkVNPayPayment() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const responseCode = urlParams.get('vnp_ResponseCode');
+            if (responseCode === '00') {
+                // Nếu thanh toán thành công, xử lý đơn hàng
+                const userId = sessionStorage.getItem('userId');
+                const totalPrice = sessionStorage.getItem('totalPrice');
+                const note = sessionStorage.getItem('note');
+                const address = sessionStorage.getItem('address');
+                const billDetails = JSON.parse(sessionStorage.getItem('billDetails'));
+
+                const billData = {
+                    userId: userId,
+                    totalPrice: totalPrice,
+                    note: note,
+                    address: address,
+                    billDetails: billDetails
+                };
+                // Gửi yêu cầu lưu hóa đơn
+                $.ajax({
+                    type: "POST",
+                    url: "/api/checkout",
+                    contentType: "application/json",
+                    data: JSON.stringify(billData),
+                    success: function () {
+                        clearCartSession();
+                        window.location.href = "/";
+                        alert("\n                              ĐẶT HÀNG THÀNH CÔNG !\n\nĐơn hàng của bạn sẽ được sắp xếp và giao đến cho bạn trong thời gian sớm nhất.");
+                    },
+                    error: function (error) {
+                        console.error("Error during checkout: ", error);
+                    }
+                });
+            } else {
+                console.error('VNPay payment failed with response code: ' + responseCode);
+            }
+        }
+        function clearCartSession() {
+            $.ajax({
+                type: "GET",
+                url: "/api/clearCart", // Đường dẫn tới API hoặc controller xóa session giỏ hàng
+                success: function () {
+                    console.log("Cart session cleared");
+                },
+                error: function (error) {
+                    console.error("Error clearing cart session: ", error);
+                }
+            });
+        }
     });
 </script>
-
 <th:block th:replace="layout :: footer"></th:block>
 
 </body>

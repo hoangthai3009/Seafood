@@ -36,4 +36,8 @@ public class CartApiController {
         int count = cartService.getSumQuantity(session);
         return ResponseEntity.ok(count);
     }
+    @GetMapping("/api/clearCart")
+    public void clearCartSession(HttpSession session) {
+        session.removeAttribute("cart");
+    }
 }

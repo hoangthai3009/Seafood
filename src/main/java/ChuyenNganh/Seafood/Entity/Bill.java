@@ -25,6 +25,10 @@ public class Bill {
 
     private String address;
 
+    private double discount;
+
+    private double totalPay;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

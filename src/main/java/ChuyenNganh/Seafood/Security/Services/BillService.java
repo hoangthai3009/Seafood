@@ -28,6 +28,9 @@ public class BillService {
     public Optional<Bill> getBillById(Long id) {
         return billRepository.findById(id);
     }
+    public List<Bill> getBillByUserId(Long userId) {
+        return billRepository.findBillByUser(userId);
+    }
 
     public Bill saveBill(Bill bill) {
         return billRepository.save(bill);
@@ -75,4 +78,10 @@ public class BillService {
     public static Double tongTienNam(int year) {
         return billRepository.getTotalRevenueByYear(year);
 }
+
+    public List<Bill> searchOrders(String keyword) {
+        // Sử dụng BillRepository để thực hiện tìm kiếm theo keyword trong tất cả các trường liên quan đến đơn hàng
+        List<Bill> searchOrders = billRepository.searchOrders(keyword);
+        return searchOrders;
+    }
 }

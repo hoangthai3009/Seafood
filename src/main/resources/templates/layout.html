@@ -13,7 +13,6 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-...." crossorigin="anonymous" />
-
     <!-- Css Styles -->
     <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/bootstrap.min.css}" type="text/css">
     <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/nice-select.css}" type="text/css">
@@ -71,8 +70,8 @@
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item" href="/" id="userNameLink"></a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Profile</a>
-                                    <a class="dropdown-item" href="">Giỏ hàng</a>
+                                    <a id="profileLink" class="dropdown-item" href="/profile/userId">Profile</a>
+                                    <a class="dropdown-item" href="/cart">Giỏ hàng</a>
                                     <div class="dropdown-divider"></div>
                                     <button class="dropdown-item" onclick="signoutUser()">Đăng Xuất</button>
                                 </div>
@@ -154,74 +153,48 @@
             </div>
         </div>
     </div>
-
-<!-- Footer Section End -->
-
-<!-- Js Plugins -->
 <script th:src="@{/js/jquery-3.7.0.min.js}"></script>
-<script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/jquery.nice-select.min.js}"></script>
-<script th:src="@{/js/jquery-ui.min.js}"></script>
-<script th:src="@{/js/jquery.slicknav.js}"></script>
-<script th:src="@{/js/mixitup.min.js}"></script>
-<script th:src="@{/js/owl.carousel.min.js}"></script>
+<script th:src="@{/vendor/jquery/jquery.easing.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/js/main.js}"></script>
-    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
-    <!-- Core plugin JavaScript-->
-    <script th:src="@{/vendor/jquery/jquery.easing.min.js}"></script>
-    <!-- Custom scripts for all pages-->
-    <script th:src="@{/js/sb-admin-2.min.js}"></script>
-    <script th:src="@{/js/admin-js.js/}"></script>
-    <script>
-        // Kiểm tra trạng thái đăng nhập khi trang được tải
+<script th:src="@{/js/admin-js.js/}"></script>
+<script th:src="@{/js/mixitup.min.js}"></script>
+<script>
+        // Hàm được gọi khi trang được tải và thực hiện các hành động khởi tạo
         document.addEventListener('DOMContentLoaded', function() {
             checkLoginStatus();
-
+            updateCartItemCount();
+            formatPrices();
         });
 
-        // Hàm kiểm tra trạng thái đăng nhập
-        // Hàm kiểm tra trạng thái đăng nhập
         function checkLoginStatus() {
             fetch('/check-login')
                 .then(response => response.json())
                 .then(data => {
-                    if (data.authenticated) {
-                        document.getElementById('loginButton').style.display = 'none';
-                        document.getElementById('userDropdown').style.display = 'block';
-                        // Lấy thông tin người dùng và hiển thị tên người dùng
-                        // Đặt nội dung của thẻ a có id là "userNameLink" thành tên người dùng
-                        const userNameLink = document.getElementById('userNameLink');
-                        if (userNameLink) {
-                            userNameLink.innerText = data.fullname;
-                        }
+                    const loginButton = document.getElementById('loginButton');
+                    const userDropdown = document.getElementById('userDropdown');
+                    if (data.authenticated && data.userId) {
+                        document.getElementById('profileLink').href = `/profile/${data.userId}`;
+                        loginButton.style.display = 'none';
+                        userDropdown.style.display = 'block';
+                        document.getElementById('userNameLink').innerText = data.fullname;
                     } else {
-                        // Chưa đăng nhập, ẩn dropdown và hiện nút đăng nhập
-                        document.getElementById('loginButton').style.display = 'block';
-                        document.getElementById('userDropdown').style.display = 'none';
+                        loginButton.style.display = 'block';
+                        userDropdown.style.display = 'none';
                     }
                 });
         }
 
-
-        // Hàm đăng xuất
         function signoutUser() {
-            fetch('/api/auth/logout', {
-                method: 'POST',
-            })
-                .then(() => {
-                    window.location.reload();
-                })
+            fetch('/api/auth/logout', { method: 'POST' })
+                .then(() => window.location.reload())
                 .catch(error => {
                     console.error('Đăng xuất lỗi:', error);
                     alert('Đăng xuất thất bại. Vui lòng thử lại.');
                 });
         }
 
-    </script>
-    <script>
         function addToCart(seafoodId, seafoodName, price, image, quantity, categoryName) {
-            // Tạo đối tượng FormData để chứa thông tin sản phẩm
             const formData = new FormData();
             formData.append("seafoodId", seafoodId);
             formData.append("seafoodName", seafoodName);
@@ -230,7 +203,6 @@
             formData.append("quantity", quantity);
             formData.append("categoryName", categoryName);
 
-            // Thực hiện Ajax request sử dụng jQuery
             $.ajax({
                 type: "POST",
                 url: "/cart/add-to-cart",
@@ -238,10 +210,8 @@
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    // Xử lý phản hồi từ máy chủ nếu cần
                     console.log("Sản phẩm đã được thêm vào giỏ hàng.");
                     updateCartItemCount();
-
                 },
                 error: function(error) {
                     console.error("Lỗi khi thêm sản phẩm vào giỏ hàng:", error);
@@ -249,43 +219,25 @@
             });
         }
 
-
-        // Hàm để cập nhật cartItemCount
         function updateCartItemCount() {
-            const cartItemCountElement = document.getElementById("cartItemCount");
-
             fetch('/cartItemCount')
                 .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    throw new Error('Network response was not ok.');
+                    if (!response.ok) throw new Error('Network response was not ok.');
+                    return response.json();
                 })
-                .then(quantity => {
-                    cartItemCountElement.textContent = quantity;
-                })
-                .catch(error => {
-                    console.error('There has been a problem with your fetch operation:', error);
-                });
+                .then(quantity => document.getElementById("cartItemCount").textContent = quantity)
+                .catch(error => console.error('Problem with fetch operation:', error));
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            // Gọi hàm cập nhật cartItemCount ban đầu
-            updateCartItemCount();
-        });
-
-        function formatNumberWithCommas(number) {
-            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        function formatPrices() {
+            document.querySelectorAll(".price-value").forEach(element => {
+                const price = parseFloat(element.innerText);
+                if (!isNaN(price)) {
+                    element.innerText = price.toLocaleString('vi-VN');
+                }
+            });
         }
-        document.querySelectorAll(".price-value").forEach(function(element) {
-            var price = parseFloat(element.innerText);
-            if (!isNaN(price)) {
-                element.innerText = formatNumberWithCommas(price);
-            }
-        });
-
-
-    </script>
+</script>
 </footer>
 </body>
 </html>

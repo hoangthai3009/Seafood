@@ -8,10 +8,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IBillRepository extends JpaRepository<Bill, Long> {
-    @Query("SELECT b FROM Bill b, User u " +
+    @Query("SELECT b FROM Bill b WHERE b.user.id = :userId")
+    List<Bill> findBillByUser(@Param("userId") Long userId);
 
-            "WHERE b.user.id = :userId")
-    Bill findBillByUser(@Param("userId") Long userId);
+    @Query("SELECT b " +
+            "FROM Bill b " +
+            "WHERE b.id = :keyword OR " +
+            "b.address = :keyword OR " +
+            "b.note = :keyword")
+    List<Bill> searchOrders(@Param("keyword") String keyword);
+
 
     @Query("SELECT MONTH(b.createdAt) AS month, SUM(b.totalPrice) AS total " +
             "FROM Bill b " +
@@ -34,7 +40,6 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
             "FROM Bill b " +
             "WHERE YEAR(b.createdAt) = :year")
     Double getTotalRevenueByYear(@Param("year") int year);
-
 
 
 }

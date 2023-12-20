@@ -134,7 +134,8 @@
                 contentType: "application/json",
                 data: JSON.stringify(billData),
                 success: function () {
-                    alert("\n                              ĐẶT HÀNG THÀNH CÔNG !\n\nĐơn hàng của bạn sẽ được sắp xếp và giao đến cho bạn trong thời gian sớm nhất.");
+                    alert("\n                              ĐẶT HÀNG THÀNH CÔNG !\n\n" +
+                        "Đơn hàng của bạn sẽ được sắp xếp và giao đến cho bạn trong thời gian sớm nhất.");
                     window.location.href = "/";
                     clearCartSession();
                     // paymentSuccess = true;

@@ -205,7 +205,7 @@
                 data.slice(0, 4).forEach(category => { // Sử dụng .slice(0, 4) để lấy chỉ 4 mục đầu tiên
                     const item = $('<div class="categories__item">' +
                         `<img src="${category.img}" alt="${category.name}">` +
-                        `<h5><a href="${category.id}">${category.name}</a></h5>` +
+                        `<h5><a href="/seafood/list?categoryId=${category.id}">${category.name}</a></h5>` +
                         '</div>');
 
                     categorySlider.append(item);

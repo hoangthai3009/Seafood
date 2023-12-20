@@ -1,11 +1,20 @@
 package ChuyenNganh.Seafood.Controller;
 
+import ChuyenNganh.Seafood.Entity.Bill;
 import ChuyenNganh.Seafood.Entity.User;
 import ChuyenNganh.Seafood.Repositories.IUserRepository;
+import ChuyenNganh.Seafood.Security.Services.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+@RequestMapping
 
 @Controller
 public class UIController {
@@ -17,10 +26,6 @@ public class UIController {
         return "User/login";
     }
 
-    @GetMapping("/register")
-    public String showRegisterPage() {
-        return "User/register";
-    }
 
     @GetMapping("/confirm")
     public String confirmRegistration(@RequestParam("token") String token) {
@@ -44,4 +49,17 @@ public class UIController {
         return "Seafood/detail";
     }
 
+    @Autowired
+    private BillService billService;
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/profile/{userId}")
+    public String profile(Model model, @PathVariable Long userId) {
+        List<Bill> orders = billService.getBillByUserId(userId);
+        model.addAttribute("orders", orders);
+        return "User/profile";
+    }
+
+    @GetMapping("/order")
+    public String test(){return "User/order";}
 }

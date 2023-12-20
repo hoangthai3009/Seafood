@@ -22,12 +22,20 @@ public class CartApiController {
         if (authentication != null && authentication.isAuthenticated()) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             Long userId = userDetails.getId();
-            String fullname = userDetails.getFullname(); // Thêm dòng này
-            return ResponseEntity.ok(Map.of(
-                    "authenticated", true,
-                    "userId", userId,
-                    "fullname", fullname // Thêm trường fullname
-            ));
+            String fullname = userDetails.getFullname();
+            String email = userDetails.getEmail();
+            String phone = userDetails.getPhone();
+            String address = userDetails.getAddress();
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("authenticated", true);
+            responseMap.put("userId", userId);
+            responseMap.put("fullname", fullname);
+            responseMap.put("email", email);
+            responseMap.put("phone", phone);
+            if (address != null)
+                responseMap.put("address", address);
+            return ResponseEntity.ok(responseMap);
+
         }
         return ResponseEntity.ok(Map.of("authenticated", false));
     }

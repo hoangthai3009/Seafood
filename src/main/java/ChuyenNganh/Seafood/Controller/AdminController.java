@@ -2,26 +2,19 @@ package ChuyenNganh.Seafood.Controller;
 
 import ChuyenNganh.Seafood.Entity.*;
 import ChuyenNganh.Seafood.Security.Services.*;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -73,9 +66,7 @@ public class AdminController {
             if(count == 2) seafood.setExtraImage3(extraImage);
             count ++;
         }
-
-        Seafood saveSeafood = seafoodService.saveSeafood(seafood);
-
+        seafoodService.saveSeafood(seafood);
         ra.addFlashAttribute("message","Seafood save successfully.");
         return "redirect:/admin/seafoods";
     }
@@ -87,15 +78,14 @@ public class AdminController {
             model.addAttribute("seafood", seafood);
             return "Admin/seafood/edit-seafood";
         }else {
-            return "not-found";
+            return "Error/404";
         }
     }
     @PostMapping("/edit-seafood")
     public String updateSeafood(@ModelAttribute(name = "seafood") Seafood seafood,
                                 RedirectAttributes ra,
                                 @RequestParam(value = "mainImage", required = false) MultipartFile mainMultipartFile,
-                                @RequestParam(value = "extraImage", required = false) MultipartFile[] extraMultipartFiles,
-                                boolean exist) throws IOException {
+                                @RequestParam(value = "extraImage", required = false) MultipartFile[] extraMultipartFiles) throws IOException {
         // Kiểm tra xem có hình chính mới không
         if (!mainMultipartFile.isEmpty()) {
             String mainImage = imageService.save(mainMultipartFile);
@@ -105,7 +95,6 @@ public class AdminController {
             Seafood currentSeafood = seafoodService.getSeafoodById(seafood.getId());
             seafood.setMainImage(currentSeafood.getMainImage());
         }
-
         // Kiểm tra và cập nhật hình phụ
         int count = 0;
         for (MultipartFile extraMultipart : extraMultipartFiles) {
@@ -115,7 +104,6 @@ public class AdminController {
                 if (count == 0) seafood.setExtraImage1(extraImage);
                 else if (count == 1) seafood.setExtraImage2(extraImage);
                 else if (count == 2) seafood.setExtraImage3(extraImage);
-                count++;
             }
             else{
                 // Giữ nguyên giá trị ảnh phụ hiện tại nếu không có cập nhật
@@ -123,8 +111,8 @@ public class AdminController {
                 if (count == 0) seafood.setExtraImage1(currentSeafood.getExtraImage1());
                 else if (count == 1) seafood.setExtraImage2(currentSeafood.getExtraImage2());
                 else if (count == 2) seafood.setExtraImage3(currentSeafood.getExtraImage3());
-                count++;
             }
+            count++;
         }
         // Lưu thông tin seafood cập nhật
         seafoodService.saveSeafood(seafood);
@@ -136,7 +124,6 @@ public class AdminController {
 
     @GetMapping("/delete/{id}")
     public String deleteSeafood (@PathVariable("id") Long id) {
-        Seafood seafood = seafoodService.getSeafoodById(id);
         seafoodService.deleteSeafood(id);
         return "redirect:/admin/seafoods";
     }
@@ -164,13 +151,12 @@ public class AdminController {
         if (Arrays.asList(roles).contains(roleName)) {
             redirectAttributes.addFlashAttribute("exists", "Quyền đã tồn tại cho người dùng này");
             logger.warn("Quyền có Id {} đã tồn tại cho người dùng có Id {}", roleService.getRoleById(roleId).getId(), userId);
-            return "redirect:/admin/assign-role/" + userId;
         } else {
             userService.addRoleToUser(userId, roleId);
             redirectAttributes.addFlashAttribute("success", "Đã thêm quyền cho người dùng này");
             logger.info("Gán thành công quyền có Id {} cho user có Id {}", roleService.getRoleById(roleId).getId(), userId);
-            return "redirect:/admin/assign-role/" + userId;
         }
+        return "redirect:/admin/assign-role/" + userId;
     }
 
     @PostMapping("/remove-role-from-user")
@@ -238,7 +224,7 @@ public class AdminController {
 
         return "redirect:/admin/roles";
     }
-*/
+
     @GetMapping("/edit-role/{roleId}")
     public String editRoleForm(@PathVariable("roleId") Long roleId, Model model) {
         Role role = roleService.getRoleById(roleId);
@@ -265,6 +251,7 @@ public class AdminController {
         logger.info("Xóa thành công role {}", role.getName());
         return "redirect:/admin/roles";
     }
+    */
     @GetMapping("/bills")
     public String getAllBills(Model model) {
         List<Bill> bills = billService.getAllBills();
@@ -321,5 +308,11 @@ public class AdminController {
         return "redirect:/admin/bills";
 
     }
-
+    @GetMapping("/bills/{billId}/details")
+    public String getBillDetailsPage(@PathVariable Long billId, Model model) {
+        List<BillDetail> billDetails = billService.getBillDetailsByBillId(billId);
+        model.addAttribute("billDetails", billDetails);
+        model.addAttribute("billId", billId);
+        return "Admin/bill/bill-detail";
+    }
 }

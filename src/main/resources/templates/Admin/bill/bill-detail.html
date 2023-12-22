@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý hóa đơn</title>
+    <th:block th:replace="layout-admin :: link-css"></th:block>
+    <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <th:block th:replace="layout-admin :: header"></th:block>
+    <div id="content-wrapper">
+        <div id="content">
+            <th:block th:replace="layout-admin :: nav"></th:block>
+            <div class="container-fluid">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h4 class="font-weight-bold text-primary text-center">CHI TIẾT HÓA ĐƠN: <span style="color:red; font-weight: bold" th:text="${billId}"></span></h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>Mã sản phẩm</th>
+                                    <th>Sản phẩm</th>
+                                    <th>Danh mục</th>
+                                    <th>Giá tiền (đ)</th>
+                                    <th>Số lượng</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="billDetail: ${billDetails}">
+                                    <td th:text="${billDetail.seafood.getId()}"></td>
+                                    <td th:text="${billDetail.seafood.getName()}"></td>
+                                    <td th:text="${billDetail.seafood.getCategory().getName()}"></td>
+                                    <td class="price-value" th:text="${billDetail.price}"></td>
+                                    <td th:text="${billDetail.getQuantity()}"></td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="/admin/bills" class="btn btn-outline-primary mt-3">Quay Lại</a>
+                    </div>
+                </div>
+            </div>
+            <th:block th:replace="layout-admin :: footer"></th:block>
+        </div>
+    </div>
+</div>
+
+<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="/js/datatables-demo.js"></script>
+</body>
+</html>

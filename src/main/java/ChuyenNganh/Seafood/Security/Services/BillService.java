@@ -1,6 +1,8 @@
 package ChuyenNganh.Seafood.Security.Services;
 
 import ChuyenNganh.Seafood.Entity.Bill;
+import ChuyenNganh.Seafood.Entity.BillDetail;
+import ChuyenNganh.Seafood.Repositories.IBillDetailRepository;
 import ChuyenNganh.Seafood.Repositories.IBillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,9 +81,9 @@ public class BillService {
         return billRepository.getTotalRevenueByYear(year);
 }
 
-    public List<Bill> searchOrders(String keyword) {
-        // Sử dụng BillRepository để thực hiện tìm kiếm theo keyword trong tất cả các trường liên quan đến đơn hàng
-        List<Bill> searchOrders = billRepository.searchOrders(keyword);
-        return searchOrders;
+    @Autowired
+    private IBillDetailRepository billDetailRepository;
+    public List<BillDetail> getBillDetailsByBillId(Long billId) {
+        return billDetailRepository.findBillDetailsByBillId(billId);
     }
 }

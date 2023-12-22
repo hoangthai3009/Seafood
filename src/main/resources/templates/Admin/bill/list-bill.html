@@ -42,7 +42,10 @@
                                     <td th:text="${#dates.format(bill.createdAt, 'dd/MM/yyyy - h:mm a')}"></td>
                                     <td th:text="${bill.note}"></td>
 
-                                    <td>
+                                    <td class="text-center">
+                                        <a th:href="@{/admin/bills/{id}/details(id=${bill.id})}" class="mr-2">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
                                         <a th:href="@{/admin/edit-bill/{id}(id=${bill.id})}" class="mr-2">
                                             <i class="fa-regular fa-pen-to-square"></i></a>
                                         <a th:href="@{/admin/delete-bill/{billId}(billId=${bill.id})}"

@@ -25,7 +25,7 @@ public class PromotionService {
         return promotionRepository.findById(code);
     }
 
-    public Promotion createPromotion(Promotion promotion) {
+    public Promotion savePromotion(Promotion promotion) {
         return promotionRepository.save(promotion);
     }
 

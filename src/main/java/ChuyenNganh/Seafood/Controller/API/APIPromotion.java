@@ -7,7 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/promotions")
@@ -27,7 +30,7 @@ public class APIPromotion {
     }
     @PostMapping
     public ResponseEntity<Promotion> createPromotion(@RequestBody Promotion promotion) {
-        Promotion createdPromotion = promotionService.createPromotion(promotion);
+        Promotion createdPromotion = promotionService.savePromotion(promotion);
         return new ResponseEntity<>(createdPromotion, HttpStatus.CREATED);
     }
 }

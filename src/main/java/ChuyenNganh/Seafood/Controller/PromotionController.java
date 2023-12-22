@@ -3,6 +3,7 @@ package ChuyenNganh.Seafood.Controller;
 import ChuyenNganh.Seafood.Entity.Promotion;
 import ChuyenNganh.Seafood.Security.Services.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/promotions")
+@PreAuthorize("hasRole('ADMIN')")
+@RequestMapping("/admin")
 public class PromotionController {
 
     private final PromotionService promotionService;
@@ -21,41 +23,44 @@ public class PromotionController {
         this.promotionService = promotionService;
     }
 
-    @GetMapping
+    @GetMapping("/promotions")
     public String getAllPromotions(Model model) {
         List<Promotion> promotions = promotionService.getAllPromotions();
         model.addAttribute("promotions", promotions);
-        return "promotion/list";
+        return "Admin/promotion/list-promotion";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/create-promotion")
     public String showCreateForm(Model model) {
         model.addAttribute("promotion", new Promotion());
-        return "promotion/create";
+        return "Admin/promotion/create-promotion";
     }
 
-    @PostMapping("/new")
-    public String createPromotion(@ModelAttribute Promotion promotion) {
-        promotionService.createPromotion(promotion);
-        return "redirect:/promotions";
+    @PostMapping("/create-promotion")
+    public String createPromotion(@ModelAttribute Promotion promotion, @RequestParam("code") String promotionCode) {
+        promotion.setCode(promotionCode);
+        promotionService.savePromotion(promotion);
+        return "redirect:/admin/promotions";
+    }
+    @GetMapping("/edit-promotion/{code}")
+    public String showEditForm(@PathVariable("code") String code, Model model) {
+        Optional<Promotion> promotionOpt = promotionService.getPromotionByCode(code);
+        if (promotionOpt.isEmpty()) {
+            return "redirect:/admin/promotions"; // or some error page
+        }
+        model.addAttribute("promotion", promotionOpt.get());
+        return "Admin/promotion/edit-promotion";
     }
 
-    @GetMapping("/{code}/edit")
-    public String showUpdateForm(@PathVariable String code, Model model) {
-        Optional<Promotion> promotion = promotionService.getPromotionByCode(code);
-        promotion.ifPresent(value -> model.addAttribute("promotion", value));
-        return "promotion/edit";
+    @PostMapping("/edit-promotion")
+    public String editPromotion(@ModelAttribute Promotion promotion) {
+        promotionService.savePromotion(promotion);
+        return "redirect:/admin/promotions";
     }
 
-    @PostMapping("/{id}/edit")
-    public String updatePromotion(@PathVariable String id, @ModelAttribute Promotion updatedPromotion) {
-        promotionService.updatePromotion(id, updatedPromotion);
-        return "redirect:/promotions";
-    }
-
-    @GetMapping("/{id}/delete")
-    public String deletePromotion(@PathVariable String id) {
-        promotionService.deletePromotion(id);
-        return "redirect:/promotions";
+    @GetMapping("/delete-promotion/{code}")
+    public String deletePromotion(@PathVariable String code) {
+        promotionService.deletePromotion(code);
+        return "redirect:/admin/promotions";
     }
 }

@@ -49,13 +49,28 @@
 </style>
 <body>
 <th:block th:replace="layout :: header"></th:block>
-
+<div class="container-fluid  mt-100" style="margin-top:100px; margin-bottom: 50px" th:if="${#lists.isEmpty(cart)}">
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                <div >
+                    <div class="col-sm-12 empty-cart-cls text-center">
+                        <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+                        <h3><strong>Giỏ Hàng Trống !</strong></h3>
+                        <h4>Hãy thêm một vài sản phẩm để mua sắm ngay nào :)</h4>
+                        <a href="/seafood/list" class="btn btn-primary cart-btn-transform m-3" data-abc="true">Tiếp tục Mua Sắm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Shoping Cart Section Begin -->
-<section class="shoping-cart spad">
+<section class="shoping-cart spad" th:unless="${#lists.isEmpty(cart)}">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="shoping__cart__table">
+                <div class="shoping__cart__table" >
                     <table>
                         <thead>
                         <tr>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <!-- Metadata, CSS Links -->
+    <title>Thêm Khuyến Mãi</title>
+    <th:block th:replace="layout-admin :: link-css"></th:block>
+    <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <th:block th:replace="layout-admin :: header"></th:block>
+    <div id="content-wrapper">
+        <div id="content">
+            <th:block th:replace="layout-admin :: nav"></th:block>
+            <!-- Content -->
+            <div class="container-fluid">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold">THÊM KHUYẾN MÃI</h6>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/create-promotion}" th:object="${promotion}" method="post">
+                            <div class="form-group row">
+                            <div class="col mt-3">
+                                <label class="d-flex justify-content-center" for="code">Mã khyến mãi:</label>
+                                <input class="form-control" type="text" id="code" th:field="*{code}">
+                                <span class="text-danger" th:if="${#fields.hasErrors('code')}"
+                                      th:errors="*{code}"></span>
+                            </div>
+                                <div class="col mt-3">
+                                <label class="d-flex justify-content-center" for="name">Tên khuyến mãi:</label>
+                                <input class="form-control" type="text" id="name" th:field="*{name}">
+                                <span class="text-danger" th:if="${#fields.hasErrors('name')}"
+                                      th:errors="*{name}"></span>
+                            </div>
+                                <div class="col mt-3">
+                                <label class="d-flex justify-content-center" for="description">Mô tả:</label>
+                                <input class="form-control" type="text" id="description" th:field="*{description}">
+                                <span class="text-danger" th:if="${#fields.hasErrors('description')}"
+                                      th:errors="*{description}"></span>
+                            </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col mt-3">
+                                    <label class="d-flex justify-content-center" for="discount">Phần trăm giảm:</label>
+                                    <input class="form-control" type="number" id="discount" th:field="*{discount}" th:value="0">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('discount')}" th:errors="*{discount}"></span>
+                                </div>
+
+                                <div class="col mt-3">
+                                <label class="d-flex justify-content-center" for="quantity">Số lượng:</label>
+                                <input class="form-control" type="number" id="quantity" th:field="*{quantity}">
+                                <span class="text-danger" th:if="${#fields.hasErrors('quantity')}"
+                                      th:errors="*{quantity}"></span>
+                            </div>
+                            <div class="col mt-3">
+                                <label class="d-flex justify-content-center" for="expired_day">Ngày hết hạn:</label>
+                                <input class="form-control" type="date" id="expired_day" th:field="*{expired_day}">
+                                <span class="text-danger" th:if="${#fields.hasErrors('expired_day')}"
+                                      th:errors="*{expired_day}"></span>
+                            </div>
+                            </div>
+                            <input type="submit" class="btn btn-primary text-center" value="Thêm Khuyến Mãi">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <th:block th:replace="layout-admin :: footer"></th:block>
+    </div>
+</div>
+</body>
+</html>

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,17 @@ public class CartControllerModel {
         model.addAttribute("totalPages", cartPage.getTotalPages());
         return "Cart/cart";
     }
+    @PreAuthorize("!hasRole('ADMIN')")
+    @GetMapping("/checkout")
+    public String showCheckoutForm(HttpSession session, Model model) {
+        Cart cart = cartService.getCart(session);
+        model.addAttribute("checkoutRequest", new CheckoutRequest());
+        model.addAttribute("cartItems", cart.getCartItems());
+        model.addAttribute("totalPrice", cartService.getSumPrice(session));
+        model.addAttribute("totalQuantity", cartService.getSumQuantity(session));
 
+        return "Cart/checkout";  // Tên của template Thymeleaf cho trang checkout
+    }
     @GetMapping("/removeFromCart/{id}")
     public String removeFromCart(HttpSession session, @PathVariable Long id) {
         var cart = cartService.getCart(session);
@@ -84,15 +95,6 @@ public class CartControllerModel {
         return "redirect:" + previousPage;
     }
 
-    @GetMapping("/checkout")
-    public String showCheckoutForm(HttpSession session, Model model) {
-        Cart cart = cartService.getCart(session);
-        model.addAttribute("checkoutRequest", new CheckoutRequest());
-        model.addAttribute("cartItems", cart.getCartItems());
-        model.addAttribute("totalPrice", cartService.getSumPrice(session));
-        model.addAttribute("totalQuantity", cartService.getSumQuantity(session));
 
-        return "Cart/checkout";  // Tên của template Thymeleaf cho trang checkout
-    }
 
 }

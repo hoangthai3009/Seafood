@@ -7,7 +7,7 @@
     <link th:fragment="link-css" th:href="@{/vendor/font-awesome/css/all.min.css}" rel="stylesheet" type="text/css">
     <link th:fragment="link-css" th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet" type="text/css">
     <link th:fragment="link-css" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/chatbox.css}" type="text/css">
 </head>
 <body>
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" th:fragment="header">
@@ -169,6 +169,34 @@
 
 <!-- Footer -->
 <footer class="sticky-footer bg-white" th:fragment="footer">
+    <!-- Chat Box-->
+    <div id="body">
+        <div id="chat-circle" class="btn btn-raised">
+            <div id="chat-overlay"></div>
+            <i class="fa-regular fa-comments text-center" style="font-size: 24px"></i>
+        </div>
+
+        <div class="chat-box">
+            <div class="chat-box-header">
+                Chat với Khách Hàng
+                <span class="chat-box-toggle"><i class="fas fa-close" style="font-size: 20px"></i></span>
+            </div>
+            <div class="chat-box-body">
+                <div class="chat-box-overlay">
+                </div>
+                <div class="chat-logs mb-3">
+
+                </div><!--chat-log -->
+            </div>
+            <div class="chat-input">
+                <form>
+                    <input type="text" id="chat-input" placeholder="Trả lời ở đây ..."/>
+                    <button type="submit" class="chat-submit" id="chat-submit"><i class="fa-solid fa-paper-plane" style="font-size: 20px"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- End Chat Box-->
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
             <span>Copyright &copy; Your Website 2021</span>
@@ -182,6 +210,7 @@
     <!-- Custom scripts for all pages-->
     <script th:src="@{/js/sb-admin-2.min.js}"></script>
     <script th:src="@{/js/admin-js.js/}"></script>
+    <script th:src="@{/js/chatbox.js}"></script>
     <script>
         // Kiểm tra trạng thái đăng nhập khi trang được tải
         document.addEventListener('DOMContentLoaded', function() {

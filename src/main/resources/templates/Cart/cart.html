@@ -143,9 +143,9 @@
                 <div class="shoping__continue">
                     <div class="shoping__discount">
                         <h5>Mã giảm giá</h5>
-                        <form action="#">
-                            <input type="text" placeholder="Nhập mã giảm giá ở đây">
-                            <button type="submit" class="site-btn">ÁP DỤNG</button>
+                        <form onsubmit="return false;">
+                            <input id="promotionCode" type="text" placeholder="Nhập mã giảm giá ở đây">
+                            <button type="submit" class="site-btn" onclick="applyPromotionCode()">ÁP DỤNG</button>
                         </form>
                     </div>
                 </div>
@@ -155,7 +155,9 @@
                     <h5>Tổng quan</h5>
                     <ul>
                         <li>Số lượng sản phẩm <span th:text="${totalQuantity}"></span></li>
-                        <li>Tổng tiền <span class="price-value" th:text="${totalPrice}">0</span> ₫</li>
+                        <li>Tổng tiền <span class="price-value" id="totalPrice" th:text="${totalPrice}">0</span> ₫</li>
+                        <li>Giảm giá <span class="price-value" id="totalDiscount">0</span> ₫</li>
+                        <li>Tổng tiền <span class="price-value" id="totalPay" th:text="${totalPrice}">0</span> ₫</li>
                     </ul>
                     <a href="/cart/checkout" class="primary-btn">Tiếp tục</a>
                 </div>
@@ -167,7 +169,6 @@
 <th:block th:replace="layout :: footer"></th:block>
 
 <script>
-
     document.addEventListener("DOMContentLoaded", function () {
         var updateButton = document.getElementById("updateButton");
 
@@ -176,8 +177,6 @@
             location.reload();
         });
     });
-
-
 </script>
 <script>
     var proQty = $('.pro-qty');
@@ -213,11 +212,56 @@
             console.log('Error updating cart: ', error);
             // Handle errors here
         });
-
-
     });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const totalDiscount = localStorage.getItem('totalDiscount');
+    const totalPay = localStorage.getItem('totalPay');
+        let totalPrice = localStorage.getItem('totalPrice');
+        if (!totalPrice) {
+            let displayedTotalPrice = document.getElementById('totalPrice').textContent.trim();
+            totalPrice = displayedTotalPrice.replace(/\.+/g, '');
+            localStorage.setItem('totalPrice', totalPrice);
+            localStorage.setItem('totalPay', totalPrice);
+        } else {
+            const formattedTotalPrice = totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            document.getElementById('totalPrice').textContent = formattedTotalPrice + ' ₫';
+        }
+    if (totalDiscount != null && totalPay != null && totalPrice != null) {
+        document.getElementById('totalDiscount').textContent = totalDiscount + ' ₫';
+        document.getElementById('totalPay').textContent = totalPay + ' ₫';
+        document.getElementById('totalPrice').textContent = totalPrice + ' ₫';
+    }
+});
+
+function applyPromotionCode() {
+        const promotionCode = document.getElementById('promotionCode').value;
+        if (!promotionCode) {
+            alert('Vui lòng nhập mã giảm giá!');
+            return;
+        }
+
+        $.ajax({
+            url: 'api/promotions/apply/' + promotionCode,
+            method: 'POST',
+            success: function(response) {
+                // Cập nhật trên giao diện
+                document.getElementById('totalDiscount').textContent = response.totalDiscount + ' ₫';
+                document.getElementById('totalPay').textContent = response.totalPay + ' ₫';
+
+                // Lưu giá trị vào localStorage
+                localStorage.setItem('totalDiscount', response.totalDiscount);
+                localStorage.setItem('totalPay', response.totalPay);
+                localStorage.setItem('totalPrice', response.totalPrice);
+                alert('Mã giảm giá đã được áp dụng thành công!');
+            },
+            error: function(xhr, status, error) {
+                alert('Không thể áp dụng mã giảm giá: ' + xhr.responseText);
+            }
+        });
+    }
 
 </script>
-
 </body>
 </html>

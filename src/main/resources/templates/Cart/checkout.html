@@ -31,18 +31,30 @@
                         </div>
                         <!-- Phương thức thanh toán -->
                         <div class="checkout__input">
-                            <p>Phương thức thanh toán<span></span></p>
-                            <select id="paymentMethod" required>
-                                <option style="font-weight: bold" value="COD">Thanh toán khi nhận hàng (COD)</option>
-                                <option style="font-weight: bold" value="VNPay">Thanh toán trực tuyến (ONLINE)</option>
-                            </select>
+                            <p>Phương thức thanh toán</p>
+                            <div class="form-group">
+                                <select id="paymentMethod" class="form-control" required>
+                                    <option style="font-weight: bold" value="COD">Thanh toán khi nhận hàng (COD)</option>
+                                    <option style="font-weight: bold" value="VNPay">Thanh toán trực tuyến (ONLINE)</option>
+                                </select>
+                            </div>
                         </div>
-                        <input type="hidden" id="totalPrice" th:value="${totalPrice}"/>
-
+                        <!-- END Phương thức thanh toán                  -->
+                        <!-- Cọc -->
+                        <div class="checkout__input">
+                            <p>Phương thức thanh toán</p>
+                            <div class="form-group">
+                                <select id="paidPercentage" class="form-control" required>
+                                    <option style="font-weight: bold" value="50">Thanh toán khi nhận hàng (COD)</option>
+                                    <option style="font-weight: bold" value="70">Thanh toán trực tuyến (ONLINE)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--END Cọc -->
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="checkout__order">
-                            <div class="checkout__order__products">Products <span>Total</span></div>
+                            <div class="checkout__order__products">Sản phẩm <span>Tổng</span></div>
                             <ul id="cartItems" th:each="item, status : ${cartItems}">
                                 <li th:id="${'cartItem-' + status.index}" th:data-seafood-id="${item.seafoodId}"
                                     th:data-quantity="${item.quantity}" th:data-price="${item.price}">
@@ -55,6 +67,9 @@
                             <div class="checkout__order__total">Tổng tiền<span class="price-value"
                                                                                th:text="${totalPrice}"></span> ₫
                             </div>
+                            <div class="checkout__order__total">Tổng giảm giá<span id="displayTotalDiscount" class="price-value">0</span> ₫</div>
+                            <div class="checkout__order__total">Tổng thanh toán<span id="displayTotalPay" class="price-value">0</span> ₫</div>
+
                             <button type="submit" id="placeOrderBtn" class="site-btn">Đặt Hàng</button>
                         </div>
                     </div>
@@ -67,6 +82,17 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script th:inline="javascript">
     $(document).ready(function () {
+        // Cập nhật giá trị từ localStorage
+        const totalDiscount = localStorage.getItem('totalDiscount');
+        const totalPay = localStorage.getItem('totalPay');
+
+        if (totalDiscount !== null) {
+            $('#displayTotalDiscount').text(totalDiscount + ' ₫');
+        }
+
+        if (totalPay !== null) {
+            $('#displayTotalPay').text(totalPay + ' ₫');
+        }
         // Lắng nghe sự kiện click của nút đặt hàng
         $("#placeOrderBtn").click(function (event) {
             event.preventDefault();
@@ -121,11 +147,17 @@
         // Hàm xử lý đặt hàng bình thường
         function processOrder(userId) {
             $("#placeOrderBtn").prop('disabled', true);
+            const totalDiscount = localStorage.getItem('totalDiscount');
+            const totalPay = localStorage.getItem('totalPay');
+            const totalPrice = localStorage.getItem('totalPrice');
             const billData = {
                 userId: userId,
-                totalPrice: $('#totalPrice').val(),
+                totalPrice: totalPrice,
+                discount: totalDiscount,
+                totalPay: totalPay,
                 note: $('#note').val(),
                 address: $('#addressInput').val(),
+                paymentMethod: "COD",
                 billDetails: getBillDetails()
             };
             $.ajax({
@@ -137,6 +169,9 @@
                     alert("\n                              ĐẶT HÀNG THÀNH CÔNG !\n\n" +
                         "Đơn hàng của bạn sẽ được sắp xếp và giao đến cho bạn trong thời gian sớm nhất.");
                     window.location.href = "/";
+                    localStorage.removeItem('totalPrice');
+                    localStorage.removeItem('totalDiscount');
+                    localStorage.removeItem('totalPay');
                     clearCartSession();
                     // paymentSuccess = true;
                     localStorage.setItem('paymentSuccess', 'true');
@@ -150,18 +185,21 @@
         }
         // Hàm khởi tạo thanh toán VNPay
         function initiateVNPayPayment(userId) {
-            const totalPrice = $('#totalPrice').val();
-            // Lưu thông tin cần thiết vào sessionStorage trước khi chuyển hướng
+            const totalDiscount = localStorage.getItem('totalDiscount');
+            const totalPay = localStorage.getItem('totalPay');
+            const totalPrice = localStorage.getItem('totalPrice');
             sessionStorage.setItem('userId', userId);
             sessionStorage.setItem('totalPrice', totalPrice);
             sessionStorage.setItem('billDetails', JSON.stringify(getBillDetails()));
             sessionStorage.setItem('note', $('#note').val());
             sessionStorage.setItem('address', $('#addressInput').val());
             sessionStorage.setItem('paymentInitiated', 'true');
+            sessionStorage.setItem('totalDiscount', totalDiscount);
+            sessionStorage.setItem('totalPay', totalPay);
             // Gửi yêu cầu thanh toán VNPay
             $.ajax({
                 type: "GET",
-                url: `/api/payment/create_payment?totalPrice=${totalPrice}`,
+                url: `/api/payment/create_payment?totalPrice=${totalPay}`,
                 success: function (response) {
                     if (response.status === "OK") {
                         // Chuyển hướng người dùng đến URL
@@ -190,6 +228,8 @@
                 // Nếu thanh toán thành công, xử lý đơn hàng
                 const userId = sessionStorage.getItem('userId');
                 const totalPrice = sessionStorage.getItem('totalPrice');
+                const totalDiscount = sessionStorage.getItem('totalDiscount');
+                const totalPay = sessionStorage.getItem('totalPay');
                 const note = sessionStorage.getItem('note');
                 const address = sessionStorage.getItem('address');
                 const billDetails = JSON.parse(sessionStorage.getItem('billDetails'));
@@ -199,6 +239,9 @@
                     totalPrice: totalPrice,
                     note: note,
                     address: address,
+                    discount: totalDiscount,
+                    totalPay: totalPay,
+                    paymentMethod: "VNPay",
                     billDetails: billDetails
                 };
                 // Gửi yêu cầu lưu hóa đơn
@@ -209,6 +252,9 @@
                     data: JSON.stringify(billData),
                     success: function () {
                         clearCartSession();
+                        localStorage.removeItem('totalPrice');
+                        localStorage.removeItem('totalDiscount');
+                        localStorage.removeItem('totalPay');
                         window.location.href = "/";
                         alert("\n                              ĐẶT HÀNG THÀNH CÔNG !\n\nĐơn hàng của bạn sẽ được sắp xếp và giao đến cho bạn trong thời gian sớm nhất.");
                     },

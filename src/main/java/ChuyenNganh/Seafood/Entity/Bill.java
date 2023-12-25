@@ -27,7 +27,17 @@ public class Bill {
 
     private double discount;
 
+    @Column(name = "total_pay")
     private double totalPay;
+
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
+    @Column(name = "paid_percentage")
+    private double paidPercentage;
+
+    @Column(name = "total_paid")
+    private double totalPaid;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

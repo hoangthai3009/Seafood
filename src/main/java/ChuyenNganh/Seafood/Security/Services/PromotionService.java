@@ -29,13 +29,6 @@ public class PromotionService {
         return promotionRepository.save(promotion);
     }
 
-    public Promotion updatePromotion(String id, Promotion updatedPromotion) {
-        if (promotionRepository.existsById(id)) {
-            updatedPromotion.setCode(id);
-            return promotionRepository.save(updatedPromotion);
-        }
-        return null;
-    }
 
     public void deletePromotion(String id) {
         promotionRepository.deleteById(id);

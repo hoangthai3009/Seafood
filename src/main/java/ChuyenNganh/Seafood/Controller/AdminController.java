@@ -315,4 +315,9 @@ public class AdminController {
         model.addAttribute("billId", billId);
         return "Admin/bill/bill-detail";
     }
+
+    @GetMapping("/chat")
+    public String chat(){
+        return "Admin/chat";
+    }
 }

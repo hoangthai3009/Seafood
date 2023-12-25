@@ -53,6 +53,11 @@ public class APIBillController {
             newBill.setTotalPrice(checkoutRequest.getTotalPrice());
             newBill.setNote(checkoutRequest.getNote());
             newBill.setAddress(checkoutRequest.getAddress());
+            newBill.setDiscount(checkoutRequest.getDiscount());
+            newBill.setTotalPay(checkoutRequest.getTotalPay());
+            newBill.setPaymentMethod(checkoutRequest.getPaymentMethod());
+            newBill.setTotalPaid(checkoutRequest.getTotalPaid());
+            newBill.setPaidPercentage(checkoutRequest.getPaidPercentage());
 
             Bill savedBill = billService.saveBill(newBill);
 

@@ -33,7 +33,7 @@ public class CartControllerModel {
     @Autowired
     private CartService cartService;
 
-    // Sử dụng Session
+    @PreAuthorize("!hasRole('ADMIN')")
     @GetMapping
     public String showCart(HttpSession session, @NotNull Model model,
                            @RequestParam(defaultValue = "0") int page,
@@ -43,6 +43,9 @@ public class CartControllerModel {
         List<CartItem> cartItems = cartPage.getContent();
         model.addAttribute("cart", cartItems);
         model.addAttribute("totalPrice", cartService.getSumPrice(session));
+        double totalPrice = cartService.getSumPrice(session);
+        model.addAttribute("totalPrice", totalPrice);
+        session.setAttribute("totalPrice", totalPrice);
         model.addAttribute("totalQuantity", cartService.getSumQuantity(session));
         model.addAttribute("currentPage", page);
         model.addAttribute("pageSize", size);
@@ -57,7 +60,9 @@ public class CartControllerModel {
         model.addAttribute("cartItems", cart.getCartItems());
         model.addAttribute("totalPrice", cartService.getSumPrice(session));
         model.addAttribute("totalQuantity", cartService.getSumQuantity(session));
-
+        double totalPrice = cartService.getSumPrice(session);
+        model.addAttribute("totalPrice", totalPrice);
+        session.setAttribute("totalPrice", totalPrice);
         return "Cart/checkout";  // Tên của template Thymeleaf cho trang checkout
     }
     @GetMapping("/removeFromCart/{id}")

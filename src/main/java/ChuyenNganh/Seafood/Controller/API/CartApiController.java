@@ -1,5 +1,7 @@
 package ChuyenNganh.Seafood.Controller.API;
 
+import ChuyenNganh.Seafood.Entity.Promotion;
+import ChuyenNganh.Seafood.Repositories.IPromotionRepository;
 import ChuyenNganh.Seafood.Security.Services.CartService;
 import ChuyenNganh.Seafood.Security.Services.UserDetailsImpl;
 import jakarta.servlet.http.HttpSession;
@@ -7,10 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class CartApiController {

@@ -7,7 +7,6 @@
     <link th:fragment="link-css" th:href="@{/vendor/font-awesome/css/all.min.css}" rel="stylesheet" type="text/css">
     <link th:fragment="link-css" th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet" type="text/css">
     <link th:fragment="link-css" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/css-seafood/chatbox.css}" type="text/css">
 </head>
 <body>
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" th:fragment="header">
@@ -63,8 +62,16 @@
         </div>
     </li>
 
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">
+        Hỗ trợ
+    </div>
+    <li class="nav-item">
+        <a class="nav-link mt-0" th:href="@{/admin/chat}">
+            <i class="fas fa-comments"></i>
+            <span>Chat với Khách Hàng</span></a>
+    </li>
     <hr class="sidebar-divider mb-0">
-
     <li class="nav-item">
         <a class="nav-link mt-0" th:href="@{/}">
             <i class="fas fa-fw fa-arrow-right-from-bracket"></i>
@@ -169,34 +176,6 @@
 
 <!-- Footer -->
 <footer class="sticky-footer bg-white" th:fragment="footer">
-    <!-- Chat Box-->
-    <div id="body">
-        <div id="chat-circle" class="btn btn-raised">
-            <div id="chat-overlay"></div>
-            <i class="fa-regular fa-comments text-center" style="font-size: 24px"></i>
-        </div>
-
-        <div class="chat-box">
-            <div class="chat-box-header">
-                Chat với Khách Hàng
-                <span class="chat-box-toggle"><i class="fas fa-close" style="font-size: 20px"></i></span>
-            </div>
-            <div class="chat-box-body">
-                <div class="chat-box-overlay">
-                </div>
-                <div class="chat-logs mb-3">
-
-                </div><!--chat-log -->
-            </div>
-            <div class="chat-input">
-                <form>
-                    <input type="text" id="chat-input" placeholder="Trả lời ở đây ..."/>
-                    <button type="submit" class="chat-submit" id="chat-submit"><i class="fa-solid fa-paper-plane" style="font-size: 20px"></i></button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- End Chat Box-->
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
             <span>Copyright &copy; Your Website 2021</span>
@@ -210,7 +189,6 @@
     <!-- Custom scripts for all pages-->
     <script th:src="@{/js/sb-admin-2.min.js}"></script>
     <script th:src="@{/js/admin-js.js/}"></script>
-    <script th:src="@{/js/chatbox.js}"></script>
     <script>
         // Kiểm tra trạng thái đăng nhập khi trang được tải
         document.addEventListener('DOMContentLoaded', function() {
@@ -263,6 +241,63 @@
                 element.innerText = formatNumberWithCommas(price);
             }
         });
+    </script>
+    <script >$(".messages").animate({ scrollTop: $(document).height() }, "fast");
+
+    $("#profile-img").click(function() {
+        $("#status-options").toggleClass("active");
+    });
+
+    $(".expand-button").click(function() {
+        $("#profile").toggleClass("expanded");
+        $("#contacts").toggleClass("expanded");
+    });
+
+    $("#status-options ul li").click(function() {
+        $("#profile-img").removeClass();
+        $("#status-online").removeClass("active");
+        $("#status-away").removeClass("active");
+        $("#status-busy").removeClass("active");
+        $("#status-offline").removeClass("active");
+        $(this).addClass("active");
+
+        if($("#status-online").hasClass("active")) {
+            $("#profile-img").addClass("online");
+        } else if ($("#status-away").hasClass("active")) {
+            $("#profile-img").addClass("away");
+        } else if ($("#status-busy").hasClass("active")) {
+            $("#profile-img").addClass("busy");
+        } else if ($("#status-offline").hasClass("active")) {
+            $("#profile-img").addClass("offline");
+        } else {
+            $("#profile-img").removeClass();
+        };
+
+        $("#status-options").removeClass("active");
+    });
+
+    function newMessage() {
+        message = $(".message-input input").val();
+        if($.trim(message) == '') {
+            return false;
+        }
+        $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+        $('.message-input input').val(null);
+        $('.contact.active .preview').html('<span>You: </span>' + message);
+        $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+    };
+
+    $('.submit').click(function() {
+        newMessage();
+    });
+
+    $(window).on('keydown', function(e) {
+        if (e.which == 13) {
+            newMessage();
+            return false;
+        }
+    });
+    //# sourceURL=pen.js
     </script>
 </footer>
 <!-- End footer -->

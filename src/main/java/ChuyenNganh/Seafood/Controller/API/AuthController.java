@@ -29,10 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -61,7 +58,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
+        Optional<User> user = userRepository.findByUsernameOrEmail(
+                loginRequest.getUsernameOrEmail(),
+                loginRequest.getUsernameOrEmail()
+        );
+        if (user.isEmpty() || !user.get().isEnabled()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("User chưa được xác thực");
+        }
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(), loginRequest.getPassword()));
 

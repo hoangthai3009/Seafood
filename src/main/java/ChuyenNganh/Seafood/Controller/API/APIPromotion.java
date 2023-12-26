@@ -71,4 +71,14 @@ public class APIPromotion {
         result.put("totalPrice", totalPrice);
         return ResponseEntity.ok(result);
     }
+    @PostMapping("/find")
+    public ResponseEntity<Optional<Promotion>> findPromotionByCode(@RequestParam String code) {
+        Optional<Promotion> promotionFound = promotionService.getPromotionByCode(code);
+        if(promotionFound.isPresent() && promotionFound.get().getExpired_day().toInstant().isBefore(Instant.now())){
+            return new ResponseEntity<>(promotionFound, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

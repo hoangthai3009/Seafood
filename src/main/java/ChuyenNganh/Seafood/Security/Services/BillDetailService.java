@@ -20,13 +20,11 @@ public class BillDetailService {
     public BillDetailService(IBillDetailRepository billDetailRepository) {
         this.billDetailRepository = billDetailRepository;
     }
-
+    public List<BillDetail> getBillDetailsByBillId(Long billId) {
+        return billDetailRepository.findBillDetailsByBillId(billId);
+    }
     public List<BillDetail> getAllBillDetails() {
         return billDetailRepository.findAll();
-    }
-
-    public Optional<BillDetail> getBillDetailById(BillDetailId id) {
-        return billDetailRepository.findById(id);
     }
 
     public BillDetail saveBillDetail(BillDetail billDetail) {

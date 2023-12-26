@@ -80,10 +80,4 @@ public class BillService {
     public static Double tongTienNam(int year) {
         return billRepository.getTotalRevenueByYear(year);
 }
-
-    @Autowired
-    private IBillDetailRepository billDetailRepository;
-    public List<BillDetail> getBillDetailsByBillId(Long billId) {
-        return billDetailRepository.findBillDetailsByBillId(billId);
-    }
 }

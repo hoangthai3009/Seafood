@@ -31,6 +31,8 @@ public class AdminController {
     private CategoryService categoryService;
     @Autowired
     private BillService billService;
+    @Autowired
+    private BillDetailService billDetailService;
     @GetMapping
     public String index() {
         return "Admin/index";
@@ -310,7 +312,7 @@ public class AdminController {
     }
     @GetMapping("/bills/{billId}/details")
     public String getBillDetailsPage(@PathVariable Long billId, Model model) {
-        List<BillDetail> billDetails = billService.getBillDetailsByBillId(billId);
+        List<BillDetail> billDetails = billDetailService.getBillDetailsByBillId(billId);
         model.addAttribute("billDetails", billDetails);
         model.addAttribute("billId", billId);
         return "Admin/bill/bill-detail";

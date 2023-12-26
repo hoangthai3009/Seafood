@@ -319,7 +319,8 @@ public class AdminController {
     }
 
     @GetMapping("/chat")
-    public String chat(){
+    public String chatAdmin(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
         return "Admin/chat";
     }
 }

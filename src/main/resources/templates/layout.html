@@ -92,34 +92,7 @@
 
 <!-- Footer Section Begin -->
 <footer class="footer spad">
-    <!-- Chat Box-->
-    <div id="body">
-        <div id="chat-circle" class="btn btn-raised">
-            <div id="chat-overlay"></div>
-            <i class="fa-regular fa-comments text-center" style="font-size: 24px"></i>
-        </div>
 
-        <div class="chat-box">
-            <div class="chat-box-header">
-                Chat với Shop
-                <span class="chat-box-toggle"><i class="fas fa-close" style="font-size: 20px"></i></span>
-            </div>
-            <div class="chat-box-body">
-                <div class="chat-box-overlay">
-                </div>
-                <div class="chat-logs mb-3">
-
-                </div><!--chat-log -->
-            </div>
-            <div class="chat-input">
-                <form>
-                    <input type="text" id="chat-input" placeholder="Bạn muốn tư vấn gì ? ..."/>
-                    <button type="submit" class="chat-submit" id="chat-submit"><i class="fa-solid fa-paper-plane" style="font-size: 20px"></i></button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- End Chat Box-->
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-6">
@@ -183,13 +156,42 @@
             </div>
         </div>
     </div>
+    <!-- Chat Box-->
+    <div id="body">
+        <div id="chat-circle" class="btn btn-raised">
+            <div id="chat-overlay"></div>
+            <i class="fa-regular fa-comments text-center" style="font-size: 24px"></i>
+        </div>
+
+        <div class="chat-box">
+            <div class="chat-box-header">
+                Chat với Shop
+                <span class="chat-box-toggle"><i class="fas fa-close" style="font-size: 20px"></i></span>
+            </div>
+            <div class="chat-box-body">
+                <div class="chat-box-overlay">
+                </div>
+                <div class="chat-logs mb-3" id="chat-messages">
+
+                </div><!--chat-log -->
+            </div>
+            <div class="chat-input">
+                <form id="messageForm" name="messageForm">
+                    <input type="text" id="chat-input" placeholder="Bạn muốn tư vấn gì ? ..."/>
+                    <button type="submit" class="chat-submit" id="chat-submit"><i class="fa-solid fa-paper-plane" style="font-size: 20px"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- End Chat Box-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script th:src="@{/js/jquery-3.7.0.min.js}"></script>
 <script th:src="@{/vendor/jquery/jquery.easing.min.js}"></script>
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/js/main.js}"></script>
 <script th:src="@{/js/admin-js.js/}"></script>
 <script th:src="@{/js/mixitup.min.js}"></script>
-    <script th:src="@{/js/chatbox.js}"></script>
 <script>
         // Hàm được gọi khi trang được tải và thực hiện các hành động khởi tạo
         document.addEventListener('DOMContentLoaded', function() {
@@ -269,6 +271,7 @@
             });
         }
 </script>
+<script th:src="@{/js/chatbox.js}"></script>
 </footer>
 </body>
 </html>

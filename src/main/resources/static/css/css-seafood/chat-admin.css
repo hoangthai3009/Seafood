@@ -1,46 +1,47 @@
+/* CSS cho phần toàn bộ container */
 .container {
     max-width: max-content;
     max-height: max-content;
     margin: auto;
 }
 
+/* CSS cho hình ảnh */
 img {
     max-width: 100%;
 }
 
+/* CSS cho khung danh sách cuộc trò chuyện */
 .inbox_people {
     background: #f8f8f8;
     float: left;
     overflow: hidden;
     width: 40%;
-    border-right: 1px solid #e0e0e0; /* Sử dụng màu nổi bật */
+    border-right: 1px solid #e0e0e0;
 }
 
-
+/* CSS cho khung tin nhắn */
 .inbox_msg {
-    border: 1px solid #e2e2e2; /* Thay đổi màu viền */
+    border: 1px solid #e2e2e2;
     clear: both;
     overflow: hidden;
     border-radius: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hiển thị bóng đổ nhẹ */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.top_spac {
-    margin: 20px 0 0;
-}
-
-
+/* CSS cho tiêu đề "Danh sách cuộc trò chuyện" */
 .recent_heading {
     float: left;
     width: 40%;
 }
+
 .recent_heading h4 {
     color: royalblue;
     font-size: 21px;
     margin-top: 10px;
     font-weight: bold;
-
 }
+
+/* CSS cho thanh tìm kiếm */
 .srch_bar {
     display: inline-block;
     position: relative;
@@ -79,7 +80,7 @@ img {
     color: inherit;
 }
 
-/* Hover effect for the search button */
+/* Hiệu ứng hover cho nút tìm kiếm */
 .srch_bar .input-group-addon:hover {
     background: rgba(0, 0, 0, 0.1);
     border-radius: 100px;
@@ -87,16 +88,13 @@ img {
     padding-bottom: 5px;
 }
 
+/* CSS cho khung cuộc trò chuyện và cuộc trò chuyện được chọn */
 .headind_srch {
     padding: 10px 29px 10px 20px;
     overflow: hidden;
 }
 
-
-
-
-
-
+/* CSS cho tên người dùng và thời gian cuộc trò chuyện */
 .chat_ib h5 {
     font-size: 15px;
     color: #464646;
@@ -109,6 +107,7 @@ img {
     float: right;
 }
 
+/* CSS cho nội dung cuộc trò chuyện */
 .chat_ib p {
     font-size: 14px;
     color: #989898;
@@ -118,7 +117,7 @@ img {
     text-overflow: ellipsis;
 }
 
-
+/* CSS cho hình ảnh người dùng và nội dung cuộc trò chuyện */
 .chat_img {
     float: left;
     width: 11%;
@@ -130,11 +129,13 @@ img {
     width: 88%;
 }
 
+/* CSS cho danh sách cuộc trò chuyện */
 .chat_people {
     overflow: hidden;
     clear: both;
 }
 
+/* CSS cho từng cuộc trò chuyện trong danh sách */
 .chat_list {
     margin: 2px 4px 2px 4px;
     padding: 18px 16px 10px;
@@ -143,134 +144,138 @@ img {
     transition: background-color 0.3s ease;
 }
 
+/* Hiệu ứng hover cho cuộc trò chuyện trong danh sách */
 .chat_list:hover {
     background-color: #e0e0e0;
 }
 
-
-.inbox_chat {
-    height: 550px;
-    overflow-y: auto;
-}
-
+/* CSS cho cuộc trò chuyện được chọn */
 .active_chat {
     background: #e0e0e0;
 }
 
+/* CSS cho hình ảnh người gửi tin nhắn đến */
 .incoming_msg_img {
     display: inline-block;
     width: 6%;
 }
-
+/* Điều chỉnh lại cho .received_msg */
 .received_msg {
-    display: inline-block;
-    padding: 10px;
-    vertical-align: top;
-    width: 90%;
-    max-width: 70%;
-}
-
-
-.received_withd_msg p {
-    background: #ebebeb none repeat scroll 0 0;
-    border-radius: 15px;
-    color: #646464;
-    font-size: 14px;
-    margin: 5px 0;
-    max-width: 60%;
+    display: block; /* thay vì inline-block */
+    border-radius: 8px;
+    margin: 10px 0;
     word-wrap: break-word;
-    font-weight: bold;
-    padding: 0.5em 1em;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);}
-
-.time_date {
-    color: #747474;
-    display: block;
-    font-size: 12px;
-    margin: 8px 0 0;
+    clear: both; /* Nếu bạn muốn đảm bảo nó không chồng lên các tin nhắn khác */
 }
 
-.received_withd_msg .time_date_popup {
-    display: none;
-    position: absolute;
-    background-color: #969595;
-    border: 1px solid #ccc;
+/* CSS cho nội dung tin nhắn người gửi */
+.outgoing_msg {
+    float: right;
+    clear: both;
+    margin: 10px 10px 2.5px;
+    max-width: 60%;
+    background-color: #0084ff;
     border-radius: 15px;
-    padding: 5px;
-    z-index: 1;
-    font-size:12px;
-    color: white;
+    color: #ffffff;
+    padding: 10px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Độ mờ tăng lên để đổ bóng rõ hơn */
+}
+
+.outgoing_msg p {
+    margin: 0;
+    word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.4;
     font-weight: bold;
-    margin: 2px 0 2px 0;
 }
 
-.received_withd_msg:hover .time_date_popup {
+/* CSS cho nội dung tin nhắn đến */
+.incoming_msg {
+    float: left;
+    clear: both;
+    max-width: 60%;
+    background-color: #dcdcdc;
+    border-radius: 15px;
+    color: #4b4b4b;
+    position: relative;
+    margin-top: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Độ mờ tăng lên để đổ bóng rõ hơn */
+}
+
+/* CSS cho nội dung tin nhắn người nhận (incoming messages) - phần chữ */
+.incoming_msg p {
+    word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 10px 10px 5px;
+    font-weight: bold;
+}
+.incoming_msg .time_date_popup {
+    align-content: center;
+    font-size: 12px;
+    color: #2d2d2d;
+    position: absolute;
+    width: 150px;
+    border-radius: 15px;
+    display: none;
+    margin: 0 0 0 5px;
+    padding: 5px; /* Thêm padding cho độ rộng và cao hợp lý */
+    background: #f9f9f9; /* Màu nền nhẹ để tăng khả năng đọc */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Thêm bóng để tạo độ sâu */
+    opacity: 0; /* Bắt đầu với opacity 0 để tạo hiệu ứng mờ dần khi hover */
+    transition: opacity 0.3s ease, bottom 0.3s ease;
+    z-index: 999;
+}
+.incoming_msg:hover .time_date_popup {
     display: block;
+    opacity: 1;
 }
-
+.outgoing_msg .time_date_popup {
+    font-size: 12px;
+    color: #2d2d2d;
+    position: absolute;
+    bottom: -15px;
+    right: -20px;
+    width: 150px;
+    border-radius: 15px;
+    display: none;
+    padding: 5px; /* Thêm padding cho độ rộng và cao hợp lý */
+    background: #f9f9f9; /* Màu nền nhẹ để tăng khả năng đọc */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Thêm bóng để tạo độ sâu */
+    opacity: 0; /* Bắt đầu với opacity 0 để tạo hiệu ứng mờ dần khi hover */
+    transition: opacity 0.3s ease, bottom 0.3s ease;
+    z-index: 998;
+}
+.outgoing_msg:hover .time_date_popup {
+    display: block;
+    opacity: 1;
+}
+/* CSS cho khung chat */
 .mesgs {
     float: left;
     padding: 30px 15px 0 25px;
     width: 60%;
 }
 
-.outgoing_msg {
-    overflow: hidden;
-    margin: 26px 0 26px;
-
-}
-.sent_msg p {
-    background: royalblue none repeat scroll 0 0;
-    border-radius: 15px;
-    font-size: 14px;
-    margin: 0;
-    color: #fff;
-    word-wrap: break-word;
-    font-weight: bold;
-    padding: 0.5em 1em;
-    width: 100%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-
-.sent_msg {
-    float: right;
-    width: 46%;
-
-}
-.sent_msg .time_date_popup {
-    display: none;
-    position: absolute;
-    background-color: #969595;
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    padding: 5px;
-    z-index: 1;
-    font-size:12px;
-    color: white;
-    font-weight: bold;
-    margin: 2px 0 2px 0;
-}
-
-.sent_msg:hover .time_date_popup {
-    display: block;
-}
+/* CSS cho khung nhập tin nhắn */
 .input_msg_write input {
     background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
     color: #4c4c4c;
     font-size: 15px;
     min-height: 48px;
     width: 100%;
-    border: 1px solid #ccc; /* Thêm border */
-    border-radius: 20px; /* Bo tròn viền */
-    padding: 10px; /* Tăng padding để tạo khoảng cách giữa viền và nội dung */
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 10px;
 }
+
 .input_msg_write input:focus {
-    outline: none; /* Loại bỏ đường viền mặc định khi focus */
-    box-shadow: 0 0 5px rgba(0,0,0,0.1); /* Hiển thị shadow khi focus */
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-
+/* CSS cho nút gửi tin nhắn */
 .type_msg {
     position: relative;
 }
@@ -289,11 +294,16 @@ img {
     width: 33px;
 }
 
+/* CSS cho khung chat tổng thể */
 .messaging {
     padding: 0 0 50px 0;
 }
 
+/* CSS cho lịch sử cuộc trò chuyện */
 .msg_history {
     height: 516px;
-    overflow-y: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: auto;
 }
+

@@ -1,5 +1,5 @@
 package ChuyenNganh.Seafood.Security.Services;
-import ChuyenNganh.Seafood.Entity.Role;
+import ChuyenNganh.Seafood.Entity.Status;
 import ChuyenNganh.Seafood.Entity.User;
 import ChuyenNganh.Seafood.Repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -36,5 +35,19 @@ public class UserService {
     public void removeRoleFromUser(Long userId, Long roleId) {
         userRepository.removeRoleFromUser(userId, roleId);
     }
+    public void saveUserStatus(User user) {
+        user.setStatus(Status.ONLINE);
+        userRepository.save(user);
+    }
+    public void disconnect(User user) {
+        var storedUser = userRepository.findById(user.getId()).orElse(null);
+        if (storedUser != null) {
+            storedUser.setStatus(Status.OFFLINE);
+            userRepository.save(storedUser);
+        }
+    }
 
+    public List<User> findConnectedUsers() {
+        return userRepository.findAllByStatus(Status.ONLINE);
+    }
 }

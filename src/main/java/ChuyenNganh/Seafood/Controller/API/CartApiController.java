@@ -33,12 +33,14 @@ public class CartApiController {
             String email = userDetails.getEmail();
             String phone = userDetails.getPhone();
             String address = userDetails.getAddress();
+            String username = userDetails.getUsername();
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("authenticated", true);
             responseMap.put("userId", userId);
             responseMap.put("fullname", fullname);
             responseMap.put("email", email);
             responseMap.put("phone", phone);
+            responseMap.put("username", username);
             if (address != null)
                 responseMap.put("address", address);
             return ResponseEntity.ok(responseMap);

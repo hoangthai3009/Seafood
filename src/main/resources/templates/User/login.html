@@ -7,6 +7,7 @@
   <title>Login</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://kit.fontawesome.com/699d350e7a.js" crossorigin="anonymous"></script>
   <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/signin-up.css}">
 </head>
 <body>
@@ -37,7 +38,11 @@
           <input type="button" onclick="login()" value="Đăng nhập">
         </div>
         <div class="signup-link">Chưa là thành viên? <a href="">Đăng ký ngay</a></div>
-
+        <!-- Thêm nút Google -->
+        <p class="text-center mt-2">hoặc</p>
+        <a href="/oauth2/authorization/google" role="button" class="btn-google">
+          <i class="fa-brands fa-google"></i> Đăng nhập bằng Google
+        </a>
       </form>
 
       <form action="#" class="signup">

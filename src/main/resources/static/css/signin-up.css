@@ -162,8 +162,8 @@ form .btn .btn-layer{
     width: 300%;
     position: absolute;
     left: -100%;
-    background: -webkit-linear-gradient(right, dodgerblue, cornflowerblue, dodgerblue);
-    border-radius: 5px;
+background-color: dodgerblue;
+    border-radius: 2px;
     transition: all 0.4s ease;;
 }
 form .btn:hover .btn-layer{
@@ -183,3 +183,33 @@ form .btn input[type="button"]{
     font-weight: 500;
     cursor: pointer;
 }
+
+
+
+.btn-google {
+    color: white; /* Màu chữ trắng */
+    font-weight: bold;
+    text-decoration: none;
+    padding: 10px 0; /* Điều chỉnh giá trị này để hẹp background */
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    text-align: center; /* Để văn bản nằm giữa nút */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: dodgerblue;
+}
+
+.btn-google:hover {
+    background-color: deepskyblue;
+    color: white;
+}
+
+.btn-google i {
+    margin-right: 10px; /* Khoảng cách giữa biểu tượng và văn bản */
+    color: white;
+}
+a:hover {
+    text-decoration: none;
+}
+

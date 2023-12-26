@@ -12,9 +12,11 @@ import ChuyenNganh.Seafood.Repositories.IUserRepository;
 import ChuyenNganh.Seafood.Security.Jwt.JwtUtils;
 import ChuyenNganh.Seafood.Security.Services.EmailSenderService;
 import ChuyenNganh.Seafood.Security.Services.UserDetailsImpl;
+import ChuyenNganh.Seafood.Security.Services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
@@ -54,6 +57,7 @@ public class AuthController {
     @Autowired
     private JwtUtils jwtUtils;
 
+    private final UserService userService;
 
 
     @PostMapping("/login")
@@ -86,6 +90,8 @@ public class AuthController {
         responseBody.put("address", userDetails.getAddress());
         responseBody.put("phone", userDetails.getPhone());
         responseBody.put("roles", roles);
+        responseBody.put("status", 0);
+        userRepository.updateUserStatusToOnline(userDetails.getUsername());
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
@@ -136,12 +142,16 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser(HttpServletRequest request) {
+    public ResponseEntity<?> logoutUser(HttpServletRequest request, Authentication authentication) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            userRepository.updateUserStatusToOffline(userDetails.getUsername());
+        }
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
     }
 }

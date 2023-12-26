@@ -1,5 +1,6 @@
 package ChuyenNganh.Seafood.Repositories;
 
+import ChuyenNganh.Seafood.Entity.Status;
 import ChuyenNganh.Seafood.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,6 +15,8 @@ import java.util.UUID;
 
 @Repository
 public interface IUserRepository extends JpaRepository<User, Long> {
+    List<User> findAllByStatus(Status status);
+
     Optional<User> findByUsername(String username);
     Optional<User> findByUsernameOrEmail(String username, String email);
 
@@ -40,4 +43,15 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     @Query(value = "DELETE FROM user_roles WHERE user_id = ?1 AND role_id = ?2", nativeQuery = true)
     void removeRoleFromUser(Long userId, Long roleId);
 
+    // Phương thức cập nhật trạng thái của người dùng thành ONLINE
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.status = 0 WHERE u.username = ?1")
+    void updateUserStatusToOnline(String username);
+
+    // Phương thức cập nhật trạng thái của người dùng thành OFFLINE
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.status = null WHERE u.username = ?1")
+    void updateUserStatusToOffline(String username);
 }

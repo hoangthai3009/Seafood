@@ -48,6 +48,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private EProvider provider;
 
+    private Status status;
+
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

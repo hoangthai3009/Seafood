@@ -21,19 +21,19 @@
                         <div class="checkout__input">
                             <p>Địa chỉ<span>*</span></p>
                             <input id="addressInput" type="text" th:field="*{address}" placeholder="Địa chỉ giao hàng"
-                                   class="checkout__input__add" required>
+                                   class="checkout__input__add">
                         </div>
                         <!-- Ghi chú đơn hàng -->
                         <div class="checkout__input">
                             <p>Ghi chú đơn hàng<span></span></p>
                             <input type="text" th:field="*{note}"
-                                   placeholder="Ghi chú chỉ dẫn giao hàng hoặc lưu ý cho shop." required>
+                                   placeholder="Ghi chú chỉ dẫn giao hàng hoặc lưu ý cho shop.">
                         </div>
                         <!-- Phương thức thanh toán -->
                         <div class="checkout__input">
                             <p>Phương thức thanh toán</p>
                             <div class="form-group">
-                                <select id="paymentMethod" class="form-control" required>
+                                <select id="paymentMethod" class="form-control" onchange="togglePaidPercentage()">
                                     <option style="font-weight: bold" value="COD">Thanh toán khi nhận hàng (COD)</option>
                                     <option style="font-weight: bold" value="VNPay">Thanh toán trực tuyến (ONLINE)</option>
                                 </select>
@@ -41,12 +41,13 @@
                         </div>
                         <!-- END Phương thức thanh toán                  -->
                         <!-- Cọc -->
-                        <div class="checkout__input">
-                            <p>Phương thức thanh toán</p>
+                        <div class="checkout__input paid" id="paidPercentageDiv" style="display: none;">
+                            <p>Thanh toán trả trước</p>
                             <div class="form-group">
-                                <select id="paidPercentage" class="form-control" required>
-                                    <option style="font-weight: bold" value="50">Thanh toán khi nhận hàng (COD)</option>
-                                    <option style="font-weight: bold" value="70">Thanh toán trực tuyến (ONLINE)</option>
+                                <select id="paidPercentage" class="form-control">
+                                    <option style="font-weight: bold" value="">Chọn mức trả trước</option>
+                                    <option style="font-weight: bold" value="0.5">50%</option>
+                                    <option style="font-weight: bold" value="0.7">70%</option>
                                 </select>
                             </div>
                         </div>
@@ -81,6 +82,35 @@
 <!-- Checkout Section End -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script th:inline="javascript">
+    function togglePaidPercentage() {
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        const paidPercentageDiv = document.getElementById('paidPercentageDiv');
+
+        if (paymentMethod === 'VNPay') {
+            paidPercentageDiv.style.display = 'block';
+            document.getElementById('paidPercentage').setAttribute('required', 'required');
+        } else {
+            paidPercentageDiv.style.display = 'none';
+            document.getElementById('paidPercentage').removeAttribute('required');
+        }
+    }
+    document.getElementById('paidPercentage').addEventListener('change', function() {
+        let paidPercentage;
+        if (this.value)
+            paidPercentage = this.value; // Phần trăm cọc được chọn
+        else
+            paidPercentage = 0; // Gán mặc định là 0 nếu chưa có giá trị được chọn
+        const totalPay = localStorage.getItem('totalPay'); // Lấy giá trị totalPay từ localStorage
+
+        if (totalPay) {
+            const totalPaid = (totalPay * paidPercentage);
+            console.log("Total Paid: ", totalPaid);
+            console.log("Paid Percentage: ", paidPercentage);
+            localStorage.setItem('paidPercentage', paidPercentage);
+            localStorage.setItem('totalPaid', totalPaid.toString());
+        }
+    });
+
     $(document).ready(function () {
         // Cập nhật giá trị từ localStorage
         const totalDiscount = localStorage.getItem('totalDiscount');
@@ -188,6 +218,8 @@
             const totalDiscount = localStorage.getItem('totalDiscount');
             const totalPay = localStorage.getItem('totalPay');
             const totalPrice = localStorage.getItem('totalPrice');
+            const paidPercentage = localStorage.getItem('paidPercentage');
+            const totalPaid = localStorage.getItem('totalPaid');
             sessionStorage.setItem('userId', userId);
             sessionStorage.setItem('totalPrice', totalPrice);
             sessionStorage.setItem('billDetails', JSON.stringify(getBillDetails()));
@@ -196,10 +228,12 @@
             sessionStorage.setItem('paymentInitiated', 'true');
             sessionStorage.setItem('totalDiscount', totalDiscount);
             sessionStorage.setItem('totalPay', totalPay);
+            sessionStorage.setItem('paidPercentage', paidPercentage);
+            sessionStorage.setItem('totalPaid', totalPaid);
             // Gửi yêu cầu thanh toán VNPay
             $.ajax({
                 type: "GET",
-                url: `/api/payment/create_payment?totalPrice=${totalPay}`,
+                url: `/api/payment/create_payment?totalPrice=${totalPaid}`,
                 success: function (response) {
                     if (response.status === "OK") {
                         // Chuyển hướng người dùng đến URL
@@ -232,6 +266,8 @@
                 const totalPay = sessionStorage.getItem('totalPay');
                 const note = sessionStorage.getItem('note');
                 const address = sessionStorage.getItem('address');
+                const totalPaid = sessionStorage.getItem('totalPaid');
+                const paidPercentage = sessionStorage.getItem('paidPercentage')
                 const billDetails = JSON.parse(sessionStorage.getItem('billDetails'));
 
                 const billData = {
@@ -241,9 +277,13 @@
                     address: address,
                     discount: totalDiscount,
                     totalPay: totalPay,
+                    paidPercentage: paidPercentage,
+                    totalPaid: totalPaid,
                     paymentMethod: "VNPay",
                     billDetails: billDetails
                 };
+                console.log("Total Paid: ", billData);
+                console.log("Paid Percentage: ", billDetails);
                 // Gửi yêu cầu lưu hóa đơn
                 $.ajax({
                     type: "POST",
@@ -255,6 +295,8 @@
                         localStorage.removeItem('totalPrice');
                         localStorage.removeItem('totalDiscount');
                         localStorage.removeItem('totalPay');
+                        localStorage.removeItem('paidPercentage');
+                        localStorage.removeItem('totalPaid');
                         window.location.href = "/";
                         alert("\n                              ĐẶT HÀNG THÀNH CÔNG !\n\nĐơn hàng của bạn sẽ được sắp xếp và giao đến cho bạn trong thời gian sớm nhất.");
                     },

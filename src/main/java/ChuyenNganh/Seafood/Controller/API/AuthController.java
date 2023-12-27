@@ -80,8 +80,9 @@ public class AuthController {
                 loginRequest.getUsernameOrEmail()
         );
         if (user.isEmpty() || !user.get().isEnabled()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("User chưa được xác thực");
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Sai thông tin đăng nhập hoặc Tài khoản chưa được xác thực");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(), loginRequest.getPassword()));
@@ -115,13 +116,11 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
             if (userRepository.existsByUsername(registerRequest.getUsername())) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Username is already taken!"));
+                return ResponseEntity.badRequest().body(Collections.singletonMap("errorUsername", "Tên đăng nhập đã tồn tại"));
             }
-
             if (userRepository.existsByEmail(registerRequest.getEmail())) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Email is already in use!"));
+                return ResponseEntity.badRequest().body(Collections.singletonMap("errorEmail", "Email đã được đăng ký"));
             }
-
             User user = new User();
             user.setUsername(registerRequest.getUsername());
             user.setEmail(registerRequest.getEmail());

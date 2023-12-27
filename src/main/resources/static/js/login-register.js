@@ -2,7 +2,6 @@
 function login() {
     const usernameOrEmail = document.getElementById("usernameOrEmail").value;
     const password = document.getElementById("login-password").value;
-
     const loginData = {
         usernameOrEmail: usernameOrEmail,
         password: password
@@ -21,15 +20,19 @@ function login() {
                 return response.json();
         })
         .then(data => {
-            clearLoginErrorMessages();
-            if (data.usernameOrEmail)
-                document.getElementById("usernameOrEmailError").innerText = data.usernameOrEmail;
-            if (data.password)
-                document.getElementById("loginPasswordError").innerText = data.password;
+            const authError = document.getElementById("authError");
+            if (data && data.error) {
+                authError.innerText = data.error;
+            } else {
+                    if (data.usernameOrEmail)
+                        document.getElementById("usernameOrEmailError").innerText = data.usernameOrEmail;
+                    if (data.password)
+                        document.getElementById("loginPasswordError").innerText = data.password;
+                }
+
         })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+    clearLoginErrorMessages();
+
 }
 function register() {
     const username = document.getElementById("username").value;
@@ -62,14 +65,18 @@ function register() {
         .then(data => {
             if (data) {
                 clearErrorMessages();
+                    if (data.errorUsername) {
+                        document.getElementById("usernameError").innerText = data.errorUsername;
+                    }
+                    if (data.errorEmail) {
+                        document.getElementById("emailError").innerText = data.errorEmail;
+                    }
                 for (const field in data) {
                     const errorField = field + "Error";
                     if (document.getElementById(errorField)) {
                         document.getElementById(errorField).innerText = data[field];
                     }
                 }
-            } else {
-                document.getElementById("error").innerText = "Sai thông tin đăng nhập";
             }
         })
         .catch((error) => {
@@ -77,12 +84,9 @@ function register() {
         });
 }
 function clearLoginErrorMessages() {
-    const errorFields = ["usernameOrEmailError", "loginPasswordError"];
-    errorFields.forEach(field => {
-        if (document.getElementById(field)) {
-            document.getElementById(field).innerText = "";
-        }
-    });
+    document.getElementById("usernameOrEmailError").innerText = "";
+    document.getElementById("loginPasswordError").innerText = "";
+    document.getElementById("authError").innerText = "";
 }function clearErrorMessages() {
     document.getElementById("usernameError").innerText = "";
     document.getElementById("emailError").innerText = "";

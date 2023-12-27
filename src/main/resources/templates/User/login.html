@@ -26,45 +26,54 @@
     </div>
     <div class="form-inner">
       <form action="#" class="login">
-        <div class="field">
-          <input type="text" id="usernameOrEmail" placeholder="Tên tài khoản hoặc Email" required="">
+        <p class="text-center" id="loginError" ></p> <!-- Thẻ hiển thị lỗi đăng nhập -->
+        <div class="field mb-2">
+          <input type="text" id="usernameOrEmail" placeholder="Tên đăng nhập hoặc Email" required="">
+          <p id="usernameOrEmailError" ></p>
         </div>
         <div class="field">
           <input type="password" id="login-password" placeholder="Mật khẩu" required="">
+          <p id="loginPasswordError" ></p>
         </div>
-        <div class="pass-link"><a href="#">Quên mật khẩu?</a></div>
+        <div class="pass-link mt-3"><a href="#">Quên mật khẩu?</a></div>
         <div class="field btn">
           <div class="btn-layer"></div>
           <input type="button" onclick="login()" value="Đăng nhập">
         </div>
         <div class="signup-link">Chưa là thành viên? <a href="">Đăng ký ngay</a></div>
         <!-- Thêm nút Google -->
-        <p class="text-center mt-2">hoặc</p>
+        <p class="text-center mt-2" style="font-size: 14px; color:black">hoặc</p>
         <a href="/oauth2/authorization/google" role="button" class="btn-google">
           <i class="fa-brands fa-google"></i> Đăng nhập bằng Google
         </a>
       </form>
 
       <form action="#" class="signup">
+        <p class="text-center" id="registerError" ></p> <!-- Thẻ hiển thị lỗi đăng nhập -->
         <div class="field">
           <input type="text" id="fullname" placeholder="Họ và tên" required>
+          <p id="fullnameError" ></p>
         </div>
         <div class="field">
-          <input type="text" id="username" placeholder="Tên tài khoản" required>
+          <input type="text" id="username" placeholder="Tên đăng nhập" required>
+          <p id="usernameError" ></p>
         </div>
         <div class="field">
           <input type="text" id="email" placeholder="Địa chỉ email" required>
+          <p id="emailError" ></p>
         </div>
         <div class="field">
           <input type="text" id="phone" placeholder="Số điện thoại" required>
+          <p id="phoneError" ></p>
         </div>
         <div class="field">
           <input type="password" id="password" placeholder="Mật khẩu" required>
+          <p id="passwordError" ></p>
         </div>
         <div class="field">
           <input type="password" id="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+          <div id="passwordMatchError" style="color: red; display: none;">Mật khẩu không khớp!</div>
         </div>
-        <div id="passwordMatchError" style="color: red; display: none;">Mật khẩu không khớp!</div>
         <div class="field btn">
           <div class="btn-layer"></div>
           <input type="button" onclick="validatePassword()" value="Đăng ký">

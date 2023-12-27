@@ -1,13 +1,12 @@
 // js login và register api
 function login() {
-    var usernameOrEmail = document.getElementById("usernameOrEmail").value;
-    var password = document.getElementById("login-password").value;
+    const usernameOrEmail = document.getElementById("usernameOrEmail").value;
+    const password = document.getElementById("login-password").value;
 
-    var loginData = {
+    const loginData = {
         usernameOrEmail: usernameOrEmail,
         password: password
     };
-
     fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -16,31 +15,36 @@ function login() {
         body: JSON.stringify(loginData),
     })
         .then(response => {
-            if (response.ok) {
+            if (response.ok)
                 window.location.href = '/';
-            } else {
-                document.getElementById("error").innerText = "Sai thông tin đăng nhập";
-            }
+             else
+                return response.json();
+        })
+        .then(data => {
+            clearLoginErrorMessages();
+            if (data.usernameOrEmail)
+                document.getElementById("usernameOrEmailError").innerText = data.usernameOrEmail;
+            if (data.password)
+                document.getElementById("loginPasswordError").innerText = data.password;
         })
         .catch((error) => {
             console.error('Error:', error);
         });
 }
 function register() {
-    var username = document.getElementById("username").value;
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
-    var fullname = document.getElementById("fullname").value;
-    var phone = document.getElementById("phone").value;
+    const username = document.getElementById("username").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const fullname = document.getElementById("fullname").value;
+    const phone = document.getElementById("phone").value;
 
-    var signUpData = {
+    const signUpData = {
         username: username,
         email: email,
         password: password,
         fullname: fullname,
         phone: phone
     };
-
     fetch('/api/auth/register', {
         method: 'POST',
         headers: {
@@ -56,8 +60,14 @@ function register() {
             }
         })
         .then(data => {
-            if (data && data.message) {
-                document.getElementById("error").innerText = data.message;
+            if (data) {
+                clearErrorMessages();
+                for (const field in data) {
+                    const errorField = field + "Error";
+                    if (document.getElementById(errorField)) {
+                        document.getElementById(errorField).innerText = data[field];
+                    }
+                }
             } else {
                 document.getElementById("error").innerText = "Sai thông tin đăng nhập";
             }
@@ -66,9 +76,24 @@ function register() {
             console.error('Error:', error);
         });
 }
+function clearLoginErrorMessages() {
+    const errorFields = ["usernameOrEmailError", "loginPasswordError"];
+    errorFields.forEach(field => {
+        if (document.getElementById(field)) {
+            document.getElementById(field).innerText = "";
+        }
+    });
+}function clearErrorMessages() {
+    document.getElementById("usernameError").innerText = "";
+    document.getElementById("emailError").innerText = "";
+    document.getElementById("passwordError").innerText = "";
+    document.getElementById("fullnameError").innerText = "";
+    document.getElementById("phoneError").innerText = "";
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     // Thêm sự kiện cho trường input
-    var inputFields = document.querySelectorAll('.form-inner form .field input');
+    const inputFields = document.querySelectorAll('.form-inner form .field input');
     inputFields.forEach(function (input) {
         input.addEventListener('keypress', function (event) {
             console.log("Adding event listener...");
@@ -87,17 +112,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 function validatePassword() {
-    var password = document.getElementById("password").value;
-    var confirmPassword = document.getElementById("confirmPassword").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
 
-    var errorDiv = document.getElementById("passwordMatchError");
+    const errorDiv = document.getElementById("passwordMatchError");
 
     if (password !== confirmPassword) {
         errorDiv.style.display = "block";
     } else {
-        // Passwords match, you can proceed with your registration logic.
         errorDiv.style.display = "none";
         register();
-        // Add your logic here to handle the registration.
     }
 }

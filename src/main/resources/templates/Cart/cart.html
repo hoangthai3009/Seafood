@@ -229,9 +229,9 @@
             document.getElementById('totalPrice').textContent = formattedTotalPrice + ' ₫';
         }
     if (totalDiscount != null && totalPay != null && totalPrice != null) {
-        document.getElementById('totalDiscount').textContent = totalDiscount + ' ₫';
-        document.getElementById('totalPay').textContent = totalPay + ' ₫';
-        document.getElementById('totalPrice').textContent = totalPrice + ' ₫';
+        document.getElementById('totalDiscount').textContent = parseFloat(totalDiscount).toLocaleString('vi-VN');
+        document.getElementById('totalPay').textContent = parseFloat(totalPay).toLocaleString('vi-VN');
+        document.getElementById('totalPrice').textContent = parseFloat(totalPrice).toLocaleString('vi-VN');
     }
 });
 
@@ -247,10 +247,9 @@ function applyPromotionCode() {
             method: 'POST',
             success: function(response) {
                 // Cập nhật trên giao diện
-                document.getElementById('totalDiscount').textContent = response.totalDiscount + ' ₫';
-                document.getElementById('totalPay').textContent = response.totalPay + ' ₫';
+                document.getElementById('totalDiscount').textContent = parseFloat(response.totalDiscount).toLocaleString('vi-VN');
+                document.getElementById('totalPay').textContent = parseFloat(response.totalPay).toLocaleString('vi-VN');
 
-                // Lưu giá trị vào localStorage
                 localStorage.setItem('totalDiscount', response.totalDiscount);
                 localStorage.setItem('totalPay', response.totalPay);
                 localStorage.setItem('totalPrice', response.totalPrice);

@@ -42,7 +42,7 @@
                         <!-- END Phương thức thanh toán                  -->
                         <!-- Cọc -->
                         <div class="checkout__input paid" id="paidPercentageDiv" style="display: none;">
-                            <p>Thanh toán trả trước</p>
+                        <p>Thanh toán trả trước</p>
                             <div class="form-group">
                                 <select id="paidPercentage" class="form-control">
                                     <option style="font-weight: bold" value="">Chọn mức trả trước</option>
@@ -95,34 +95,38 @@
         }
     }
     document.getElementById('paidPercentage').addEventListener('change', function() {
-        let paidPercentage;
-        if (this.value)
-            paidPercentage = this.value; // Phần trăm cọc được chọn
-        else
-            paidPercentage = 0; // Gán mặc định là 0 nếu chưa có giá trị được chọn
-        const totalPay = localStorage.getItem('totalPay'); // Lấy giá trị totalPay từ localStorage
-
-        if (totalPay) {
-            const totalPaid = (totalPay * paidPercentage);
-            console.log("Total Paid: ", totalPaid);
-            console.log("Paid Percentage: ", paidPercentage);
-            localStorage.setItem('paidPercentage', paidPercentage);
-            localStorage.setItem('totalPaid', totalPaid.toString());
+        let paidPercentage = parseFloat(this.value);
+        if (isNaN(paidPercentage)) {
+            paidPercentage = 0;
+        }
+        const totalPay = parseFloat(localStorage.getItem('totalPay'));
+        if (!isNaN(totalPay)) {
+            let totalToDisplay;
+            if (paidPercentage === 0) {
+                totalToDisplay = totalPay;
+            }else{
+                const totalPaid = totalPay * paidPercentage;
+                totalToDisplay = totalPaid;
+                localStorage.setItem('paidPercentage', paidPercentage.toString());
+                localStorage.setItem('totalPaid', totalPaid.toString());
+            }
+            // Cập nhật giao diện người dùng
+            $('#displayTotalPay').text(totalToDisplay.toLocaleString('vi-VN'));
         }
     });
 
+
     $(document).ready(function () {
-        // Cập nhật giá trị từ localStorage
-        const totalDiscount = localStorage.getItem('totalDiscount');
-        const totalPay = localStorage.getItem('totalPay');
+        const totalDiscount = parseFloat(localStorage.getItem('totalDiscount'));
+        const totalPay = parseFloat(localStorage.getItem('totalPay'));
+        const totalPaid = parseFloat(localStorage.getItem('totalPaid'));
 
-        if (totalDiscount !== null) {
-            $('#displayTotalDiscount').text(totalDiscount + ' ₫');
-        }
-
-        if (totalPay !== null) {
-            $('#displayTotalPay').text(totalPay + ' ₫');
-        }
+        if (totalDiscount !== null)
+            $('#displayTotalDiscount').text(totalDiscount.toLocaleString('vi-VN'));
+        if (totalPay !== null)
+            $('#displayTotalPay').text(totalPay.toLocaleString('vi-VN'));
+        if(localStorage.getItem('totalPaid') !== null)
+            $('#displayTotalPay').text(totalPaid.toLocaleString('vi-VN'));
         // Lắng nghe sự kiện click của nút đặt hàng
         $("#placeOrderBtn").click(function (event) {
             event.preventDefault();
@@ -177,18 +181,15 @@
         // Hàm xử lý đặt hàng bình thường
         function processOrder(userId) {
             $("#placeOrderBtn").prop('disabled', true);
-            const totalDiscount = localStorage.getItem('totalDiscount');
-            const totalPay = localStorage.getItem('totalPay');
-            const totalPrice = localStorage.getItem('totalPrice');
             const billData = {
                 userId: userId,
-                totalPrice: totalPrice,
-                discount: totalDiscount,
-                totalPay: totalPay,
+                totalPrice: localStorage.getItem('totalPrice'),
+                discount: localStorage.getItem('totalDiscount'),
+                totalPay: localStorage.getItem('totalPay'),
                 note: $('#note').val(),
                 address: $('#addressInput').val(),
                 paymentMethod: "COD",
-                billDetails: getBillDetails()
+                billDetails: getBillDetails(),
             };
             $.ajax({
                 type: "POST",
@@ -199,13 +200,8 @@
                     alert("\n                              ĐẶT HÀNG THÀNH CÔNG !\n\n" +
                         "Đơn hàng của bạn sẽ được sắp xếp và giao đến cho bạn trong thời gian sớm nhất.");
                     window.location.href = "/";
-                    localStorage.removeItem('totalPrice');
-                    localStorage.removeItem('totalDiscount');
-                    localStorage.removeItem('totalPay');
+                    localStorage.clear();
                     clearCartSession();
-                    // paymentSuccess = true;
-                    localStorage.setItem('paymentSuccess', 'true');
-
                 },
                 error: function (error) {
                     console.error("Error during checkout: ", error);
@@ -215,28 +211,23 @@
         }
         // Hàm khởi tạo thanh toán VNPay
         function initiateVNPayPayment(userId) {
-            const totalDiscount = localStorage.getItem('totalDiscount');
-            const totalPay = localStorage.getItem('totalPay');
-            const totalPrice = localStorage.getItem('totalPrice');
-            const paidPercentage = localStorage.getItem('paidPercentage');
+            localStorage.setItem('userId', userId);
+            localStorage.setItem('billDetails', JSON.stringify(getBillDetails()));
+            localStorage.setItem('note', $('#note').val());
+            localStorage.setItem('address', $('#addressInput').val());
+            localStorage.setItem('paymentInitiated', 'true');
             const totalPaid = localStorage.getItem('totalPaid');
-            sessionStorage.setItem('userId', userId);
-            sessionStorage.setItem('totalPrice', totalPrice);
-            sessionStorage.setItem('billDetails', JSON.stringify(getBillDetails()));
-            sessionStorage.setItem('note', $('#note').val());
-            sessionStorage.setItem('address', $('#addressInput').val());
-            sessionStorage.setItem('paymentInitiated', 'true');
-            sessionStorage.setItem('totalDiscount', totalDiscount);
-            sessionStorage.setItem('totalPay', totalPay);
-            sessionStorage.setItem('paidPercentage', paidPercentage);
-            sessionStorage.setItem('totalPaid', totalPaid);
-            // Gửi yêu cầu thanh toán VNPay
+            let price = localStorage.getItem('totalPay');
+            console.log(price);
+            console.log(localStorage.getItem('totalPay'));
+            if (totalPaid && totalPaid !== '0') {
+                price = totalPaid;
+            }
             $.ajax({
                 type: "GET",
-                url: `/api/payment/create_payment?totalPrice=${totalPaid}`,
+                url: `/api/payment/create_payment?totalPrice=${price}`,
                 success: function (response) {
                     if (response.status === "OK") {
-                        // Chuyển hướng người dùng đến URL
                         window.location.href = response.url;
                     } else {
                         // Xử lý trường hợp lỗi nếu cần
@@ -251,39 +242,28 @@
             });
         }
         // Hàm lấy thông tin hóa đơn từ giỏ hàng
-        if (sessionStorage.getItem('paymentInitiated') === 'true') {
+        if (localStorage.getItem('paymentInitiated') === 'true') {
             checkVNPayPayment();
-            sessionStorage.removeItem('paymentInitiated'); // Xóa trạng thái đã lưu
+            localStorage.removeItem('paymentInitiated'); // Xóa trạng thái đã lưu
         }
         function checkVNPayPayment() {
             const urlParams = new URLSearchParams(window.location.search);
             const responseCode = urlParams.get('vnp_ResponseCode');
             if (responseCode === '00') {
-                // Nếu thanh toán thành công, xử lý đơn hàng
-                const userId = sessionStorage.getItem('userId');
-                const totalPrice = sessionStorage.getItem('totalPrice');
-                const totalDiscount = sessionStorage.getItem('totalDiscount');
-                const totalPay = sessionStorage.getItem('totalPay');
-                const note = sessionStorage.getItem('note');
-                const address = sessionStorage.getItem('address');
-                const totalPaid = sessionStorage.getItem('totalPaid');
-                const paidPercentage = sessionStorage.getItem('paidPercentage')
-                const billDetails = JSON.parse(sessionStorage.getItem('billDetails'));
-
+                console.log("Thanh toán VNPay thành công");
                 const billData = {
-                    userId: userId,
-                    totalPrice: totalPrice,
-                    note: note,
-                    address: address,
-                    discount: totalDiscount,
-                    totalPay: totalPay,
-                    paidPercentage: paidPercentage,
-                    totalPaid: totalPaid,
-                    paymentMethod: "VNPay",
-                    billDetails: billDetails
+                    userId: localStorage.getItem('userId'),
+                    totalPrice: localStorage.getItem('totalPrice'),
+                    note: localStorage.getItem('note'),
+                    address: localStorage.getItem('address'),
+                    discount: localStorage.getItem('totalDiscount'),
+                    totalPay: localStorage.getItem('totalPay'),
+                    paidPercentage: localStorage.getItem('paidPercentage'),
+                    totalPaid: localStorage.getItem('totalPaid'),
+                    paymentMethod: "Ví VNPay",
+                    billDetails: JSON.parse(localStorage.getItem('billDetails')),
                 };
-                console.log("Total Paid: ", billData);
-                console.log("Paid Percentage: ", billDetails);
+                console.log(billData);
                 // Gửi yêu cầu lưu hóa đơn
                 $.ajax({
                     type: "POST",
@@ -292,12 +272,9 @@
                     data: JSON.stringify(billData),
                     success: function () {
                         clearCartSession();
-                        localStorage.removeItem('totalPrice');
-                        localStorage.removeItem('totalDiscount');
-                        localStorage.removeItem('totalPay');
-                        localStorage.removeItem('paidPercentage');
-                        localStorage.removeItem('totalPaid');
+                        localStorage.clear();
                         window.location.href = "/";
+                        console.log("Lưu hóa đơn thành công");
                         alert("\n                              ĐẶT HÀNG THÀNH CÔNG !\n\nĐơn hàng của bạn sẽ được sắp xếp và giao đến cho bạn trong thời gian sớm nhất.");
                     },
                     error: function (error) {

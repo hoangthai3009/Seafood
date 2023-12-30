@@ -197,6 +197,15 @@
                 contentType: "application/json",
                 data: JSON.stringify(billData),
                 success: function () {
+                    const promotionCode = localStorage.getItem('promotionCode');
+                    if (promotionCode) {
+                        $.ajax({
+                            url: '/api/promotions/decrement/' + promotionCode,
+                            method: 'POST',
+                            success: function() {},
+                            error: function(err) {}
+                        });
+                    }
                     alert("\n                              ĐẶT HÀNG THÀNH CÔNG !\n\n" +
                         "Đơn hàng của bạn sẽ được sắp xếp và giao đến cho bạn trong thời gian sớm nhất.");
                     window.location.href = "/";
@@ -268,6 +277,15 @@
                     contentType: "application/json",
                     data: JSON.stringify(billData),
                     success: function () {
+                        const promotionCode = localStorage.getItem('promotionCode');
+                        if (promotionCode) {
+                            $.ajax({
+                                url: '/api/promotions/decrement/' + promotionCode,
+                                method: 'POST',
+                                success: function() {},
+                                error: function(err) {}
+                            });
+                        }
                         clearCartSession();
                         localStorage.clear();
                         window.location.href = "/";

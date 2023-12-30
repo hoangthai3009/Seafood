@@ -363,3 +363,9 @@ window.addEventListener("load", function() {
     updateTotalRevenue();
 });
 
+fetch('/api/totalBills')
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("tongDonHang").textContent = data;
+    })
+    .catch(error => console.error(error));

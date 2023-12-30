@@ -253,6 +253,7 @@ function applyPromotionCode() {
                 localStorage.setItem('totalDiscount', response.totalDiscount);
                 localStorage.setItem('totalPay', response.totalPay);
                 localStorage.setItem('totalPrice', response.totalPrice);
+                localStorage.setItem('promotionCode', promotionCode);
                 alert('Mã giảm giá đã được áp dụng thành công!');
             },
             error: function(xhr, status, error) {

@@ -1,6 +1,9 @@
 package ChuyenNganh.Seafood.Controller.API;
 
+import ChuyenNganh.Seafood.Entity.Bill;
 import ChuyenNganh.Seafood.Security.Services.BillService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -42,5 +46,12 @@ public class ThongKeAPIController {
         int currentYear = LocalDate.now().getYear();
         return BillService.tongTienNam(currentYear);
     }
-
+    @Autowired
+    private BillService billService;
+    @GetMapping("/totalBills")
+    public ResponseEntity<Integer> getTotalOrders() {
+        List<Bill> bills = billService.getAllBills();
+        int totalOrders = bills.size();
+        return ResponseEntity.ok(totalOrders);
+    }
 }

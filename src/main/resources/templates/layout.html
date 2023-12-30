@@ -220,7 +220,7 @@
 
         function signoutUser() {
             fetch('/api/auth/logout', { method: 'POST' })
-                .then(() => window.location.reload())
+                .then(() => window.location.reload(), localStorage.clear)
                 .catch(error => {
                     console.error('Đăng xuất lỗi:', error);
                     alert('Đăng xuất thất bại. Vui lòng thử lại.');

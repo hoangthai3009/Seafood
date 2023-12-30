@@ -6,6 +6,12 @@ function login() {
         usernameOrEmail: usernameOrEmail,
         password: password
     };
+
+    // Initialize error messages as empty strings
+    let authErrorMessage = "";
+    let usernameOrEmailErrorMessage = "";
+    let loginPasswordErrorMessage = "";
+
     fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -15,25 +21,37 @@ function login() {
     })
         .then(response => {
             if (response.ok)
-                window.location.href = '/';
-             else
                 return response.json();
+            else
+                return response.json().then(err => Promise.reject(err));
         })
         .then(data => {
-            const authError = document.getElementById("authError");
-            if (data && data.error) {
-                authError.innerText = data.error;
+            if (data && data.roles && data.roles.includes('ROLE_ADMIN')) {
+                window.location.href = '/admin';
+                alert('Chào mừng! Bạn đã đăng nhập với quyền ADMIN')
             } else {
-                    if (data.usernameOrEmail)
-                        document.getElementById("usernameOrEmailError").innerText = data.usernameOrEmail;
-                    if (data.password)
-                        document.getElementById("loginPasswordError").innerText = data.password;
-                }
-
+                window.location.href = '/';
+            }
         })
-    clearLoginErrorMessages();
+        .catch(error => {
+            if (error.error)
+                authErrorMessage = error.error;
+            if (error.usernameOrEmail)
+                usernameOrEmailErrorMessage = error.usernameOrEmail;
+            if (error.password)
+                loginPasswordErrorMessage = error.password;
+        })
+        .finally(() => {
+            // Set error messages in DOM after promise completion
+            document.getElementById("authError").innerText = authErrorMessage;
+            document.getElementById("usernameOrEmailError").innerText = usernameOrEmailErrorMessage;
+            document.getElementById("loginPasswordError").innerText = loginPasswordErrorMessage;
+        });
 
+    clearLoginErrorMessages();
 }
+
+
 function register() {
     const username = document.getElementById("username").value;
     const email = document.getElementById("email").value;

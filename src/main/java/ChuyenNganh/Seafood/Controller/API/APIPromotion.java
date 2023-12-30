@@ -74,7 +74,7 @@ public class APIPromotion {
     @PostMapping("/find")
     public ResponseEntity<Optional<Promotion>> findPromotionByCode(@RequestParam String code) {
         Optional<Promotion> promotionFound = promotionService.getPromotionByCode(code);
-        if(promotionFound.isPresent() && promotionFound.get().getExpired_day().toInstant().isBefore(Instant.now())){
+        if(promotionFound.isPresent() && promotionFound.get().getExpired_day().toInstant().isAfter(Instant.now())){
             return new ResponseEntity<>(promotionFound, HttpStatus.OK);
         }
         else {

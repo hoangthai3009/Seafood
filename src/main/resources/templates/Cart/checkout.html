@@ -218,8 +218,6 @@
             localStorage.setItem('paymentInitiated', 'true');
             const totalPaid = localStorage.getItem('totalPaid');
             let price = localStorage.getItem('totalPay');
-            console.log(price);
-            console.log(localStorage.getItem('totalPay'));
             if (totalPaid && totalPaid !== '0') {
                 price = totalPaid;
             }
@@ -241,7 +239,6 @@
                 }
             });
         }
-        // Hàm lấy thông tin hóa đơn từ giỏ hàng
         if (localStorage.getItem('paymentInitiated') === 'true') {
             checkVNPayPayment();
             localStorage.removeItem('paymentInitiated'); // Xóa trạng thái đã lưu
@@ -288,7 +285,7 @@
         function clearCartSession() {
             $.ajax({
                 type: "GET",
-                url: "/api/clearCart", // Đường dẫn tới API hoặc controller xóa session giỏ hàng
+                url: "/api/clearCart",
                 success: function () {
                     console.log("Cart session cleared");
                 },

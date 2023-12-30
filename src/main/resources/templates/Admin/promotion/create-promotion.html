@@ -43,7 +43,7 @@
                             <div class="form-group row">
                                 <div class="col mt-3">
                                     <label class="d-flex justify-content-center" for="discount">Phần trăm giảm:</label>
-                                    <input class="form-control" type="number" id="discount" th:field="*{discount}" th:value="0">
+                                    <input class="form-control" type="number" id="discount" th:field="*{discount}" step="any">
                                     <span class="text-danger" th:if="${#fields.hasErrors('discount')}" th:errors="*{discount}"></span>
                                 </div>
 

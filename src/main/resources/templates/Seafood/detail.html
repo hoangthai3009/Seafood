@@ -240,7 +240,7 @@
         const mainImage = document.getElementById('main-image');
         mainImage.src = seafood.mainImage || 'path-to-default-image.jpg';
         document.getElementById('product-name').innerText = seafood.name || 'Tên không xác định';
-        document.getElementById('product-price').innerText = seafood.price ? `${seafood.price.toLocaleString()} VND` : 'Giá không xác định';
+        document.getElementById('product-price').innerText = seafood.price ? `${seafood.price.toLocaleString()} ₫ /`+seafood.unit : 'Giá không xác định';
         document.getElementById('product-description').innerText = seafood.description || 'Không có mô tả';
         document.getElementById('product-origin').innerText = seafood.origin || 'Không rõ xuất xứ';
         const imageSlider = document.getElementById('image-slider');

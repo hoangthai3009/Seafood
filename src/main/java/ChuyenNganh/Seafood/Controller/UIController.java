@@ -60,6 +60,6 @@ public class UIController {
         return "User/profile";
     }
 
-    @GetMapping("/order")
-    public String test(){return "User/order";}
+    @GetMapping("/promotions")
+    public String promotions(){return "Home/promotions";}
 }

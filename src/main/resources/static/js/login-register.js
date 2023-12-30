@@ -27,9 +27,10 @@ function login() {
         })
         .then(data => {
             if (data && data.roles && data.roles.includes('ROLE_ADMIN')) {
+                localStorage.setItem('isAdmin', 'true');
                 window.location.href = '/admin';
-                alert('Chào mừng! Bạn đã đăng nhập với quyền ADMIN')
             } else {
+                localStorage.setItem('isAdmin', null);
                 window.location.href = '/';
             }
         })

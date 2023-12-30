@@ -543,19 +543,43 @@ ol {
 	display: inline-block;
 	margin-right: -50px;
 }
-
-.header__cart .header__cart__price span {
-	color: #252525;
-	font-weight: 700;
+.header__cart__price .nav-link {
+	color: #333;
+	font-size: 16px;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	text-decoration: none; /* Bỏ gạch chân mặc định cho liên kết */
 }
 
-.humberger__menu__wrapper {
-	display: none;
+.header__cart__price .nav-link:hover {
+	color: #007bff;
 }
 
-.humberger__open {
-	display: none;
+/* Tùy chỉnh mục "Hồ sơ" để hiển thị đậm hơn */
+.header__cart__price .dropdown-menu a.dropdown-item {
+	padding: 10px 20px;
+	transition: background-color 0.3s;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	text-decoration: none;
 }
+
+/* Đổi màu nền khi di chuột qua các mục dropdown */
+.header__cart__price .dropdown-menu a.dropdown-item:hover {
+	background-color: #f8f9fa;
+}
+
+/* Tạo hiệu ứng khi di chuột qua đường kẻ ngang */
+.header__cart__price .dropdown-divider {
+	margin: 0;
+}
+.header__cart__price .sigout:hover {
+	color: #f10000;
+	cursor: pointer;
+}
+
 
 /*---------------------
   Hero

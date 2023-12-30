@@ -1,7 +1,7 @@
 // Common functions
 function number_format(number, decimals, dec_point, thousands_sep) {
     number = (number + '').replace('.', '').replace(' ', '');
-    var n = !isFinite(+number) ? 0 : +number,
+    let n = !isFinite(+number) ? 0 : +number,
         prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
         sep = (typeof thousands_sep === 'undefined') ? '.' : thousands_sep,
         dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
@@ -350,13 +350,10 @@ function formatCurrency(value) {
     });
 
     // Thay thế "đ" thành "₫" trong chuỗi định dạng
-    const formattedValue = formatter.format(value).replace('₫', '₫');
-
-    return formattedValue;
+    return formatter.format(value).replace('₫', '₫');
 }
 function updateTotalRevenueUI(elementId, value) {
-    const formattedValue = formatCurrency(value);
-    document.getElementById(elementId).textContent = formattedValue;
+    document.getElementById(elementId).textContent = formatCurrency(value);
 }
 // Gọi hàm khi trang được load
 window.addEventListener("load", function() {
@@ -369,3 +366,12 @@ fetch('/api/totalBills')
         document.getElementById("tongDonHang").textContent = data;
     })
     .catch(error => console.error(error));
+
+
+fetch('/messages/unread/total')
+    .then(response => response.json())
+    .then(data => {
+        // Cập nhật giao diện với số lượng tin nhắn chưa đọc
+        document.getElementById('countMessage').textContent = data;
+    })
+    .catch(error => console.error('Error fetching unread messages:', error));

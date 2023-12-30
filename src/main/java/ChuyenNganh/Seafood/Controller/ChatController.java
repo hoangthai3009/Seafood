@@ -4,6 +4,7 @@ import ChuyenNganh.Seafood.DAOS.ChatNotification;
 import ChuyenNganh.Seafood.Entity.ChatMessage;
 import ChuyenNganh.Seafood.Security.Services.ChatMessageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -40,5 +41,10 @@ public class ChatController {
                                                               @PathVariable String recipientId) {
         return ResponseEntity
                 .ok(chatMessageService.findChatMessages(senderId, recipientId));
+    }
+    @GetMapping("/messages/unread/total")
+    public ResponseEntity<Long> countTotalUnreadMessages() {
+        long count = chatMessageService.countTotalUnreadMessages();
+        return ResponseEntity.ok(count);
     }
 }
